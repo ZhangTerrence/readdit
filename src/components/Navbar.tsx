@@ -34,9 +34,9 @@ export const Navbar = () => {
       </div>
       <Link
         className={
-          "border-contrast bg-tertiary text-primary hover:bg-contrast rounded-xl border-[2px] border-solid p-3 text-xl transition-colors duration-200"
+          "border-contrast bg-contrast text-primary rounded-xl border-[2px] border-solid p-3 text-xl transition-colors duration-200"
         }
-        href={"/login"}
+        href={"/signin"}
       >
         Login
       </Link>

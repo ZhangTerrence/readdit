@@ -1,11 +1,11 @@
 import { HomeButton } from "@/components/HomeButton";
-import { Signup } from "@/components/Signup";
+import { Signin } from "@/components/Signin";
 
-export default function LoginPage() {
+export default function SigninPage() {
   return (
     <main className={"relative flex h-screen w-screen items-center"}>
       <HomeButton />
-      <Signup />
+      <Signin />
     </main>
   );
 }
