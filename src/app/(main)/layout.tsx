@@ -1,10 +1,14 @@
-import { Navbar } from "@/components/Navbar";
+import { Navigation } from "@/components/Navigation";
 
-export default function MainLayout(props: { children: React.ReactNode }) {
+export default function MainLayout(props: {
+  children: React.ReactNode;
+  authModals: React.ReactNode;
+}) {
   return (
     <section className={"flex flex-col items-center"}>
-      <Navbar />
+      <Navigation />
       {props.children}
+      {props.authModals}
     </section>
   );
 }

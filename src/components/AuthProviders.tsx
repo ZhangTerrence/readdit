@@ -4,7 +4,7 @@ import { useState } from "react";
 import { IoLogoGoogle, IoLogoGithub } from "react-icons/io5";
 import { signIn } from "next-auth/react";
 
-export const AuthForm = () => {
+export const AuthProviders = () => {
   const [loading, toggleLoading] = useState(false);
 
   const handleProvider = async (

@@ -1,3 +1,4 @@
+import { SignoutButton } from "@/components/SignoutButton";
 import { getAuthSession } from "@/lib/auth";
 
 export default async function HomePage() {
@@ -6,7 +7,7 @@ export default async function HomePage() {
   return (
     <main>
       <p>Hello world!</p>
-      {session ? <p>Logged in</p> : null}
+      {session ? <SignoutButton /> : null}
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 
@@ -10,16 +10,10 @@ export const metadata: Metadata = {
   icons: "/readdit.png",
 };
 
-export default function RootLayout(props: {
-  auth: React.ReactNode;
-  children: React.ReactNode;
-}) {
+export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={ubuntu.className}>
-        {props.auth}
-        {props.children}
-      </body>
+      <body className={ubuntu.className}>{props.children}</body>
     </html>
   );
 }
