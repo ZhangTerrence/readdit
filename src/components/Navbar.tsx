@@ -6,7 +6,7 @@ export const Navbar = () => {
   return (
     <nav
       className={
-        "border-contrast flex w-[95vw] items-center justify-between border-b-[2px] border-solid p-3"
+        "flex w-[95vw] items-center justify-between border-b-[2px] border-solid border-contrast p-3"
       }
     >
       <Link className={"flex items-center"} href={"/"}>
@@ -21,7 +21,7 @@ export const Navbar = () => {
       </Link>
       <div
         className={
-          "border-contrast flex w-[40rem] items-center rounded-xl border-[2px] border-solid p-2"
+          "flex w-[40rem] items-center rounded-xl border-[2px] border-solid border-contrast p-2"
         }
       >
         <IoSearch className={"mx-2"} />
@@ -34,7 +34,7 @@ export const Navbar = () => {
       </div>
       <Link
         className={
-          "border-contrast bg-contrast text-primary rounded-xl border-[2px] border-solid p-3 text-xl transition-colors duration-200"
+          "rounded-xl border-[2px] border-solid border-contrast bg-contrast p-3 text-xl text-primary transition-colors duration-200"
         }
         href={"/signin"}
       >
