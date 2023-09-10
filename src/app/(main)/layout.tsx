@@ -1,14 +1,10 @@
 import { Navigation } from "@/components/Navigation";
 
-export default function MainLayout(props: {
-  children: React.ReactNode;
-  authModals: React.ReactNode;
-}) {
+export default function MainLayout(props: { children: React.ReactNode }) {
   return (
-    <section className={"flex flex-col items-center"}>
+    <section className={"h-screen w-screen bg-slate-50"}>
       <Navigation />
-      {props.children}
-      {props.authModals}
+      <div className={"pt-20"}>{props.children}</div>
     </section>
   );
 }

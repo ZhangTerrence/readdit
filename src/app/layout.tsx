@@ -10,10 +10,16 @@ export const metadata: Metadata = {
   icons: "/readdit.png",
 };
 
-export default function RootLayout(props: { children: React.ReactNode }) {
+export default function RootLayout(props: {
+  children: React.ReactNode;
+  authModals: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className={ubuntu.className}>{props.children}</body>
+      <body className={ubuntu.className}>
+        {props.authModals}
+        {props.children}
+      </body>
     </html>
   );
 }

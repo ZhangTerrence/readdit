@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { IoArrowBackSharp } from "react-icons/io5";
+import { IoHomeSharp } from "react-icons/io5";
 
 export const HomeButton = () => {
   return (
@@ -7,7 +9,7 @@ export const HomeButton = () => {
       className={"absolute left-0 top-0 m-4 flex items-center text-2xl"}
       href={"/"}
     >
-      <IoArrowBackSharp className={"mr-2"} />
+      <IoHomeSharp className={"mr-2"} />
       <p>Home</p>
     </Link>
   );

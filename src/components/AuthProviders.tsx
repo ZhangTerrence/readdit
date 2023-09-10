@@ -27,7 +27,7 @@ export const AuthProviders = () => {
     <div className={"mb-6 flex flex-col"}>
       <button
         className={
-          "mb-4 flex items-center rounded-xl border-[2px] border-solid border-contrast p-4 text-xl"
+          "mb-4 flex items-center rounded-xl border border-solid border-slate-950 bg-slate-50 p-4 text-xl"
         }
         onClick={(e) => handleProvider(e, "google")}
       >
@@ -36,7 +36,7 @@ export const AuthProviders = () => {
       </button>
       <button
         className={
-          "flex items-center rounded-xl border-[2px] border-solid border-contrast p-4 text-xl"
+          "flex items-center rounded-xl border border-solid border-slate-950 bg-slate-50 p-4 text-xl"
         }
         onClick={(e) => handleProvider(e, "github")}
       >
