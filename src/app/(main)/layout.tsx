@@ -2,9 +2,9 @@ import { Navigation } from "@/components/Navigation";
 
 export default function MainLayout(props: { children: React.ReactNode }) {
   return (
-    <section className={"h-screen w-screen bg-slate-50"}>
+    <section className={"h-screen w-screen"}>
       <Navigation />
-      <div className={"pt-20"}>{props.children}</div>
+      <div className={"h-screen w-screen pt-20"}>{props.children}</div>
     </section>
   );
 }
