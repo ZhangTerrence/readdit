@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { CreateSubreaddit } from "@/components/CreateSubreaddit";
+import { getAuthSession } from "@/lib/auth";
 import { IoHome, IoChatbox } from "react-icons/io5";
 
 export default async function HomePage() {
+  const session = await getAuthSession();
+
   return (
-    <main className={"flex justify-center bg-slate-100 py-8"}>
+    <main className={"flex justify-center bg-slate-200 py-8"}>
       <div
         className={
           "mr-12 w-[50rem] rounded-md border border-solid border-slate-500 bg-white p-8"
@@ -21,7 +24,7 @@ export default async function HomePage() {
       </div>
       <div
         className={
-          "w-[25rem] rounded-md border border-solid border-slate-500 bg-white p-8"
+          "h-fit w-[25rem] rounded-md border border-solid border-slate-500 bg-white p-8"
         }
       >
         <div
@@ -38,7 +41,7 @@ export default async function HomePage() {
             favorite communities.
           </p>
         </div>
-        <Link href={"/createPost"}>
+        <Link href={"/submit"}>
           <button
             className={
               "mt-4 w-full rounded-full border border-solid border-slate-500 bg-gray-800 p-1 text-xl text-slate-50"
@@ -47,7 +50,7 @@ export default async function HomePage() {
             Create Post
           </button>
         </Link>
-        <CreateSubreaddit />
+        <CreateSubreaddit session={session} />
       </div>
     </main>
   );

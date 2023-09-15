@@ -1,25 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { IoLogoGoogle, IoLogoGithub } from "react-icons/io5";
 import { signIn } from "next-auth/react";
 
 export const AuthProviders = () => {
-  const [loading, toggleLoading] = useState(false);
-
   const handleProvider = async (
     e: React.MouseEvent<HTMLButtonElement>,
     provider: "google" | "github",
   ) => {
     e.preventDefault();
-    toggleLoading(true);
 
     try {
       await signIn(provider);
     } catch (error) {
       console.log(error);
-    } finally {
-      toggleLoading(false);
     }
   };
 

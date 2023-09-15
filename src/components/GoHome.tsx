@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { IoHomeSharp } from "react-icons/io5";
 
-export const HomeButton = () => {
+export const GoHome = () => {
   return (
     <Link
       className={"absolute left-0 top-0 m-4 flex items-center text-2xl"}

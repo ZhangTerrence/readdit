@@ -8,26 +8,31 @@ export async function POST(req: Request) {
     const session = await getAuthSession();
 
     if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
+      return new Response("Unauthorized.", { status: 401 });
     }
 
     const body = await req.json();
-    const { name } = SubreadditValidator.parse(body);
+
+    const { name, description } = SubreadditValidator.parse(body);
 
     const subreadditExists = await prisma.subreaddit.findFirst({
       where: {
-        name,
+        name: {
+          endsWith: name,
+          mode: "insensitive",
+        },
       },
     });
 
     if (subreadditExists) {
-      return new Response("Subreaddit already exists", { status: 409 });
+      return new Response("Subreaddit already exists.", { status: 409 });
     }
 
     const subreaddit = await prisma.subreaddit.create({
       data: {
         name,
         creatorId: session.user.id,
+        description,
       },
     });
 
@@ -38,12 +43,12 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response(subreaddit.name);
+    return new Response(`Successfully created ${subreaddit.name}.`);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
     }
 
-    return new Response("Internal server error", { status: 500 });
+    return new Response("Internal server error.", { status: 500 });
   }
 }

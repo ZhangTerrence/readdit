@@ -1,15 +1,23 @@
 "use client";
 
+import type { Session } from "next-auth";
 import { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { IoClose, IoInformationCircle } from "react-icons/io5";
-import axios from "axios";
+import { toast } from "react-toastify";
 
-export const CreateSubreaddit = () => {
+type CreateSubreadditProps = {
+  session: Session | null;
+};
+
+export const CreateSubreaddit = (props: CreateSubreadditProps) => {
   const modal = useRef<HTMLDialogElement | null>(null);
   const subreadditName = useRef<HTMLInputElement | null>(null);
+  const subreadditDesc = useRef<HTMLInputElement | null>(null);
   const [charRemaining, setCharRemaining] = useState(21);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const closeModal = () => {
     if (subreadditName.current) subreadditName.current.value = "";
@@ -31,18 +39,41 @@ export const CreateSubreaddit = () => {
   };
 
   const createSubreaddit = async () => {
+    if (!props.session) {
+      router.push("/signin");
+      return;
+    }
+
     if (error || !subreadditName.current?.value) {
-      window.alert("Error");
+      toast.error("Please enter valid name.");
       return;
     }
 
     const payload: CreateSubreadditPayload = {
       name: subreadditName.current.value,
+      description: !subreadditDesc.current
+        ? "A wonderful description"
+        : subreadditDesc.current.value.length === 0
+        ? "A wonderful description"
+        : subreadditDesc.current.value,
     };
 
-    const { data } = await axios.post("/api/subreaddit", payload);
-
-    closeModal();
+    await fetch("/api/subreaddit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).then(async (response) => {
+      if (response.status < 200 || response.status >= 300) {
+        const error = await response.text();
+        toast.error(error);
+      } else {
+        const success = await response.text();
+        toast.success(success);
+        closeModal();
+      }
+    });
   };
 
   return (
@@ -90,7 +121,7 @@ export const CreateSubreaddit = () => {
               <IoInformationCircle className={"peer"} />
               <span
                 className={
-                  "invisible absolute -left-[7.25rem] top-full mt-2 w-[15rem] break-words rounded-md bg-gray-950 p-2 text-center text-sm text-slate-50 peer-hover:visible"
+                  "invisible absolute -left-[7.25rem] top-full z-10 mt-2 w-[15rem] break-words rounded-md bg-gray-950 p-2 text-center text-sm text-slate-50 peer-hover:visible"
                 }
               >
                 {`Names cannot have spaces (e.g., "r/bookclub" not "r/book club"),
@@ -100,7 +131,7 @@ export const CreateSubreaddit = () => {
               </span>
             </div>
           </div>
-          <div className={"relative mt-8"}>
+          <div className={"relative mt-4"}>
             <span
               className={
                 "absolute bottom-0 left-0 top-0 my-auto ml-3 h-fit w-fit text-gray-500"
@@ -115,7 +146,13 @@ export const CreateSubreaddit = () => {
               ref={subreadditName}
               type="text"
               maxLength={21}
-              onChange={(e) => checkName(e.target.value)}
+              onChange={(e) => checkName(e.currentTarget.value)}
+              onKeyDown={(e) => {
+                if (e.code === "Enter") {
+                  e.preventDefault();
+                  createSubreaddit();
+                }
+              }}
             />
           </div>
           <p
@@ -128,6 +165,15 @@ export const CreateSubreaddit = () => {
           {error ? (
             <p className={"mt-2 text-sm text-red-600"}>{error}</p>
           ) : null}
+          <h2 className={"mt-4 flex items-center text-xl"}>
+            Description <p className={"ml-1 text-xs italic"}>(Optional)</p>
+          </h2>
+          <input
+            className={"mt-4 w-full border border-solid border-slate-200 p-2"}
+            ref={subreadditDesc}
+            type="text"
+            placeholder={"A wonderful description."}
+          />
           <div className={"mt-8 flex justify-end"}>
             <button
               className={

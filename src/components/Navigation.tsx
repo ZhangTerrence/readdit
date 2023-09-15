@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getAuthSession } from "@/lib/auth";
-import { IoSearch } from "react-icons/io5";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { Searchbar } from "./Searchbar";
 
 export const Navigation = async () => {
   const session = await getAuthSession();
@@ -10,7 +10,7 @@ export const Navigation = async () => {
   return (
     <nav
       className={
-        "fixed left-0 right-0 z-20 mx-auto flex h-20 w-screen items-center justify-between border-b border-solid border-b-slate-500 bg-white px-4"
+        "fixed left-0 right-0 z-20 mx-auto flex h-14 w-screen items-center justify-between border-b border-solid border-b-slate-500 bg-white px-4"
       }
     >
       <Link className={"flex items-center"} href={"/"}>
@@ -18,34 +18,30 @@ export const Navigation = async () => {
           className={"mr-4"}
           src={"/readdit.png"}
           alt={"readdit"}
-          width={35}
-          height={35}
+          width={25}
+          height={25}
         />
         <p className={"text-xl"}>Readdit</p>
       </Link>
+      <Searchbar />
       {session ? (
         <ProfileDropdown session={session} />
       ) : (
-        <Link
-          className={"rounded-lg bg-gray-800 p-3 text-xl text-slate-50"}
-          href={"/signin"}
-        >
-          Sign In
-        </Link>
+        <div className={"flex"}>
+          <Link
+            className={"mr-4 rounded-lg bg-slate-200 p-2 text-lg"}
+            href={"/signup"}
+          >
+            Sign Up
+          </Link>
+          <Link
+            className={"rounded-lg bg-gray-800 p-2 text-lg text-slate-50"}
+            href={"/signin"}
+          >
+            Sign In
+          </Link>
+        </div>
       )}
-      <div
-        className={
-          "fixed left-0 right-0 top-0 m-auto mt-3 flex h-fit w-[40rem] items-center rounded-full border border-solid border-slate-950 bg-white p-3"
-        }
-      >
-        <IoSearch className={"mx-2 text-lg"} />
-        <input
-          className={"grow text-lg outline-none"}
-          type="text"
-          name="searchbar"
-          placeholder={"Search Readdit"}
-        />
-      </div>
     </nav>
   );
 };

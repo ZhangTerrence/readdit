@@ -1,6 +1,8 @@
-import "@/styles/globals.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ubuntu = Ubuntu({ weight: "400", subsets: ["latin"] });
 
@@ -17,6 +19,18 @@ export default function RootLayout(props: {
   return (
     <html lang="en">
       <body className={ubuntu.className}>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         {props.authModals}
         {props.children}
       </body>

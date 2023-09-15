@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HomeButton } from "@/components/HomeButton";
+import { GoHome } from "@/components/GoHome";
 import { AuthProviders } from "@/components/AuthProviders";
 
 export default async function SigninPage() {
@@ -7,10 +7,10 @@ export default async function SigninPage() {
     <main
       className={"relative flex h-screen w-screen items-center bg-slate-50"}
     >
-      <HomeButton />
+      <GoHome />
       <form
         className={
-          "ml-[20rem] flex h-full grow flex-col items-start justify-center border-l border-solid border-slate-950 bg-gradient-to-br from-slate-100 to-slate-300 pl-12"
+          "ml-[20rem] flex h-full grow flex-col items-start justify-center border-l border-solid border-slate-950 bg-gradient-to-br from-slate-50 to-slate-300 pl-12"
         }
       >
         <h1 className={"mb-2 text-4xl underline"}>SIGN IN</h1>

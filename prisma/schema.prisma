@@ -41,7 +41,7 @@ model User {
   username      String?   @unique
   email         String?   @unique
   emailVerified DateTime?
-  image         String?
+  image         String    @default("https://utfs.io/f/3fbc2bf9-050e-4a0e-b15a-1c78ebaaeed0_DefaultUser.png")
 
   accounts Account[]
   sessions Session[]
@@ -66,12 +66,14 @@ model Subscription {
 }
 
 model Subreaddit {
-  id        String  @id @default(cuid())
-  creator   User?   @relation("createdBy", fields: [creatorId], references: [id])
-  creatorId String?
+  id        String @id @default(cuid())
+  creator   User   @relation("createdBy", fields: [creatorId], references: [id])
+  creatorId String
 
   name        String         @unique
-  description String?
+  description String         @default("A wonderful description.")
+  rules       String[]       @default(["Remember the human", "Behave like you would in real life", "Look for the original source of content", "Search for duplicates before posting", "Read the community’s rules"])
+  image       String         @default("https://utfs.io/f/eae14390-926b-448b-9d30-b1e387700399_DefaultSubreaddit.png")
   Posts       Post[]
   Subscribers Subscription[]
 
@@ -88,10 +90,11 @@ model Post {
   author       User       @relation(fields: [authorId], references: [id])
   authorId     String
 
-  title       String
-  description String?
-  PostVotes   PostVote[]
-  Comments    Comment[]
+  title     String
+  text      String     @default("")
+  image     String?
+  PostVotes PostVote[]
+  Comments  Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -105,7 +108,7 @@ model Comment {
   User      User?   @relation(fields: [userId], references: [id])
   userId    String?
 
-  text         String
+  text         String?
   replyingTo   Comment?      @relation("replyingTo", fields: [replyingToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replyingToId String?
   CommentVotes CommentVote[]
