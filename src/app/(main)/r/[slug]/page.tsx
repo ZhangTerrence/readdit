@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAuthSession } from "@/lib/auth";
 import { GoHome } from "@/components/GoHome";
-import { FaBirthdayCake } from "react-icons/fa";
+import { FaBirthdayCake, FaUser } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
@@ -92,7 +92,10 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
           <div className={"mr-10 flex w-[35rem] flex-col"}>
             <MiniCreatePost
               session={session}
-              subreadditName={subreaddit.name}
+              subreaddit={{
+                subreadditId: subreaddit.id,
+                subreadditName: subreaddit.name,
+              }}
             />
           </div>
           <div className={"flex flex-col"}>
@@ -116,11 +119,20 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
                     Created {format(subreaddit.createdAt, "MMMM d, yyyy")}
                   </p>
                 </div>
+                <div
+                  className={
+                    "mt-3 flex items-center border-b border-solid border-slate-300 pb-2"
+                  }
+                >
+                  <FaUser className={"mr-2"} />
+                  <p className={"text-gray-500"}>{members} members</p>
+                </div>
                 <Link
                   href={{
                     pathname: "/submit",
                     query: {
-                      subreaddit: subreaddit.name,
+                      subreadditId: subreaddit.id,
+                      subreadditName: subreaddit.name,
                     },
                   }}
                 >

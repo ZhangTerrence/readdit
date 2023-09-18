@@ -1,18 +1,18 @@
 "use client";
 
 import type { Session } from "next-auth";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
 type MiniCreatePostTypes = {
   session: Session | null;
-  subreadditName: string;
+  subreaddit: {
+    subreadditId: string;
+    subreadditName: string;
+  };
 };
 
 export const MiniCreatePost = (props: MiniCreatePostTypes) => {
-  const router = useRouter();
-
   {
     return props.session ? (
       <div className={"flex items-center rounded-md bg-slate-50 p-2"}>
@@ -28,7 +28,8 @@ export const MiniCreatePost = (props: MiniCreatePostTypes) => {
           href={{
             pathname: "/submit",
             query: {
-              subreaddit: props.subreadditName,
+              subreadditId: props.subreaddit.subreadditId,
+              subreadditName: props.subreaddit.subreadditName,
             },
           }}
         >

@@ -1,16 +1,14 @@
 import { FaCircleExclamation } from "react-icons/fa6";
-import EditorJS from "@editorjs/editorjs";
 import { getAuthSession } from "@/lib/auth";
 import { CreatePost } from "@/components/CreatePost";
 
 export default async function CreatePage() {
   const session = await getAuthSession();
-  // const editor = new EditorJS({
-  //   holder: "editorjs",
-  // });
 
   return (
-    <main className={"flex h-screen justify-center bg-slate-200 py-8"}>
+    <main
+      className={"flex h-fit min-h-screen justify-center bg-slate-200 py-8"}
+    >
       <CreatePost session={session} />
       <div
         className={
