@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import type { Session } from "next-auth";
-import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { IoCaretDown, IoSettings, IoExit } from "react-icons/io5";
+import Image from "next/image";
+import { useState } from "react";
+import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
+
+import type { Session } from "next-auth";
 
 type ProfileDropdownTypes = {
   session: Session;
@@ -23,13 +24,15 @@ export const ProfileDropdown = (props: ProfileDropdownTypes) => {
       >
         <div className={"mr-6 flex items-center"}>
           <Image
-            className={"mr-3 rounded-full border border-solid border-slate-950"}
+            className={
+              "m-auto block rounded-full border border-solid border-slate-950"
+            }
             src={props.session.user.image!}
             alt={"user image"}
             width={30}
             height={30}
           />
-          <p className={"text-xl"}>
+          <p className={"ml-2 text-xl"}>
             {props.session.user.name || props.session.user.username}
           </p>
         </div>
@@ -48,14 +51,14 @@ export const ProfileDropdown = (props: ProfileDropdownTypes) => {
           className={"flex w-full cursor-pointer items-center p-2"}
           onClick={() => {}}
         >
-          <IoSettings className={"ml-1 mr-5 text-xl"} />
+          <IoSettings className={"ml-1 mr-[.85rem] block text-xl"} />
           <button className={"mb-[0.15rem] text-lg"}>User Settings</button>
         </li>
         <li
           className={"flex w-full cursor-pointer items-center p-2"}
           onClick={() => signOut()}
         >
-          <IoExit className={"ml-1 mr-5 text-xl"} />
+          <IoExit className={"ml-1 mr-[.85rem] block text-xl"} />
           <button className={"mb-[0.15rem] text-lg"}>Log Out</button>
         </li>
       </ul>

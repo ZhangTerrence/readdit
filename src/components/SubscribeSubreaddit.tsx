@@ -1,10 +1,11 @@
 "use client";
 
 import type { Session } from "next-auth";
-import { SubscribeToSubreadditPayload } from "@/lib/validators/subreaddit";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+import { SubscribeToSubreadditPayload } from "@/lib/validators/subreaddit";
 
 type JoinSubreadditTypes = {
   session: Session | null;
@@ -13,8 +14,12 @@ type JoinSubreadditTypes = {
 };
 
 export const SubscribeSubreaddit = (props: JoinSubreadditTypes) => {
-  const router = useRouter();
   const [isSubscribed, toggleIsSubscribed] = useState(props.isSubscribed);
+  const router = useRouter();
+
+  useEffect(() => {
+    toggleIsSubscribed(props.isSubscribed);
+  }, [props.isSubscribed]);
 
   const joinSubreaddit = async () => {
     if (!props.session) {

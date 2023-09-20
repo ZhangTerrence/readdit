@@ -1,29 +1,30 @@
 "use client";
 
 import type { Session } from "next-auth";
-import { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { IoClose, IoInformationCircle } from "react-icons/io5";
 import { toast } from "react-toastify";
+
+import { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
 
 type CreateSubreadditProps = {
   session: Session | null;
 };
 
 export const CreateSubreaddit = (props: CreateSubreadditProps) => {
-  const modal = useRef<HTMLDialogElement | null>(null);
-  const subreadditName = useRef<HTMLInputElement | null>(null);
-  const subreadditDesc = useRef<HTMLInputElement | null>(null);
+  const modalRef = useRef<HTMLDialogElement | null>(null);
+  const subreadditNameRef = useRef<HTMLInputElement | null>(null);
+  const subreadditDescRef = useRef<HTMLInputElement | null>(null);
   const [charRemaining, setCharRemaining] = useState(21);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const closeModal = () => {
-    if (subreadditName.current) subreadditName.current.value = "";
+    if (subreadditNameRef.current) subreadditNameRef.current.value = "";
     setCharRemaining(21);
     setError(null);
-    modal.current?.close();
+    modalRef.current?.close();
   };
 
   const checkName = (input: string) => {
@@ -33,8 +34,6 @@ export const CreateSubreaddit = (props: CreateSubreadditProps) => {
       setError(
         "Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.",
       );
-    } else if (input.length === 0) {
-      setError("A community name is required");
     } else setError(null);
   };
 
@@ -44,18 +43,23 @@ export const CreateSubreaddit = (props: CreateSubreadditProps) => {
       return;
     }
 
-    if (error || !subreadditName.current?.value) {
-      toast.error("Please enter valid name.");
+    if (!subreadditNameRef.current?.value) {
+      toast.error("Name is required.");
+      return;
+    }
+
+    if (error) {
+      toast.error(error);
       return;
     }
 
     const payload: CreateSubreadditPayload = {
-      name: subreadditName.current.value,
-      description: !subreadditDesc.current
+      name: subreadditNameRef.current.value,
+      description: !subreadditDescRef.current
         ? "A wonderful description"
-        : subreadditDesc.current.value.length === 0
+        : subreadditDescRef.current.value.length === 0
         ? "A wonderful description"
-        : subreadditDesc.current.value,
+        : subreadditDescRef.current.value,
     };
 
     await fetch("/api/subreaddit", {
@@ -82,7 +86,7 @@ export const CreateSubreaddit = (props: CreateSubreadditProps) => {
         className={
           "mt-4 w-full rounded-full border border-solid border-slate-500 p-1 text-xl"
         }
-        onClick={() => modal.current?.showModal()}
+        onClick={() => modalRef.current?.showModal()}
       >
         Create Community
       </button>
@@ -90,7 +94,7 @@ export const CreateSubreaddit = (props: CreateSubreadditProps) => {
         className={
           "absolute inset-0 m-auto backdrop:bg-slate-900 backdrop:opacity-30"
         }
-        ref={modal}
+        ref={modalRef}
         open={false}
         onClick={(e) => {
           if (e.target === e.currentTarget) closeModal();
@@ -143,7 +147,7 @@ export const CreateSubreaddit = (props: CreateSubreadditProps) => {
               className={
                 "w-full border border-solid border-slate-200 px-7 py-2"
               }
-              ref={subreadditName}
+              ref={subreadditNameRef}
               type="text"
               maxLength={21}
               onChange={(e) => checkName(e.currentTarget.value)}
@@ -170,14 +174,14 @@ export const CreateSubreaddit = (props: CreateSubreadditProps) => {
           </h2>
           <input
             className={"mt-4 w-full border border-solid border-slate-200 p-2"}
-            ref={subreadditDesc}
+            ref={subreadditDescRef}
             type="text"
             placeholder={"A wonderful description."}
           />
           <div className={"mt-8 flex justify-end"}>
             <button
               className={
-                "mr-4 rounded-md border border-solid border-slate-950 bg-slate-100 p-3 text-lg"
+                "mr-4 rounded-md border border-solid border-slate-950 bg-slate-200 p-3 text-lg"
               }
               onClick={(e) => {
                 e.preventDefault();

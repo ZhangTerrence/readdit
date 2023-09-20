@@ -15,13 +15,17 @@ type MiniCreatePostTypes = {
 export const MiniCreatePost = (props: MiniCreatePostTypes) => {
   {
     return props.session ? (
-      <div className={"flex items-center rounded-md bg-slate-50 p-2"}>
+      <div
+        className={
+          "flex items-center rounded-md border border-solid border-slate-500 bg-gray-200 p-3"
+        }
+      >
         <Image
-          className={"mr-2 rounded-full border border-solid border-slate-950"}
+          className={"mr-3 rounded-full border border-solid border-slate-500"}
           src={props.session.user.image!}
           alt={"user image"}
-          width={45}
-          height={45}
+          width={40}
+          height={40}
         />
         <Link
           className={"grow"}
@@ -35,7 +39,7 @@ export const MiniCreatePost = (props: MiniCreatePostTypes) => {
         >
           <input
             className={
-              "w-full rounded-md bg-slate-200 py-2 pl-2 text-lg outline-none"
+              "w-full rounded-md border border-solid border-slate-500 bg-slate-50 py-2 pl-2 text-lg outline-none"
             }
             type="text"
             placeholder={"Create Post"}

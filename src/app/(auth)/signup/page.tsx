@@ -1,19 +1,18 @@
 import Link from "next/link";
-import { GoHome } from "@/components/GoHome";
+
 import { AuthProviders } from "@/components/AuthProviders";
+import { GoHome } from "@/components/GoHome";
 
 export default async function LoginPage() {
   return (
-    <main
-      className={"relative flex h-screen w-screen items-center bg-slate-50"}
-    >
+    <main className={"relative flex h-screen w-screen bg-slate-50"}>
       <GoHome />
       <form
         className={
           "ml-[20rem] flex h-full grow flex-col items-start justify-center border-l border-solid border-slate-950 bg-gradient-to-br  from-slate-50 to-slate-300 pl-12"
         }
       >
-        <h1 className={"mb-2 text-4xl"}>SIGN UP</h1>
+        <h1 className={"mb-2 text-4xl underline"}>SIGN UP</h1>
         <p className={"mb-6 text-lg"}>
           By continuing, you are creating a Readdit account and agree to our
           <a href=""> User Agreement</a> and

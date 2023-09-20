@@ -1,7 +1,8 @@
-import { getAuthSession } from "@/lib/auth";
-import { SubreadditValidator } from "@/lib/validators/subreaddit";
-import prisma from "@/lib/prisma";
 import { z } from "zod";
+
+import { getAuthSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { SubreadditValidator } from "@/lib/validators/subreaddit";
 
 export async function POST(req: Request) {
   try {

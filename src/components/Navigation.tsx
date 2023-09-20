@@ -1,6 +1,8 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
 import { getAuthSession } from "@/lib/auth";
+
 import { ProfileDropdown } from "./ProfileDropdown";
 import { Searchbar } from "./Searchbar";
 
@@ -15,7 +17,7 @@ export const Navigation = async () => {
     >
       <Link className={"flex items-center"} href={"/"}>
         <Image
-          className={"mr-4"}
+          className={"mr-4 block"}
           src={"/readdit.png"}
           alt={"readdit"}
           width={25}

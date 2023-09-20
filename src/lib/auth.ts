@@ -1,9 +1,11 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import prisma from "./prisma";
-import { AuthOptions, getServerSession } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
 import { nanoid } from "nanoid";
+import { getServerSession, AuthOptions } from "next-auth";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+
+import prisma from "./prisma";
 
 const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),

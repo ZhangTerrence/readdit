@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { GoHome } from "@/components/GoHome";
+
 import { AuthProviders } from "@/components/AuthProviders";
+import { GoHome } from "@/components/GoHome";
 
 export default async function SigninPage() {
   return (
-    <main
-      className={"relative flex h-screen w-screen items-center bg-slate-50"}
-    >
+    <main className={"relative flex h-screen w-screen bg-slate-50"}>
       <GoHome />
       <form
         className={

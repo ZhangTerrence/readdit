@@ -1,7 +1,7 @@
 "use client";
 
-import { IoLogoGoogle, IoLogoGithub } from "react-icons/io5";
 import { signIn } from "next-auth/react";
+import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 
 export const AuthProviders = () => {
   const handleProvider = async (

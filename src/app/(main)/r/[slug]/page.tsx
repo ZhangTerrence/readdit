@@ -1,13 +1,15 @@
-import { notFound } from "next/navigation";
-import { getAuthSession } from "@/lib/auth";
-import { GoHome } from "@/components/GoHome";
-import { FaBirthdayCake, FaUser } from "react-icons/fa";
+import format from "date-fns/format";
 import Image from "next/image";
 import Link from "next/link";
-import prisma from "@/lib/prisma";
-import format from "date-fns/format";
+import { notFound } from "next/navigation";
+import { FaBirthdayCake, FaUser } from "react-icons/fa";
+
+import { GoHome } from "@/components/GoHome";
 import { MiniCreatePost } from "@/components/MiniCreatePost";
+import { PostFeed } from "@/components/PostFeed";
 import { SubscribeSubreaddit } from "@/components/SubscribeSubreaddit";
+import { getAuthSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 
 type SubreadditPageProps = {
   params: {
@@ -57,10 +59,14 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
   return (
     <div className={"relative"}>
       <GoHome />
-      <main className={"flex flex-col items-center bg-slate-200"}>
+      <main
+        className={
+          "flex h-fit min-h-screen flex-col items-center bg-slate-200 py-8"
+        }
+      >
         <div
           className={
-            "flex w-[60rem] border-b-[2px] border-solid border-slate-950 pb-3 pt-6"
+            "flex w-[75rem] border-b-[2px] border-solid border-slate-950 pb-3"
           }
         >
           <div className={"flex w-full items-center justify-between"}>
@@ -89,13 +95,18 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
           </div>
         </div>
         <div className={"flex py-8"}>
-          <div className={"mr-10 flex w-[35rem] flex-col"}>
+          <div className={"mr-10 flex w-[50rem] flex-col"}>
             <MiniCreatePost
               session={session}
               subreaddit={{
                 subreadditId: subreaddit.id,
                 subreadditName: subreaddit.name,
               }}
+            />
+            <PostFeed
+              session={session}
+              posts={subreaddit.Posts}
+              subreadditName={subreaddit.name}
             />
           </div>
           <div className={"flex flex-col"}>
@@ -111,6 +122,14 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
                 <p>{subreaddit.description}</p>
                 <div
                   className={
+                    "mt-3 flex items-center border-b border-t border-solid border-slate-300 py-2"
+                  }
+                >
+                  <FaUser className={"mr-2"} />
+                  <p className={"text-gray-500"}>{members} members</p>
+                </div>
+                <div
+                  className={
                     "mt-3 flex items-center border-b border-solid border-slate-300 pb-2"
                   }
                 >
@@ -118,14 +137,6 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
                   <p className={"text-gray-500"}>
                     Created {format(subreaddit.createdAt, "MMMM d, yyyy")}
                   </p>
-                </div>
-                <div
-                  className={
-                    "mt-3 flex items-center border-b border-solid border-slate-300 pb-2"
-                  }
-                >
-                  <FaUser className={"mr-2"} />
-                  <p className={"text-gray-500"}>{members} members</p>
                 </div>
                 <Link
                   href={{

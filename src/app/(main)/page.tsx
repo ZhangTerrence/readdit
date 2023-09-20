@@ -1,13 +1,16 @@
 import Link from "next/link";
+import { IoChatbox, IoHome } from "react-icons/io5";
+
 import { CreateSubreaddit } from "@/components/CreateSubreaddit";
 import { getAuthSession } from "@/lib/auth";
-import { IoHome, IoChatbox } from "react-icons/io5";
 
 export default async function HomePage() {
   const session = await getAuthSession();
 
   return (
-    <main className={"flex justify-center bg-slate-200 py-8"}>
+    <main
+      className={"flex h-fit min-h-screen justify-center bg-slate-200 py-8"}
+    >
       <div
         className={
           "mr-12 w-[50rem] rounded-md border border-solid border-slate-500 bg-white p-8"

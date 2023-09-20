@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
 
 export const Searchbar = () => {

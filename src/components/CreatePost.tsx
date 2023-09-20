@@ -1,49 +1,37 @@
 "use client";
 
 import type { Session } from "next-auth";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type EditorJS from "@editorjs/editorjs";
-import { uploadFiles } from "@/lib/uploadthing";
 import { IoPencil } from "react-icons/io5";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+
+import { uploadFiles } from "@/lib/uploadthing";
 import { CreatePostPayload } from "@/lib/validators/post";
 
-type CreatePostProps = {
-  session: Session | null;
-};
+import type EditorJS from "@editorjs/editorjs";
 
 type Subreaddit = {
   id: string | null;
   name: string | null;
 };
 
+type CreatePostProps = {
+  session: Session | null;
+};
+
 export const CreatePost = (props: CreatePostProps) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const editorRef = useRef<EditorJS | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const [isMounted, toggleIsMounted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [titleCharRemaining, setTitleCharRemaining] = useState(128);
   const [subreaddit, setSubreaddit] = useState<Subreaddit>({
     id: null,
     name: null,
   });
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      toggleIsMounted(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    setSubreaddit({
-      id: searchParams.get("subreadditId"),
-      name: searchParams.get("subreadditName"),
-    });
-  }, [searchParams]);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const editor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
@@ -62,7 +50,7 @@ export const CreatePost = (props: CreatePostProps) => {
         placeholder: "Write your post here...",
         onReady: () => (editorRef.current = editor),
         inlineToolbar: true,
-        minHeight: 20,
+        minHeight: 10,
         data: { blocks: [] },
         tools: {
           header: {
@@ -111,16 +99,25 @@ export const CreatePost = (props: CreatePostProps) => {
   }, []);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      toggleIsMounted(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setSubreaddit({
+      id: searchParams.get("subreadditId"),
+      name: searchParams.get("subreadditName"),
+    });
+  }, [searchParams]);
+
+  useEffect(() => {
     const initEditor = async () => {
       await editor();
-
-      setTimeout(() => {});
     };
 
     if (isMounted) {
       initEditor();
-
-      return () => {};
     }
   }, [isMounted, editor]);
 
@@ -134,6 +131,15 @@ export const CreatePost = (props: CreatePostProps) => {
     if (input.length < 3) {
       setError("Title must be greater than 3 characters.");
     } else setError(null);
+  };
+
+  const cancel = () => {
+    if (!subreaddit.name) {
+      router.push("/");
+      return;
+    }
+
+    router.push(`/r/${subreaddit.name}`);
   };
 
   const createPost = async () => {
@@ -177,6 +183,9 @@ export const CreatePost = (props: CreatePostProps) => {
       } else {
         const success = await response.text();
         toast.success(success);
+        setTimeout(() => {
+          router.push(`/r/${subreaddit.name}`);
+        }, 3000);
       }
     });
   };
@@ -191,17 +200,20 @@ export const CreatePost = (props: CreatePostProps) => {
         <IoPencil className={"-mt-3 mr-2"} />
         <h1 className={"pb-4 font-bold"}>Create a post</h1>
       </div>
-      <div className={"mt-4 w-1/2 text-lg"}>
+      <div
+        className={
+          "mt-4 w-1/2 rounded-md border border-solid border-slate-500 text-lg"
+        }
+      >
         <input
           className={"w-full rounded-md p-2"}
           defaultValue={subreaddit.name ? subreaddit.name : undefined}
           type="text"
         />
-        <button></button>
       </div>
       <div
         className={
-          "mt-4 flex w-[50rem] flex-col border border-solid border-slate-500 bg-slate-50 p-4"
+          "mt-4 flex w-[50rem] flex-col rounded-md border border-solid border-slate-500 bg-slate-50 p-4"
         }
       >
         <div
@@ -210,11 +222,13 @@ export const CreatePost = (props: CreatePostProps) => {
           }
         >
           <input
-            className={"w-full bg-transparent py-2 pl-3 pr-16 text-2xl"}
-            type="text"
+            className={
+              "w-full bg-transparent py-2 pl-3 pr-16 text-2xl outline-none"
+            }
             ref={titleRef}
-            maxLength={128}
+            type="text"
             placeholder={"Title"}
+            maxLength={128}
             onChange={(e) => checkTitle(e.currentTarget.value)}
           />
           <p
@@ -232,17 +246,30 @@ export const CreatePost = (props: CreatePostProps) => {
         >
           <div id={"editor"} className={"break-words pl-4"}></div>
         </div>
-        <button
-          className={
-            "w-fit self-end rounded-full bg-gray-700 px-6 py-[0.65rem] text-sm leading-normal text-white"
-          }
-          onClick={(e) => {
-            e.preventDefault();
-            createPost();
-          }}
-        >
-          Post
-        </button>
+        <div className={"flex self-end"}>
+          <button
+            className={
+              "mr-4 w-fit self-end rounded-full border border-solid border-slate-500 bg-slate-200 px-6 py-[0.65rem] text-sm leading-normal text-slate-950"
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              cancel();
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            className={
+              "w-fit self-end rounded-full bg-gray-700 px-6 py-[0.65rem] text-sm leading-normal text-white"
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              createPost();
+            }}
+          >
+            Post
+          </button>
+        </div>
       </div>
     </div>
   );

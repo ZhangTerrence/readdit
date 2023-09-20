@@ -1,6 +1,7 @@
 import { FaCircleExclamation } from "react-icons/fa6";
-import { getAuthSession } from "@/lib/auth";
+
 import { CreatePost } from "@/components/CreatePost";
+import { getAuthSession } from "@/lib/auth";
 
 export default async function CreatePage() {
   const session = await getAuthSession();
