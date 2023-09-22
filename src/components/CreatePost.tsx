@@ -1,37 +1,28 @@
 "use client";
 
-import type { Session } from "next-auth";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IoPencil } from "react-icons/io5";
 import { toast } from "react-toastify";
 
 import { uploadFiles } from "@/lib/uploadthing";
-import { CreatePostPayload } from "@/lib/validators/post";
 
 import type EditorJS from "@editorjs/editorjs";
+import type { Session } from "next-auth";
+import type { Subreaddit } from "@prisma/client";
+import type { CreatePostPayload } from "@/lib/validators/post";
 
-type Subreaddit = {
-  id: string | null;
-  name: string | null;
-};
-
-type CreatePostProps = {
+export const CreatePost = (props: {
   session: Session | null;
-};
-
-export const CreatePost = (props: CreatePostProps) => {
+  subreaddit: Subreaddit | null;
+}) => {
   const editorRef = useRef<EditorJS | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const [isMounted, toggleIsMounted] = useState(false);
   const [titleCharRemaining, setTitleCharRemaining] = useState(128);
-  const [subreaddit, setSubreaddit] = useState<Subreaddit>({
-    id: null,
-    name: null,
-  });
+  const [subreaddit, setSubreaddit] = useState<Subreaddit | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const editor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
@@ -105,11 +96,12 @@ export const CreatePost = (props: CreatePostProps) => {
   }, []);
 
   useEffect(() => {
-    setSubreaddit({
-      id: searchParams.get("subreadditId"),
-      name: searchParams.get("subreadditName"),
-    });
-  }, [searchParams]);
+    if (props.subreaddit) {
+      setSubreaddit(props.subreaddit);
+    } else {
+      setSubreaddit(null);
+    }
+  }, [props.subreaddit]);
 
   useEffect(() => {
     const initEditor = async () => {
@@ -134,7 +126,7 @@ export const CreatePost = (props: CreatePostProps) => {
   };
 
   const cancel = () => {
-    if (!subreaddit.name) {
+    if (!subreaddit) {
       router.push("/");
       return;
     }
@@ -157,7 +149,7 @@ export const CreatePost = (props: CreatePostProps) => {
       return;
     }
 
-    if (!subreaddit.id) {
+    if (!subreaddit) {
       toast.error("No subreaddit selected.");
       return;
     }
@@ -207,7 +199,7 @@ export const CreatePost = (props: CreatePostProps) => {
       >
         <input
           className={"w-full rounded-md p-2"}
-          defaultValue={subreaddit.name ? subreaddit.name : undefined}
+          defaultValue={subreaddit ? subreaddit.name : undefined}
           type="text"
         />
       </div>

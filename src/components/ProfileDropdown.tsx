@@ -18,7 +18,7 @@ export const ProfileDropdown = (props: ProfileDropdownTypes) => {
     <div className={"relative flex items-center rounded-md"}>
       <div
         className={
-          "flex cursor-pointer items-center rounded-md border border-solid border-slate-200 p-2"
+          "flex cursor-pointer items-center rounded-md border border-solid border-slate-300 p-2"
         }
         onClick={() => toggleDropdown(!dropdown)}
       >
@@ -32,9 +32,7 @@ export const ProfileDropdown = (props: ProfileDropdownTypes) => {
             width={30}
             height={30}
           />
-          <p className={"ml-2 text-xl"}>
-            {props.session.user.name || props.session.user.username}
-          </p>
+          <p className={"ml-2 text-xl"}>{props.session.user.username}</p>
         </div>
         <IoCaretDown
           className={`${
@@ -45,7 +43,7 @@ export const ProfileDropdown = (props: ProfileDropdownTypes) => {
       <ul
         className={`${
           dropdown ? "block" : "hidden"
-        } absolute top-full w-full rounded-md border border-solid border-slate-200 bg-white`}
+        } absolute top-full w-full rounded-md border border-solid border-slate-300 bg-white`}
       >
         <li
           className={"flex w-full cursor-pointer items-center p-2"}

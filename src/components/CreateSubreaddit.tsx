@@ -1,18 +1,14 @@
 "use client";
 
-import type { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { IoClose, IoInformationCircle } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-import { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
+import type { Session } from "next-auth";
+import type { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
 
-type CreateSubreadditProps = {
-  session: Session | null;
-};
-
-export const CreateSubreaddit = (props: CreateSubreadditProps) => {
+export const CreateSubreaddit = (props: { session: Session | null }) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const subreadditNameRef = useRef<HTMLInputElement | null>(null);
   const subreadditDescRef = useRef<HTMLInputElement | null>(null);

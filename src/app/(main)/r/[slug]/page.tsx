@@ -11,13 +11,13 @@ import { SubscribeSubreaddit } from "@/components/SubscribeSubreaddit";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-type SubreadditPageProps = {
+export default async function SubreadditPage({
+  params,
+}: {
   params: {
     slug: string;
   };
-};
-
-export default async function SubreadditPage({ params }: SubreadditPageProps) {
+}) {
   const session = await getAuthSession();
 
   const subreaddit = await prisma.subreaddit.findFirst({
@@ -32,6 +32,7 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
         include: {
           author: true,
           PostVotes: true,
+          Comments: true,
         },
       },
     },
@@ -88,25 +89,20 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
             {subreaddit.creatorId !== session?.user.id ? (
               <SubscribeSubreaddit
                 session={session}
-                isSubscribed={isSubscribed}
                 subreadditId={subreaddit.id}
+                isSubscribed={isSubscribed}
               />
             ) : null}
           </div>
         </div>
         <div className={"flex py-8"}>
           <div className={"mr-10 flex w-[50rem] flex-col"}>
-            <MiniCreatePost
-              session={session}
-              subreaddit={{
-                subreadditId: subreaddit.id,
-                subreadditName: subreaddit.name,
-              }}
-            />
+            <MiniCreatePost session={session} subreaddit={subreaddit} />
             <PostFeed
               session={session}
-              posts={subreaddit.Posts}
+              subreadditId={subreaddit.id}
               subreadditName={subreaddit.name}
+              posts={subreaddit.Posts}
             />
           </div>
           <div className={"flex flex-col"}>
@@ -140,11 +136,7 @@ export default async function SubreadditPage({ params }: SubreadditPageProps) {
                 </div>
                 <Link
                   href={{
-                    pathname: "/submit",
-                    query: {
-                      subreadditId: subreaddit.id,
-                      subreadditName: subreaddit.name,
-                    },
+                    pathname: `/submit/${subreaddit.id}`,
                   }}
                 >
                   <button

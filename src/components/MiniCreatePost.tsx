@@ -1,18 +1,15 @@
 "use client";
 
-import type { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 
-type MiniCreatePostTypes = {
-  session: Session | null;
-  subreaddit: {
-    subreadditId: string;
-    subreadditName: string;
-  };
-};
+import type { Session } from "next-auth";
+import type { Subreaddit } from "@prisma/client";
 
-export const MiniCreatePost = (props: MiniCreatePostTypes) => {
+export const MiniCreatePost = (props: {
+  session: Session | null;
+  subreaddit: Subreaddit;
+}) => {
   {
     return props.session ? (
       <div
@@ -30,11 +27,7 @@ export const MiniCreatePost = (props: MiniCreatePostTypes) => {
         <Link
           className={"grow"}
           href={{
-            pathname: "/submit",
-            query: {
-              subreadditId: props.subreaddit.subreadditId,
-              subreadditName: props.subreaddit.subreadditName,
-            },
+            pathname: `/submit/${props.subreaddit.id}`,
           }}
         >
           <input

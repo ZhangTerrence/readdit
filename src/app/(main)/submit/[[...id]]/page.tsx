@@ -2,15 +2,42 @@ import { FaCircleExclamation } from "react-icons/fa6";
 
 import { CreatePost } from "@/components/CreatePost";
 import { getAuthSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 
-export default async function CreatePage() {
+export default async function CreatePage({
+  params,
+}: {
+  params: {
+    id: string;
+  };
+}) {
   const session = await getAuthSession();
+
+  const subreaddit =
+    params.id === undefined
+      ? null
+      : await prisma.subreaddit.findFirst({
+          where: {
+            id: {
+              endsWith: params.id[0],
+              mode: "insensitive",
+            },
+          },
+          include: {
+            Posts: {
+              include: {
+                author: true,
+                PostVotes: true,
+              },
+            },
+          },
+        });
 
   return (
     <main
       className={"flex h-fit min-h-screen justify-center bg-slate-200 py-8"}
     >
-      <CreatePost session={session} />
+      <CreatePost session={session} subreaddit={subreaddit} />
       <div
         className={
           "h-fit rounded-md border border-solid border-slate-500 bg-slate-50 p-4 px-6"

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PostValidator = z.object({
+export const CreatePostValidator = z.object({
   title: z
     .string()
     .min(3, {
@@ -13,4 +13,10 @@ export const PostValidator = z.object({
   content: z.any(),
 });
 
-export type CreatePostPayload = z.infer<typeof PostValidator>;
+export const DeletePostValidator = z.object({
+  postId: z.string(),
+  subreadditId: z.string(),
+});
+
+export type CreatePostPayload = z.infer<typeof CreatePostValidator>;
+export type DeletePostPayload = z.infer<typeof DeletePostValidator>;
