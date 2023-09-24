@@ -1,8 +1,10 @@
 import { z } from "zod";
-
+import {
+  CreateSubscriptionValidator,
+  DeleteSubscriptionValidator,
+} from "@/lib/validators/subscribe";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { SubreadditSubscriptionValidator } from "@/lib/validators/subreaddit";
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +16,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { subreadditId } = SubreadditSubscriptionValidator.parse(body);
+    const { subreadditId } = CreateSubscriptionValidator.parse(body);
 
     const subscriptionExists = await prisma.subscription.findFirst({
       where: {
@@ -61,7 +63,7 @@ export async function DELETE(req: Request) {
 
     const body = await req.json();
 
-    const { subreadditId } = SubreadditSubscriptionValidator.parse(body);
+    const { subreadditId } = DeleteSubscriptionValidator.parse(body);
 
     const subscriptionExists = await prisma.subscription.findFirst({
       where: {

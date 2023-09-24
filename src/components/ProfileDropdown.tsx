@@ -1,18 +1,17 @@
 "use client";
 
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import { useState } from "react";
-import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
-
 import type { Session } from "next-auth";
+import { useState } from "react";
+import Image from "next/image";
+import { signOut } from "next-auth/react";
+import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
 
 type ProfileDropdownTypes = {
   session: Session;
 };
 
 export const ProfileDropdown = (props: ProfileDropdownTypes) => {
-  const [dropdown, toggleDropdown] = useState(false);
+  const [dropdown, setDropdown] = useState(false);
 
   return (
     <div className={"relative flex items-center rounded-md"}>
@@ -20,9 +19,9 @@ export const ProfileDropdown = (props: ProfileDropdownTypes) => {
         className={
           "flex cursor-pointer items-center rounded-md border border-solid border-slate-300 p-2"
         }
-        onClick={() => toggleDropdown(!dropdown)}
+        onClick={() => setDropdown(!dropdown)}
       >
-        <div className={"mr-6 flex items-center"}>
+        <div className={"mr-2 flex items-center"}>
           <Image
             className={
               "m-auto block rounded-full border border-solid border-slate-950"

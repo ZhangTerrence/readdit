@@ -1,28 +1,37 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import type EditorJS from "@editorjs/editorjs";
+import type { Session } from "next-auth";
+import type { CreatePostPayload } from "@/lib/validators/post";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { uploadFiles } from "@/lib/uploadthing";
 import { IoPencil } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-import { uploadFiles } from "@/lib/uploadthing";
-
-import type EditorJS from "@editorjs/editorjs";
-import type { Session } from "next-auth";
-import type { Subreaddit } from "@prisma/client";
-import type { CreatePostPayload } from "@/lib/validators/post";
-
 export const CreatePost = (props: {
   session: Session | null;
-  subreaddit: Subreaddit | null;
+  subreadditId: string | undefined;
+  subreadditName: string | undefined;
 }) => {
   const editorRef = useRef<EditorJS | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
-  const [isMounted, toggleIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [subreadditId, setSubreadditId] = useState<string | undefined>(
+    undefined,
+  );
+  const [subreadditName, setSubreadditName] = useState<string | undefined>(
+    undefined,
+  );
   const [titleCharRemaining, setTitleCharRemaining] = useState(128);
-  const [subreaddit, setSubreaddit] = useState<Subreaddit | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [titleError, setTitleError] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMounted(true);
+    }
+  }, []);
 
   const editor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
@@ -66,7 +75,6 @@ export const CreatePost = (props: {
                     files: [file],
                     endpoint: "imageUploader",
                   });
-
                   return {
                     success: 1,
                     file: {
@@ -90,26 +98,17 @@ export const CreatePost = (props: {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      toggleIsMounted(true);
-    }
-  }, []);
+    setSubreadditId(props.subreadditId);
+    setSubreadditName(props.subreadditName);
+  }, [props.subreadditId, props.subreadditName]);
 
   useEffect(() => {
-    if (props.subreaddit) {
-      setSubreaddit(props.subreaddit);
-    } else {
-      setSubreaddit(null);
-    }
-  }, [props.subreaddit]);
-
-  useEffect(() => {
-    const initEditor = async () => {
+    const initializeEditor = async () => {
       await editor();
     };
 
     if (isMounted) {
-      initEditor();
+      initializeEditor();
     }
   }, [isMounted, editor]);
 
@@ -118,20 +117,18 @@ export const CreatePost = (props: {
   }
 
   const checkTitle = (input: string) => {
-    setTitleCharRemaining(128 - input.length);
-
     if (input.length < 3) {
-      setError("Title must be greater than 3 characters.");
-    } else setError(null);
+      setTitleError("Title must be greater than 3 characters.");
+    } else setTitleError(null);
   };
 
-  const cancel = () => {
-    if (!subreaddit) {
+  const cancelCreatePost = () => {
+    if (!(subreadditId && subreadditName)) {
       router.push("/");
       return;
     }
 
-    router.push(`/r/${subreaddit.name}`);
+    router.push(`/r/${subreadditName}`);
   };
 
   const createPost = async () => {
@@ -144,12 +141,12 @@ export const CreatePost = (props: {
       return;
     }
 
-    if (error) {
-      toast.error(error);
+    if (titleError) {
+      toast.error(titleError);
       return;
     }
 
-    if (!subreaddit) {
+    if (!(subreadditId && subreadditName)) {
       toast.error("No subreaddit selected.");
       return;
     }
@@ -159,7 +156,7 @@ export const CreatePost = (props: {
     const payload: CreatePostPayload = {
       title: titleRef.current?.value,
       content: blocks,
-      subreadditId: subreaddit.id,
+      subreadditId,
     };
 
     await fetch("/api/post", {
@@ -176,8 +173,8 @@ export const CreatePost = (props: {
         const success = await response.text();
         toast.success(success);
         setTimeout(() => {
-          router.push(`/r/${subreaddit.name}`);
-        }, 3000);
+          router.push(`/r/${subreadditName}`);
+        }, 5000);
       }
     });
   };
@@ -199,7 +196,7 @@ export const CreatePost = (props: {
       >
         <input
           className={"w-full rounded-md p-2"}
-          defaultValue={subreaddit ? subreaddit.name : undefined}
+          defaultValue={subreadditName}
           type="text"
         />
       </div>
@@ -221,7 +218,10 @@ export const CreatePost = (props: {
             type="text"
             placeholder={"Title"}
             maxLength={128}
-            onChange={(e) => checkTitle(e.currentTarget.value)}
+            onChange={(e) => {
+              setTitleCharRemaining(128 - e.currentTarget.value.length);
+              checkTitle(e.currentTarget.value);
+            }}
           />
           <p
             className={`${
@@ -245,7 +245,7 @@ export const CreatePost = (props: {
             }
             onClick={(e) => {
               e.preventDefault();
-              cancel();
+              cancelCreatePost();
             }}
           >
             Cancel

@@ -1,36 +1,35 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { IoClose, IoInformationCircle } from "react-icons/io5";
-import { toast } from "react-toastify";
-
 import type { Session } from "next-auth";
 import type { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { IoClose, IoInformationCircle } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 export const CreateSubreaddit = (props: { session: Session | null }) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const subreadditNameRef = useRef<HTMLInputElement | null>(null);
   const subreadditDescRef = useRef<HTMLInputElement | null>(null);
-  const [charRemaining, setCharRemaining] = useState(21);
-  const [error, setError] = useState<string | null>(null);
+  const [nameCharRemaining, setNameCharRemaining] = useState(21);
+  const [nameError, setNameError] = useState<string | null>(null);
   const router = useRouter();
 
   const closeModal = () => {
-    if (subreadditNameRef.current) subreadditNameRef.current.value = "";
-    setCharRemaining(21);
-    setError(null);
+    if (subreadditNameRef.current) {
+      subreadditNameRef.current.value = "";
+    }
+    setNameCharRemaining(21);
+    setNameError(null);
     modalRef.current?.close();
   };
 
   const checkName = (input: string) => {
-    setCharRemaining(21 - input.length);
-
     if (!input.match(/^[a-zA-Z0-9_]*$/) || input.length < 3) {
-      setError(
+      setNameError(
         "Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.",
       );
-    } else setError(null);
+    } else setNameError(null);
   };
 
   const createSubreaddit = async () => {
@@ -44,8 +43,8 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
       return;
     }
 
-    if (error) {
-      toast.error(error);
+    if (nameError) {
+      toast.error(nameError);
       return;
     }
 
@@ -146,7 +145,10 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
               ref={subreadditNameRef}
               type="text"
               maxLength={21}
-              onChange={(e) => checkName(e.currentTarget.value)}
+              onChange={(e) => {
+                setNameCharRemaining(21 - e.currentTarget.value.length);
+                checkName(e.currentTarget.value);
+              }}
               onKeyDown={(e) => {
                 if (e.code === "Enter") {
                   e.preventDefault();
@@ -157,13 +159,13 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
           </div>
           <p
             className={`${
-              charRemaining === 0 ? "text-red-600" : ""
+              nameCharRemaining === 0 ? "text-red-600" : ""
             } mt-4 text-sm`}
           >
-            {charRemaining} Characters remaining
+            {nameCharRemaining} Characters remaining
           </p>
-          {error ? (
-            <p className={"mt-2 text-sm text-red-600"}>{error}</p>
+          {nameError ? (
+            <p className={"mt-2 text-sm text-red-600"}>{nameError}</p>
           ) : null}
           <h2 className={"mt-4 flex items-center text-xl"}>
             Description <p className={"ml-1 text-xs italic"}>(Optional)</p>

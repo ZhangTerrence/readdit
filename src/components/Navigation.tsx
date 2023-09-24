@@ -1,10 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-
-import { getAuthSession } from "@/lib/auth";
-
 import { ProfileDropdown } from "./ProfileDropdown";
 import { Searchbar } from "./Searchbar";
+import { getAuthSession } from "@/lib/auth";
 
 export const Navigation = async () => {
   const session = await getAuthSession();

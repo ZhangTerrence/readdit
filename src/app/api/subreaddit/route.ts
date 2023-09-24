@@ -1,8 +1,7 @@
 import { z } from "zod";
-
+import { CreateSubreadditValidator } from "@/lib/validators/subreaddit";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { SubreadditValidator } from "@/lib/validators/subreaddit";
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +13,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { name, description } = SubreadditValidator.parse(body);
+    const { name, description } = CreateSubreadditValidator.parse(body);
 
     const subreadditExists = await prisma.subreaddit.findFirst({
       where: {
@@ -31,8 +30,8 @@ export async function POST(req: Request) {
 
     const subreaddit = await prisma.subreaddit.create({
       data: {
-        name,
         creatorId: session.user.id,
+        name,
         description,
       },
     });

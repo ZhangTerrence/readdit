@@ -1,11 +1,35 @@
 import Link from "next/link";
-import { IoChatbox, IoHome } from "react-icons/io5";
-
 import { CreateSubreaddit } from "@/components/CreateSubreaddit";
 import { getAuthSession } from "@/lib/auth";
+import { IoChatbox, IoHome } from "react-icons/io5";
+import { PostFeed } from "@/components/PostFeed";
+import prisma from "@/lib/prisma";
 
 export default async function HomePage() {
   const session = await getAuthSession();
+
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+      subreaddit: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      PostVotes: true,
+      Comments: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 10,
+  });
 
   return (
     <main
@@ -13,7 +37,7 @@ export default async function HomePage() {
     >
       <div
         className={
-          "mr-12 w-[50rem] rounded-md border border-solid border-slate-500 bg-white p-8"
+          "mr-12 w-[50rem] rounded-md border border-solid border-slate-500 bg-white px-8 py-6"
         }
       >
         <div
@@ -24,6 +48,7 @@ export default async function HomePage() {
           <IoChatbox className={"mr-4 mt-1"} />
           <h1>Your Feed</h1>
         </div>
+        <PostFeed type={"multiple"} posts={posts} />
       </div>
       <div
         className={

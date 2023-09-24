@@ -1,11 +1,10 @@
 import { z } from "zod";
-
-import { getAuthSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
 import {
   CreatePostValidator,
   DeletePostValidator,
 } from "@/lib/validators/post";
+import { getAuthSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -30,17 +29,17 @@ export async function POST(req: Request) {
     });
 
     if (!subscriptionExists) {
-      return new Response("Must be subscribed to post.", {
+      return new Response("Must be subscribed to subreaddit.", {
         status: 400,
       });
     }
 
     await prisma.post.create({
       data: {
+        subreadditId,
+        authorId: session.user.id,
         title,
         content,
-        authorId: session.user.id,
-        subreadditId,
       },
     });
 
@@ -73,26 +72,23 @@ export async function DELETE(req: Request) {
         subreadditId,
         userId: session.user.id,
       },
-      include: {
-        subreaddit: true,
-      },
     });
 
     if (!subscriptionExists) {
-      return new Response("Must be subscribed to post.", {
+      return new Response("Must be subscribed to subreaddit.", {
         status: 400,
       });
     }
 
-    const deletedPost = await prisma.post.delete({
+    await prisma.post.delete({
       where: {
-        id: postId,
         subreadditId,
         authorId: session.user.id,
+        id: postId,
       },
     });
 
-    return new Response(`Successfully deleted ${deletedPost.title}`);
+    return new Response(`Successfully deleted post.`);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });

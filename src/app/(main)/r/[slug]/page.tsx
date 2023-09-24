@@ -1,15 +1,14 @@
-import format from "date-fns/format";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FaBirthdayCake, FaUser } from "react-icons/fa";
-
-import { GoHome } from "@/components/GoHome";
+import format from "date-fns/format";
+import { HomeButton } from "@/components/HomeButton";
 import { MiniCreatePost } from "@/components/MiniCreatePost";
 import { PostFeed } from "@/components/PostFeed";
 import { SubscribeSubreaddit } from "@/components/SubscribeSubreaddit";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { FaBirthdayCake, FaUser } from "react-icons/fa";
 
 export default async function SubreadditPage({
   params,
@@ -30,7 +29,12 @@ export default async function SubreadditPage({
     include: {
       Posts: {
         include: {
-          author: true,
+          author: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
           PostVotes: true,
           Comments: true,
         },
@@ -43,15 +47,14 @@ export default async function SubreadditPage({
   const subscription = session?.user
     ? await prisma.subscription.findFirst({
         where: {
-          subreadditId: subreaddit.id,
           userId: session.user.id,
+          subreadditId: subreaddit.id,
         },
       })
     : null;
-
   const isSubscribed = !!subscription;
 
-  const members = await prisma.subscription.count({
+  const subscribers = await prisma.subscription.count({
     where: {
       subreadditId: subreaddit.id,
     },
@@ -59,7 +62,7 @@ export default async function SubreadditPage({
 
   return (
     <div className={"relative"}>
-      <GoHome />
+      <HomeButton />
       <main
         className={
           "flex h-fit min-h-screen flex-col items-center bg-slate-200 py-8"
@@ -97,12 +100,11 @@ export default async function SubreadditPage({
         </div>
         <div className={"flex py-8"}>
           <div className={"mr-10 flex w-[50rem] flex-col"}>
-            <MiniCreatePost session={session} subreaddit={subreaddit} />
+            <MiniCreatePost session={session} subreadditId={subreaddit.id} />
             <PostFeed
-              session={session}
-              subreadditId={subreaddit.id}
-              subreadditName={subreaddit.name}
+              type={"single"}
               posts={subreaddit.Posts}
+              subreaddit={{ id: subreaddit.id, name: subreaddit.name }}
             />
           </div>
           <div className={"flex flex-col"}>
@@ -122,7 +124,7 @@ export default async function SubreadditPage({
                   }
                 >
                   <FaUser className={"mr-2"} />
-                  <p className={"text-gray-500"}>{members} members</p>
+                  <p className={"text-gray-500"}>{subscribers} members</p>
                 </div>
                 <div
                   className={

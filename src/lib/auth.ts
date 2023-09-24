@@ -1,10 +1,8 @@
-import { nanoid } from "nanoid";
+import { randomUsername } from "./usernames";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession, AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-
 import prisma from "./prisma";
 
 const authOptions: AuthOptions = {
@@ -30,9 +28,9 @@ const authOptions: AuthOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
+        session.user.username = token.username;
         session.user.email = token.email;
         session.user.image = token.picture;
-        session.user.username = token.username;
       }
 
       return session;
@@ -56,17 +54,17 @@ const authOptions: AuthOptions = {
             id: databaseUser.id,
           },
           data: {
-            username: nanoid(10),
+            username: randomUsername,
           },
         });
       }
 
       return {
         id: databaseUser.id,
+        username: databaseUser.username,
         name: databaseUser.name,
         email: databaseUser.email,
         picture: databaseUser.image,
-        username: databaseUser.username,
       };
     },
 

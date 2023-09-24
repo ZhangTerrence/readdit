@@ -1,10 +1,9 @@
-import "./globals.css";
-import "react-toastify/dist/ReactToastify.css";
-
+import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./globals.css";
 
-import type { Metadata } from "next";
 const ubuntu = Ubuntu({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {

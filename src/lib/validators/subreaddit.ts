@@ -1,15 +1,18 @@
 import { z } from "zod";
 
-export const SubreadditValidator = z.object({
+export const CreateSubreadditValidator = z.object({
   name: z.string().min(3).max(21),
   description: z.string(),
 });
 
-export const SubreadditSubscriptionValidator = z.object({
+export const UpdateSubreadditValidator = z.object({
   subreadditId: z.string(),
 });
 
-export type CreateSubreadditPayload = z.infer<typeof SubreadditValidator>;
-export type SubscribeToSubreadditPayload = z.infer<
-  typeof SubreadditSubscriptionValidator
->;
+export const DeleteSubreadditValidator = z.object({
+  subreadditId: z.string(),
+});
+
+export type CreateSubreadditPayload = z.infer<typeof CreateSubreadditValidator>;
+export type UpdateSubreadditPayload = z.infer<typeof UpdateSubreadditValidator>;
+export type DeleteSubreadditPayload = z.infer<typeof DeleteSubreadditValidator>;

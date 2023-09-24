@@ -1,24 +1,26 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import type { Session } from "next-auth";
+import type {
+  CreateSubscriptionPayload,
+  DeleteSubscriptionPayload,
+} from "@/lib/validators/subscribe";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import type { Session } from "next-auth";
-import type { SubscribeToSubreadditPayload } from "@/lib/validators/subreaddit";
-
-type JoinSubreadditTypes = {
+type SubscribeSubreadditTypes = {
   session: Session | null;
   subreadditId: string;
   isSubscribed: boolean;
 };
 
-export const SubscribeSubreaddit = (props: JoinSubreadditTypes) => {
-  const [isSubscribed, toggleIsSubscribed] = useState(props.isSubscribed);
+export const SubscribeSubreaddit = (props: SubscribeSubreadditTypes) => {
+  const [isSubscribed, setIsSubscribed] = useState(props.isSubscribed);
   const router = useRouter();
 
   useEffect(() => {
-    toggleIsSubscribed(props.isSubscribed);
+    setIsSubscribed(props.isSubscribed);
   }, [props.isSubscribed]);
 
   const joinSubreaddit = async () => {
@@ -27,7 +29,7 @@ export const SubscribeSubreaddit = (props: JoinSubreadditTypes) => {
       return;
     }
 
-    const payload: SubscribeToSubreadditPayload = {
+    const payload: CreateSubscriptionPayload = {
       subreadditId: props.subreadditId,
     };
 
@@ -40,18 +42,17 @@ export const SubscribeSubreaddit = (props: JoinSubreadditTypes) => {
     }).then(async (response) => {
       if (response.status < 200 || response.status >= 300) {
         const error = await response.text();
-
         toast.error(error);
       } else {
         const success = await response.text();
-        toggleIsSubscribed(true);
+        setIsSubscribed(true);
         toast.success(success);
       }
     });
   };
 
   const leaveSubreaddit = async () => {
-    const payload: SubscribeToSubreadditPayload = {
+    const payload: DeleteSubscriptionPayload = {
       subreadditId: props.subreadditId,
     };
 
@@ -64,11 +65,10 @@ export const SubscribeSubreaddit = (props: JoinSubreadditTypes) => {
     }).then(async (response) => {
       if (response.status < 200 || response.status >= 300) {
         const error = await response.text();
-
         toast.error(error);
       } else {
         const success = await response.text();
-        toggleIsSubscribed(false);
+        setIsSubscribed(false);
         toast.success(success);
       }
     });

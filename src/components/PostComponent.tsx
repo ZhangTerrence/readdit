@@ -1,7 +1,15 @@
 "use client";
 
+import type { Session } from "next-auth";
+import type { Post, PostVotes, Comment } from "@prisma/client";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { EditorRenderer } from "./EditorRenderer";
+import { formatTimeToNow } from "@/lib/formatter";
+import { DeletePostPayload } from "@/lib/validators/post";
+import { VoteTypes } from "@prisma/client";
+import { BsDot } from "react-icons/bs";
 import {
   IoArrowDownSharp,
   IoArrowUpSharp,
@@ -10,31 +18,23 @@ import {
 } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-import { formatTimeToNow } from "@/lib/formatter";
-import { DeletePostPayload } from "@/lib/validators/post";
-import { VoteTypes } from "@prisma/client";
-
-import type { Post, PostVote, Comment } from "@prisma/client";
-import type { Session } from "next-auth";
 type PostProps = {
   session: Session | null;
-  subreadditId: string;
-  subreadditName: string;
-  post: {
+  post: Post & {
     author: {
       id: string;
-      name: string | null;
       username: string | null;
-      email: string | null;
-      emailVerified: Date | null;
-      image: string;
     };
-    PostVotes: PostVote[];
+    PostVotes: PostVotes[];
     Comments: Comment[];
-  } & Post;
+  };
+  subreadditId: string;
+  subreadditName: string;
 };
 
 export const PostComponent = (props: PostProps) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [blurDiv, setBlurDiv] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -45,6 +45,12 @@ export const PostComponent = (props: PostProps) => {
   }, 0);
 
   const comments = props.post.Comments.length;
+
+  const checkOverflow = () => {
+    contentRef.current?.clientHeight === 560
+      ? setBlurDiv(true)
+      : setBlurDiv(false);
+  };
 
   const deletePost = async () => {
     if (!props.session) {
@@ -77,26 +83,53 @@ export const PostComponent = (props: PostProps) => {
   return (
     <div
       className={
-        "relative mb-4 flex h-fit max-h-[35rem] w-full rounded-md border border-solid border-slate-500 bg-slate-50"
+        "relative mb-4 flex h-fit w-full rounded-md border border-solid border-slate-500 bg-slate-50"
       }
     >
-      <div className={"flex h-full w-12 flex-col bg-gray-200 p-2"}>
+      <div className={"w-12 bg-gray-200 p-3 text-xl"}>
         <IoArrowUpSharp className={"m-auto block"} />
         <p className={"text-center"}>{votes}</p>
         <IoArrowDownSharp className={"m-auto block"} />
       </div>
-      <div className={"grow p-2"}>
-        {pathname !== "/" ? null : `r/${props.subreadditName}`}
+      <div className={"grow px-4 py-2"}>
         <div className={"mb-2 flex text-sm"}>
+          {pathname === "/" ? (
+            <Link
+              className={"hover:underline"}
+              href={`r/${props.subreadditName}`}
+            >
+              <span>r/{props.subreadditName}</span>
+              <BsDot className={"inline-block"} />
+            </Link>
+          ) : null}
           <p className={"mr-2"}>
-            Posted by <Link href={"/"}>u/{props.post.author.username}</Link>
+            Posted by{" "}
+            <Link
+              className={"hover:underline"}
+              href={`/u/${props.post.author.id}`}
+            >
+              u/{props.post.author.username}
+            </Link>
           </p>
           <p>{formatTimeToNow(props.post.createdAt)}</p>
         </div>
         <Link href={"/"}>
           <h1 className={"my-2 text-2xl font-semibold"}>{props.post.title}</h1>
         </Link>
-
+        <div
+          className={"relative my-4 max-h-[35rem] w-full overflow-clip text-sm"}
+          ref={contentRef}
+          onLoad={() => checkOverflow()}
+        >
+          <EditorRenderer content={props.post.content} />
+          {blurDiv ? (
+            <div
+              className={
+                "absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-slate-50 to-transparent"
+              }
+            />
+          ) : null}
+        </div>
         <div className={"flex w-full items-center"}>
           <div className={"text-md flex items-center"}>
             <IoChatboxOutline className={"m-auto mr-2 block"} />
