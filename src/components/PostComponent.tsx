@@ -1,7 +1,7 @@
 "use client";
 
 import type { Session } from "next-auth";
-import type { Post, PostVotes, Comment } from "@prisma/client";
+import type { Post, PostVote, Comment } from "@prisma/client";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -25,8 +25,8 @@ type PostProps = {
       id: string;
       username: string | null;
     };
-    PostVotes: PostVotes[];
-    Comments: Comment[];
+    postVotes: PostVote[];
+    comments: Comment[];
   };
   subreadditId: string;
   subreadditName: string;
@@ -38,13 +38,13 @@ export const PostComponent = (props: PostProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const votes = props.post.PostVotes.reduce((n, vote) => {
+  const votes = props.post.postVotes.reduce((n, vote) => {
     if (vote.type === VoteTypes.UP) return n + 1;
     if (vote.type === VoteTypes.DOWN) return n - 1;
     return n;
   }, 0);
 
-  const comments = props.post.Comments.length;
+  const comments = props.post.comments.length;
 
   const checkOverflow = () => {
     contentRef.current?.clientHeight === 560
@@ -96,7 +96,7 @@ export const PostComponent = (props: PostProps) => {
           {pathname === "/" ? (
             <Link
               className={"hover:underline"}
-              href={`r/${props.subreadditName}`}
+              href={`/r/${props.subreadditName}`}
             >
               <span>r/{props.subreadditName}</span>
               <BsDot className={"inline-block"} />
@@ -113,13 +113,16 @@ export const PostComponent = (props: PostProps) => {
           </p>
           <p>{formatTimeToNow(props.post.createdAt)}</p>
         </div>
-        <Link href={"/"}>
+        <Link href={`/r/${props.subreadditName}/post/${props.post.id}`}>
           <h1 className={"my-2 text-2xl font-semibold"}>{props.post.title}</h1>
         </Link>
         <div
           className={"relative my-4 max-h-[35rem] w-full overflow-clip text-sm"}
           ref={contentRef}
           onLoad={() => checkOverflow()}
+          onClick={() =>
+            router.push(`/r/${props.subreadditName}/post/${props.post.id}`)
+          }
         >
           <EditorRenderer content={props.post.content} />
           {blurDiv ? (
@@ -131,10 +134,13 @@ export const PostComponent = (props: PostProps) => {
           ) : null}
         </div>
         <div className={"flex w-full items-center"}>
-          <div className={"text-md flex items-center"}>
+          <Link
+            className={"text-md flex items-center"}
+            href={`/r/${props.subreadditName}/post/${props.post.id}`}
+          >
             <IoChatboxOutline className={"m-auto mr-2 block"} />
             <p>{comments} comments</p>
-          </div>
+          </Link>
         </div>
       </div>
       {props.session && props.post.authorId === props.session.user.id ? (

@@ -22,8 +22,8 @@ export default async function HomePage() {
           name: true,
         },
       },
-      PostVotes: true,
-      Comments: true,
+      postVotes: true,
+      comments: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -48,7 +48,7 @@ export default async function HomePage() {
           <IoChatbox className={"mr-4 mt-1"} />
           <h1>Your Feed</h1>
         </div>
-        <PostFeed type={"multiple"} posts={posts} />
+        <PostFeed type={"multiple"} session={session} posts={posts} />
       </div>
       <div
         className={

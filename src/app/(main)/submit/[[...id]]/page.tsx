@@ -22,10 +22,10 @@ export default async function CreatePage({
             },
           },
           include: {
-            Posts: {
+            posts: {
               include: {
                 author: true,
-                PostVotes: true,
+                postVotes: true,
               },
             },
           },

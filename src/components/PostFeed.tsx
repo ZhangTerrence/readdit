@@ -1,17 +1,19 @@
-import type { Post, PostVotes, Comment } from "@prisma/client";
+import type { Post, PostVote, Comment } from "@prisma/client";
 import { PostComponent } from "./PostComponent";
 import { getAuthSession } from "@/lib/auth";
+import { Session } from "next-auth";
 
 type PostFeedProps =
   | {
       type: "single";
+      session: Session | null;
       posts: (Post & {
         author: {
           id: string;
           username: string;
         };
-        PostVotes: PostVotes[];
-        Comments: Comment[];
+        postVotes: PostVote[];
+        comments: Comment[];
       })[];
       subreaddit: {
         id: string;
@@ -20,6 +22,7 @@ type PostFeedProps =
     }
   | {
       type: "multiple";
+      session: Session | null;
       posts: (Post & {
         author: {
           id: string;
@@ -29,14 +32,12 @@ type PostFeedProps =
           id: string;
           name: string;
         };
-        PostVotes: PostVotes[];
-        Comments: Comment[];
+        postVotes: PostVote[];
+        comments: Comment[];
       })[];
     };
 
-export const PostFeed = async (props: PostFeedProps) => {
-  const session = await getAuthSession();
-
+export const PostFeed = (props: PostFeedProps) => {
   return (
     <div className={"flex flex-col items-center pt-4"}>
       {props.type === "single"
@@ -44,7 +45,7 @@ export const PostFeed = async (props: PostFeedProps) => {
             return (
               <PostComponent
                 key={i}
-                session={session}
+                session={props.session}
                 subreadditId={props.subreaddit.id}
                 subreadditName={props.subreaddit.name}
                 post={post}
@@ -55,7 +56,7 @@ export const PostFeed = async (props: PostFeedProps) => {
             return (
               <PostComponent
                 key={i}
-                session={session}
+                session={props.session}
                 subreadditId={post.subreaddit.id}
                 subreadditName={post.subreaddit.name}
                 post={post}

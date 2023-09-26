@@ -13,6 +13,7 @@ type SubscribeSubreadditTypes = {
   session: Session | null;
   subreadditId: string;
   isSubscribed: boolean;
+  classNames?: string;
 };
 
 export const SubscribeSubreaddit = (props: SubscribeSubreadditTypes) => {
@@ -76,16 +77,14 @@ export const SubscribeSubreaddit = (props: SubscribeSubreadditTypes) => {
 
   return props.session && isSubscribed ? (
     <button
-      className={
-        "rounded-full border border-solid border-slate-950 bg-slate-50 px-8 py-4 text-lg"
-      }
+      className={`rounded-full border border-solid border-slate-950 bg-slate-50 px-8 py-4 text-lg ${props.classNames}`}
       onClick={() => leaveSubreaddit()}
     >
       Leave
     </button>
   ) : (
     <button
-      className={"rounded-full bg-gray-950 px-8 py-4 text-lg text-slate-50"}
+      className={`rounded-full bg-gray-950 px-8 py-4 text-lg text-slate-50 ${props.classNames}`}
       onClick={() => joinSubreaddit()}
     >
       Join

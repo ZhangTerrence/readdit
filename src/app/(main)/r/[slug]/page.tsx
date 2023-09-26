@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import format from "date-fns/format";
+import { format } from "date-fns";
 import { HomeButton } from "@/components/HomeButton";
 import { MiniCreatePost } from "@/components/MiniCreatePost";
 import { PostFeed } from "@/components/PostFeed";
@@ -27,7 +27,7 @@ export default async function SubreadditPage({
       },
     },
     include: {
-      Posts: {
+      posts: {
         include: {
           author: {
             select: {
@@ -35,8 +35,8 @@ export default async function SubreadditPage({
               username: true,
             },
           },
-          PostVotes: true,
-          Comments: true,
+          postVotes: true,
+          comments: true,
         },
       },
     },
@@ -103,7 +103,8 @@ export default async function SubreadditPage({
             <MiniCreatePost session={session} subreadditId={subreaddit.id} />
             <PostFeed
               type={"single"}
-              posts={subreaddit.Posts}
+              session={session}
+              posts={subreaddit.posts}
               subreaddit={{ id: subreaddit.id, name: subreaddit.name }}
             />
           </div>

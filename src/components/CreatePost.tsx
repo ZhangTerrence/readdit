@@ -236,7 +236,7 @@ export const CreatePost = (props: {
             "mb-4 h-fit rounded-sm border border-solid border-slate-300 p-4"
           }
         >
-          <div id={"editor"} className={"break-words pl-4"}></div>
+          <div id={"editor"} className={"break-words pl-4"} />
         </div>
         <div className={"flex self-end"}>
           <button

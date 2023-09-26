@@ -40,19 +40,19 @@ model User {
 
   name          String?
   username      String    @unique
-  email         String    @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String    @default("https://utfs.io/f/3fbc2bf9-050e-4a0e-b15a-1c78ebaaeed0_DefaultUser.png")
   accounts      Account[]
   sessions      Session[]
 
-  Posts         Post[]
-  Comments      Comment[]
-  Subscriptions Subscription[]
+  posts         Post[]
+  comments      Comment[]
+  subscriptions Subscription[]
 
-  PostVotes          PostVotes[]
-  CommentVotes       CommentVotes[]
-  CreatedSubreaddits Subreaddit[]   @relation("createdBy")
+  postVotes          PostVote[]
+  commentVotes       CommentVote[]
+  createdSubreaddits Subreaddit[]  @relation("createdBy")
 
   @@index([username])
 }
@@ -77,8 +77,8 @@ model Subreaddit {
   rules       String[] @default(["Remember the human", "Behave like you would in real life", "Look for the original source of content", "Search for duplicates before posting", "Read the community’s rules"])
   image       String   @default("https://utfs.io/f/eae14390-926b-448b-9d30-b1e387700399_DefaultSubreaddit.png")
 
-  Posts       Post[]
-  Subscribers Subscription[]
+  posts       Post[]
+  subscribers Subscription[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -97,8 +97,8 @@ model Post {
   title   String
   content Json?
 
-  PostVotes PostVotes[]
-  Comments  Comment[]
+  postVotes PostVote[]
+  comments  Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,17 +107,17 @@ model Post {
 model Comment {
   id String @id @default(cuid())
 
-  Post   Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
 
   text         String?
   replyingTo   Comment? @relation("replyingTo", fields: [replyingToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replyingToId String?
 
-  CommentVotes CommentVotes[]
-  replies      Comment[]      @relation("replyingTo")
+  commentVotes CommentVote[]
+  replies      Comment[]     @relation("replyingTo")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -128,7 +128,7 @@ enum VoteTypes {
   DOWN
 }
 
-model PostVotes {
+model PostVote {
   user   User      @relation(fields: [userId], references: [id])
   userId String
   post   Post      @relation(fields: [postId], references: [id])
@@ -138,7 +138,7 @@ model PostVotes {
   @@id([userId, postId])
 }
 
-model CommentVotes {
+model CommentVote {
   user      User      @relation(fields: [userId], references: [id])
   userId    String
   comment   Comment   @relation(fields: [commentId], references: [id])
