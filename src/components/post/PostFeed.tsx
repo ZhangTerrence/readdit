@@ -1,7 +1,8 @@
+"use client";
+
+import type { Session } from "next-auth";
 import type { Post, PostVote, Comment } from "@prisma/client";
-import { PostComponent } from "./PostComponent";
-import { getAuthSession } from "@/lib/auth";
-import { Session } from "next-auth";
+import { PostPreview } from "./PostPreview";
 
 type PostFeedProps =
   | {
@@ -43,7 +44,7 @@ export const PostFeed = (props: PostFeedProps) => {
       {props.type === "single"
         ? props.posts.map((post, i) => {
             return (
-              <PostComponent
+              <PostPreview
                 key={i}
                 session={props.session}
                 subreadditId={props.subreaddit.id}
@@ -54,7 +55,7 @@ export const PostFeed = (props: PostFeedProps) => {
           })
         : props.posts.map((post, i) => {
             return (
-              <PostComponent
+              <PostPreview
                 key={i}
                 session={props.session}
                 subreadditId={post.subreaddit.id}

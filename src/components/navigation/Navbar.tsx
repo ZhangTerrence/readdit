@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ProfileDropdown } from "./ProfileDropdown";
+import { ProfileInfo } from "./ProfileInfo";
 import { Searchbar } from "./Searchbar";
 import { getAuthSession } from "@/lib/auth";
 
-export const Navigation = async () => {
+export const Navbar = async () => {
   const session = await getAuthSession();
 
   return (
@@ -25,7 +25,7 @@ export const Navigation = async () => {
       </Link>
       <Searchbar />
       {session ? (
-        <ProfileDropdown session={session} />
+        <ProfileInfo session={session} />
       ) : (
         <div className={"flex"}>
           <Link

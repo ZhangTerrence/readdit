@@ -1,4 +1,4 @@
-import { CreatePost } from "@/components/CreatePost";
+import { CreatePost } from "@/components/post/CreatePost";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { FaCircleExclamation } from "react-icons/fa6";

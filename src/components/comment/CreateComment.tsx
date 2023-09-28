@@ -10,6 +10,7 @@ type CreateCommentProps = {
   session: Session | null;
   postId: string;
   replyingToId?: string;
+  closeReplying?: () => void;
 };
 
 export const CreateComment = (props: CreateCommentProps) => {
@@ -19,6 +20,7 @@ export const CreateComment = (props: CreateCommentProps) => {
   const createComment = async () => {
     if (!props.session) {
       router.push("/signin");
+      return;
     }
 
     if (!textRef.current?.value) {
@@ -31,8 +33,6 @@ export const CreateComment = (props: CreateCommentProps) => {
       text: textRef.current.value,
       replyingToId: props.replyingToId,
     };
-
-    console.log(payload);
 
     await fetch("/api/comment", {
       method: "POST",
@@ -52,7 +52,7 @@ export const CreateComment = (props: CreateCommentProps) => {
   };
 
   return (
-    <div className={"flex flex-col"}>
+    <div className={`flex w-full flex-col`}>
       {props.session ? (
         <h4 className={"mb-2 text-sm text-gray-500"}>
           Replying as u/{props.session.user.username}
@@ -61,22 +61,37 @@ export const CreateComment = (props: CreateCommentProps) => {
       <textarea
         id={"editor"}
         className={
-          "h-40 resize-none rounded-md border border-solid border-slate-950 p-2"
+          "resize-none rounded-md border border-solid border-slate-950 p-2"
         }
         ref={textRef}
         placeholder={"Write your comment here..."}
       />
-      <button
-        className={
-          "mt-2 w-fit self-end rounded-full bg-gray-700 px-4 py-2 text-sm text-white"
-        }
-        onClick={(e) => {
-          e.preventDefault();
-          createComment();
-        }}
-      >
-        Comment
-      </button>
+      <div className={"self-end"}>
+        {props.closeReplying ? (
+          <button
+            className={
+              "mr-4 mt-2 w-fit self-end rounded-full bg-slate-300 px-4 py-2 text-sm text-slate-950"
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              props.closeReplying!();
+            }}
+          >
+            Cancel
+          </button>
+        ) : null}
+        <button
+          className={
+            "mt-2 w-fit self-end rounded-full bg-gray-700 px-4 py-2 text-sm text-white"
+          }
+          onClick={(e) => {
+            e.preventDefault();
+            createComment();
+          }}
+        >
+          Comment
+        </button>
+      </div>
     </div>
   );
 };

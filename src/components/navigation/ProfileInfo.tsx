@@ -1,16 +1,12 @@
 "use client";
 
 import type { Session } from "next-auth";
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
 
-type ProfileDropdownTypes = {
-  session: Session;
-};
-
-export const ProfileDropdown = (props: ProfileDropdownTypes) => {
+export const ProfileInfo = (props: { session: Session }) => {
   const [dropdown, setDropdown] = useState(false);
 
   return (

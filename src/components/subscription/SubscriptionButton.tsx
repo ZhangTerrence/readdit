@@ -9,14 +9,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-type SubscribeSubreadditTypes = {
+type SubscriptionButtonTypes = {
   session: Session | null;
   subreadditId: string;
   isSubscribed: boolean;
   classNames?: string;
 };
 
-export const SubscribeSubreaddit = (props: SubscribeSubreadditTypes) => {
+export const SubscriptionButton = (props: SubscriptionButtonTypes) => {
   const [isSubscribed, setIsSubscribed] = useState(props.isSubscribed);
   const router = useRouter();
 

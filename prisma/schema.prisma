@@ -113,11 +113,11 @@ model Comment {
   authorId String
 
   text         String?
-  replyingTo   Comment? @relation("replyingTo", fields: [replyingToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replyingToId String?
-
   commentVotes CommentVote[]
-  replies      Comment[]     @relation("replyingTo")
+
+  replies      Comment[] @relation("replyingTo")
+  replyingTo   Comment?  @relation("replyingTo", fields: [replyingToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replyingToId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

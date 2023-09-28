@@ -5,7 +5,7 @@ import type { Post, PostVote, Comment } from "@prisma/client";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { EditorRenderer } from "./EditorRenderer";
+import { ContentRenderer } from "../renderers/ContentRenderer";
 import { formatTimeToNow } from "@/lib/formatter";
 import { DeletePostPayload } from "@/lib/validators/post";
 import { VoteTypes } from "@prisma/client";
@@ -18,7 +18,7 @@ import {
 } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-type PostProps = {
+type PostPreviewProps = {
   session: Session | null;
   post: Post & {
     author: {
@@ -32,7 +32,7 @@ type PostProps = {
   subreadditName: string;
 };
 
-export const PostComponent = (props: PostProps) => {
+export const PostPreview = (props: PostPreviewProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [blurDiv, setBlurDiv] = useState(false);
   const router = useRouter();
@@ -117,14 +117,16 @@ export const PostComponent = (props: PostProps) => {
           <h1 className={"my-2 text-2xl font-semibold"}>{props.post.title}</h1>
         </Link>
         <div
-          className={"relative my-4 max-h-[35rem] w-full overflow-clip text-sm"}
+          className={
+            "relative my-4 max-h-[35rem] w-full cursor-pointer overflow-clip text-sm"
+          }
           ref={contentRef}
           onLoad={() => checkOverflow()}
           onClick={() =>
             router.push(`/r/${props.subreadditName}/post/${props.post.id}`)
           }
         >
-          <EditorRenderer content={props.post.content} />
+          <ContentRenderer content={props.post.content} />
           {blurDiv ? (
             <div
               className={

@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
-import { HomeButton } from "@/components/HomeButton";
-import { MiniCreatePost } from "@/components/MiniCreatePost";
-import { PostFeed } from "@/components/PostFeed";
-import { SubscribeSubreaddit } from "@/components/SubscribeSubreaddit";
+import { HomeButton } from "@/components/navigation/HomeButton";
+import { CreatePostPreview } from "@/components/post/CreatePostPreview";
+import { PostFeed } from "@/components/post/PostFeed";
+import { SubscriptionButton } from "@/components/subscription/SubscriptionButton";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
@@ -90,7 +90,7 @@ export default async function SubreadditPage({
               </div>
             </div>
             {subreaddit.creatorId !== session?.user.id ? (
-              <SubscribeSubreaddit
+              <SubscriptionButton
                 session={session}
                 subreadditId={subreaddit.id}
                 isSubscribed={isSubscribed}
@@ -100,7 +100,7 @@ export default async function SubreadditPage({
         </div>
         <div className={"flex py-8"}>
           <div className={"mr-10 flex w-[50rem] flex-col"}>
-            <MiniCreatePost session={session} subreadditId={subreaddit.id} />
+            <CreatePostPreview session={session} subreadditId={subreaddit.id} />
             <PostFeed
               type={"single"}
               session={session}

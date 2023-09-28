@@ -4,12 +4,7 @@ import { signIn } from "next-auth/react";
 import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 
 export const AuthProviders = () => {
-  const handleProvider = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    provider: "google" | "github",
-  ) => {
-    e.preventDefault();
-
+  const handleProvider = async (provider: "google" | "github") => {
     try {
       await signIn(provider);
     } catch (error) {
@@ -23,7 +18,10 @@ export const AuthProviders = () => {
         className={
           "mb-4 flex items-center rounded-xl border border-solid border-slate-950 bg-slate-50 p-4 text-xl"
         }
-        onClick={(e) => handleProvider(e, "google")}
+        onClick={(e) => {
+          e.preventDefault();
+          handleProvider("google");
+        }}
       >
         <IoLogoGoogle className={"mr-2"} />
         Continue with Google
@@ -32,7 +30,10 @@ export const AuthProviders = () => {
         className={
           "flex items-center rounded-xl border border-solid border-slate-950 bg-slate-50 p-4 text-xl"
         }
-        onClick={(e) => handleProvider(e, "github")}
+        onClick={(e) => {
+          e.preventDefault();
+          handleProvider("github");
+        }}
       >
         <IoLogoGithub className={"mr-2"} />
         Continue with Github

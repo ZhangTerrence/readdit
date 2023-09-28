@@ -2,12 +2,14 @@
 
 import type { Session } from "next-auth";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export const MiniCreatePost = (props: {
+export const CreatePostPreview = (props: {
   session: Session | null;
   subreadditId: string;
 }) => {
+  const router = useRouter();
+
   if (!props.session) {
     return null;
   }
@@ -25,20 +27,14 @@ export const MiniCreatePost = (props: {
         width={40}
         height={40}
       />
-      <Link
-        className={"grow"}
-        href={{
-          pathname: `/submit/${props.subreadditId}`,
-        }}
-      >
-        <input
-          className={
-            "w-full rounded-md border border-solid border-slate-500 bg-slate-50 py-2 pl-2 text-lg outline-none"
-          }
-          type="text"
-          placeholder={"Create Post"}
-        />
-      </Link>
+      <input
+        className={
+          "w-full rounded-md border border-solid border-slate-500 bg-slate-50 py-2 pl-2 text-lg outline-none"
+        }
+        type="text"
+        placeholder={"Create Post"}
+        onClick={() => router.push(`/submit/${props.subreadditId}`)}
+      />
     </div>
   );
 };

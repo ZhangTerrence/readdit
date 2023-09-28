@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { CreateSubreaddit } from "@/components/CreateSubreaddit";
+import { CreateSubreaddit } from "@/components/subreaddit/CreateSubreaddit";
+import { PostFeed } from "@/components/post/PostFeed";
 import { getAuthSession } from "@/lib/auth";
 import { IoChatbox, IoHome } from "react-icons/io5";
-import { PostFeed } from "@/components/PostFeed";
 import prisma from "@/lib/prisma";
 
 export default async function HomePage() {
@@ -28,7 +28,7 @@ export default async function HomePage() {
     orderBy: {
       createdAt: "desc",
     },
-    take: 10,
+    take: 5,
   });
 
   return (

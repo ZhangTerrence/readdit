@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AuthProviders } from "@/components/AuthProviders";
-import { HomeButton } from "@/components/HomeButton";
+import { HomeButton } from "@/components/navigation/HomeButton";
 
 export default async function LoginPage() {
   return (

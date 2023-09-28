@@ -2,10 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
-import { CreateComment } from "@/components/CreateComment";
-import { CommentComponent } from "@/components/CommentComponent";
-import { EditorRenderer } from "@/components/EditorRenderer";
-import { SubscribeSubreaddit } from "@/components/SubscribeSubreaddit";
+import { ContentRenderer } from "@/components/renderers/ContentRenderer";
+import { SubscriptionButton } from "@/components/subscription/SubscriptionButton";
 import { formatTimeToNow } from "@/lib/formatter";
 import { getAuthSession } from "@/lib/auth";
 import { VoteTypes } from "@prisma/client";
@@ -13,6 +11,8 @@ import prisma from "@/lib/prisma";
 import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
+import { CommentSection } from "@/components/comment/CommentSection";
+import { CreateComment } from "@/components/comment/CreateComment";
 
 export default async function PostPage({
   params,
@@ -46,6 +46,30 @@ export default async function PostPage({
             },
           },
           commentVotes: true,
+          replies: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                },
+              },
+              commentVotes: true,
+              replies: {
+                include: {
+                  author: {
+                    select: {
+                      id: true,
+                      username: true,
+                      image: true,
+                    },
+                  },
+                  commentVotes: true,
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -110,14 +134,17 @@ export default async function PostPage({
                 <p>{formatTimeToNow(post.createdAt)}</p>
               </div>
               <h1 className={"text-4xl"}>{post.title}</h1>
-              <EditorRenderer content={post.content} />
+              <ContentRenderer content={post.content} />
             </div>
           </div>
           <hr className={"border-t border-slate-950 pb-4"} />
           <CreateComment session={session} postId={post.id} />
-          {post.comments.map((comment, i) => {
-            return <CommentComponent key={i} comment={comment} />;
-          })}
+          <CommentSection
+            session={session}
+            postId={post.id}
+            comments={post.comments.filter((comment) => !comment.replyingToId)}
+            indent={0}
+          />
         </div>
         <div className={"flex flex-col"}>
           <div
@@ -163,7 +190,7 @@ export default async function PostPage({
                 </p>
               </div>
               {post.subreaddit.creatorId !== session?.user.id ? (
-                <SubscribeSubreaddit
+                <SubscriptionButton
                   session={session}
                   subreadditId={post.subreaddit.id}
                   isSubscribed={isSubscribed}
