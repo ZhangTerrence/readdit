@@ -1,22 +1,18 @@
 "use client";
 
-import type { Comment, CommentVote } from "@prisma/client";
+import type { Comment, CommentVote, VoteTypes } from "@prisma/client";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatTimeToNow } from "@/lib/formatter";
 import { BsDot } from "react-icons/bs";
-import {
-  IoArrowDownSharp,
-  IoArrowUpSharp,
-  IoChatboxOutline,
-  IoTrashBinOutline,
-} from "react-icons/io5";
+import { IoChatboxOutline, IoTrashBinOutline } from "react-icons/io5";
 import { CreateComment } from "./CreateComment";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import { DeleteCommentPayload } from "@/lib/validators/comment";
 import { toast } from "react-toastify";
+import { CommentVoteClient } from "../vote/CommentVoteClient";
 
 type PostCommentProps = {
   session: Session | null;
@@ -28,12 +24,14 @@ type PostCommentProps = {
     };
     commentVotes: CommentVote[];
   };
-  commentVotes: number;
+  initialVotes: number;
+  initialVote: VoteTypes | undefined;
 };
 
 export const PostComment = (props: PostCommentProps) => {
   const commentRef = useRef<HTMLDivElement>(null);
   const [isReplying, setIsReplying] = useState(false);
+
   const router = useRouter();
 
   const closeReplying = () => {
@@ -100,24 +98,27 @@ export const PostComment = (props: PostCommentProps) => {
             <p>{formatTimeToNow(props.comment.createdAt)}</p>
           </div>
           <p className={"mt-1"}>{props.comment.text}</p>
-          <div className={"flex items-center"}>
-            <div className={"mr-2 flex items-center p-2 text-lg"}>
-              <IoArrowUpSharp className={"mr-2"} />
-              <p className={"text-center"}>{props.commentVotes}</p>
-              <IoArrowDownSharp className={"ml-2"} />
-            </div>
-            <button
-              className={
-                "flex items-center rounded-md p-2 text-lg hover:bg-slate-200"
-              }
-              onClick={() => setIsReplying(!isReplying)}
-            >
-              <IoChatboxOutline />
-              <p className={"ml-2"}>Reply</p>
-            </button>
-          </div>
         </>
       )}
+      <div className={"flex items-center"}>
+        <div className={"mr-2 flex items-center p-2 text-lg"}>
+          <CommentVoteClient
+            session={props.session}
+            commentId={props.comment.id}
+            initialVotes={props.initialVotes}
+            initialVote={props.initialVote}
+          />
+        </div>
+        <button
+          className={
+            "flex items-center rounded-md p-2 text-lg hover:bg-slate-200"
+          }
+          onClick={() => setIsReplying(!isReplying)}
+        >
+          <IoChatboxOutline />
+          <p className={"ml-2"}>Reply</p>
+        </button>
+      </div>
       {isReplying ? (
         <CreateComment
           session={props.session}

@@ -8,11 +8,12 @@ import { formatTimeToNow } from "@/lib/formatter";
 import { getAuthSession } from "@/lib/auth";
 import { VoteTypes } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
 import { CommentSection } from "@/components/comment/CommentSection";
 import { CreateComment } from "@/components/comment/CreateComment";
+import { PostVoteClient } from "@/components/vote/PostVoteClient";
+import { GoToSubreaddit } from "@/components/subreaddit/GoToSubreaddit";
 
 export default async function PostPage({
   params,
@@ -93,6 +94,10 @@ export default async function PostPage({
     return n;
   }, 0);
 
+  const currentVote = post.postVotes.find(
+    (vote: { userId: string }) => vote.userId === session?.user.id,
+  );
+
   const subscribers = await prisma.subscription.count({
     where: {
       subreadditId: post.subreaddit.id,
@@ -104,24 +109,27 @@ export default async function PostPage({
       <div className={"flex max-w-[85rem] bg-slate-200 p-8"}>
         <div
           className={
-            "mr-4 flex w-[50rem] flex-col rounded-md border border-solid border-slate-500 bg-slate-50 p-4"
+            "mr-4 flex w-[50rem] flex-col overflow-x-scroll rounded-md border border-solid border-slate-500 bg-slate-50 p-4"
           }
         >
           <div className={"mb-6 flex"}>
             <div className={"mr-3 w-12 text-xl"}>
-              <IoArrowUpSharp className={"m-auto block"} />
-              <p className={"text-center"}>{votes}</p>
-              <IoArrowDownSharp className={"m-auto block"} />
+              <PostVoteClient
+                session={session}
+                postId={post.id}
+                initialVotes={votes}
+                initialVote={currentVote?.type}
+              />
             </div>
             <div className={"grow"}>
               <div className={"mb-2 flex text-sm"}>
-                <Link
-                  className={"hover:underline"}
-                  href={`/r/${post.subreaddit.name}`}
+                <GoToSubreaddit
+                  style={"hover:underline"}
+                  subreadditName={post.subreaddit.name}
                 >
                   <span>r/{post.subreaddit.name}</span>
                   <BsDot className={"inline-block"} />
-                </Link>
+                </GoToSubreaddit>
                 <p className={"mr-2"}>
                   Posted by{" "}
                   <Link
@@ -162,12 +170,12 @@ export default async function PostPage({
                 width={65}
                 height={65}
               />
-              <Link
-                className={"text-xl font-semibold"}
-                href={`/r/${post.subreaddit.name}`}
+              <GoToSubreaddit
+                style={"text-xl font-semibold"}
+                subreadditName={post.subreaddit.name}
               >
                 r/{post.subreaddit.name}
-              </Link>
+              </GoToSubreaddit>
             </div>
             <div className={"p-4"}>
               <p>{post.subreaddit.description}</p>

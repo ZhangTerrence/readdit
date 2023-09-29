@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProfileInfo } from "./ProfileInfo";
 import { Searchbar } from "./Searchbar";
 import { getAuthSession } from "@/lib/auth";
+import { LogoButton } from "./LogoButton";
 
 export const Navbar = async () => {
   const session = await getAuthSession();
@@ -13,16 +14,7 @@ export const Navbar = async () => {
         "fixed left-0 right-0 z-20 mx-auto flex h-14 w-screen items-center justify-between border-b border-solid border-b-slate-500 bg-white px-4"
       }
     >
-      <Link className={"flex items-center"} href={"/"}>
-        <Image
-          className={"mr-4 block"}
-          src={"/readdit.png"}
-          alt={"readdit"}
-          width={25}
-          height={25}
-        />
-        <p className={"text-xl"}>Readdit</p>
-      </Link>
+      <LogoButton />
       <Searchbar />
       {session ? (
         <ProfileInfo session={session} />

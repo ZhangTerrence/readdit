@@ -10,13 +10,9 @@ import { formatTimeToNow } from "@/lib/formatter";
 import { DeletePostPayload } from "@/lib/validators/post";
 import { VoteTypes } from "@prisma/client";
 import { BsDot } from "react-icons/bs";
-import {
-  IoArrowDownSharp,
-  IoArrowUpSharp,
-  IoChatboxOutline,
-  IoTrashBinOutline,
-} from "react-icons/io5";
+import { IoChatboxOutline, IoTrashBinOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
+import { PostVoteClient } from "../vote/PostVoteClient";
 
 type PostPreviewProps = {
   session: Session | null;
@@ -30,6 +26,7 @@ type PostPreviewProps = {
   };
   subreadditId: string;
   subreadditName: string;
+  currentVote?: VoteTypes | undefined;
 };
 
 export const PostPreview = (props: PostPreviewProps) => {
@@ -80,6 +77,16 @@ export const PostPreview = (props: PostPreviewProps) => {
     });
   };
 
+  const goToSubreaddit = () => {
+    router.refresh();
+    router.push(`/r/${props.subreadditName}`);
+  };
+
+  const goToPost = () => {
+    router.refresh();
+    router.push(`/r/${props.subreadditName}/post/${props.post.id}`);
+  };
+
   return (
     <div
       className={
@@ -87,20 +94,23 @@ export const PostPreview = (props: PostPreviewProps) => {
       }
     >
       <div className={"w-12 bg-gray-200 p-3 text-xl"}>
-        <IoArrowUpSharp className={"m-auto block"} />
-        <p className={"text-center"}>{votes}</p>
-        <IoArrowDownSharp className={"m-auto block"} />
+        <PostVoteClient
+          session={props.session}
+          postId={props.post.id}
+          initialVotes={votes}
+          initialVote={props.currentVote}
+        />
       </div>
       <div className={"grow px-4 py-2"}>
         <div className={"mb-2 flex text-sm"}>
           {pathname === "/" ? (
-            <Link
+            <button
               className={"hover:underline"}
-              href={`/r/${props.subreadditName}`}
+              onClick={() => goToSubreaddit()}
             >
               <span>r/{props.subreadditName}</span>
               <BsDot className={"inline-block"} />
-            </Link>
+            </button>
           ) : null}
           <p className={"mr-2"}>
             Posted by{" "}
@@ -113,18 +123,19 @@ export const PostPreview = (props: PostPreviewProps) => {
           </p>
           <p>{formatTimeToNow(props.post.createdAt)}</p>
         </div>
-        <Link href={`/r/${props.subreadditName}/post/${props.post.id}`}>
-          <h1 className={"my-2 text-2xl font-semibold"}>{props.post.title}</h1>
-        </Link>
+        <h1
+          className={"my-2 cursor-pointer text-2xl font-semibold"}
+          onClick={() => goToPost()}
+        >
+          {props.post.title}
+        </h1>
         <div
           className={
             "relative my-4 max-h-[35rem] w-full cursor-pointer overflow-clip text-sm"
           }
           ref={contentRef}
           onLoad={() => checkOverflow()}
-          onClick={() =>
-            router.push(`/r/${props.subreadditName}/post/${props.post.id}`)
-          }
+          onClick={() => goToPost()}
         >
           <ContentRenderer content={props.post.content} />
           {blurDiv ? (
@@ -135,14 +146,14 @@ export const PostPreview = (props: PostPreviewProps) => {
             />
           ) : null}
         </div>
-        <div className={"flex w-full items-center"}>
-          <Link
+        <div className={"flex w-full cursor-pointer items-center"}>
+          <button
             className={"text-md flex items-center"}
-            href={`/r/${props.subreadditName}/post/${props.post.id}`}
+            onClick={() => goToPost()}
           >
             <IoChatboxOutline className={"m-auto mr-2 block"} />
             <p>{comments} comments</p>
-          </Link>
+          </button>
         </div>
       </div>
       {props.session && props.post.authorId === props.session.user.id ? (

@@ -43,6 +43,11 @@ export const PostFeed = (props: PostFeedProps) => {
     <div className={"flex flex-col items-center pt-4"}>
       {props.type === "single"
         ? props.posts.map((post, i) => {
+            const currentVote = post.postVotes.find(
+              (vote: { userId: string }) =>
+                vote.userId === props.session?.user.id,
+            );
+
             return (
               <PostPreview
                 key={i}
@@ -50,10 +55,16 @@ export const PostFeed = (props: PostFeedProps) => {
                 subreadditId={props.subreaddit.id}
                 subreadditName={props.subreaddit.name}
                 post={post}
+                currentVote={currentVote?.type}
               />
             );
           })
         : props.posts.map((post, i) => {
+            const currentVote = post.postVotes.find(
+              (vote: { userId: string }) =>
+                vote.userId === props.session?.user.id,
+            );
+
             return (
               <PostPreview
                 key={i}
@@ -61,6 +72,7 @@ export const PostFeed = (props: PostFeedProps) => {
                 subreadditId={post.subreaddit.id}
                 subreadditName={post.subreaddit.name}
                 post={post}
+                currentVote={currentVote?.type}
               />
             );
           })}

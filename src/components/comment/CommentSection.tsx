@@ -51,13 +51,18 @@ export const CommentSection = async (props: CommentSectionProps) => {
           return n;
         }, 0);
 
+        const currentVote = comment.commentVotes.find(
+          (vote: { userId: string }) => vote.userId === props.session?.user.id,
+        );
+
         return (
           <div key={comment.id} className={"flex flex-col"}>
             <div className={"mb-2"}>
               <PostComment
                 session={props.session}
                 comment={comment}
-                commentVotes={votes}
+                initialVotes={votes}
+                initialVote={currentVote?.type}
               />
             </div>
             {comment.replies ? (
