@@ -90,10 +90,10 @@ export const PostPreview = (props: PostPreviewProps) => {
   return (
     <div
       className={
-        "relative mb-4 flex h-fit w-full rounded-md border border-solid border-slate-500 bg-slate-50"
+        "relative mb-4 flex h-fit w-full overflow-hidden rounded-md border border-solid border-gray-500"
       }
     >
-      <div className={"w-12 bg-gray-200 p-3 text-xl"}>
+      <div className={"w-12 bg-gray-100 p-3 text-xl"}>
         <PostVoteClient
           session={props.session}
           postId={props.post.id}
@@ -101,8 +101,8 @@ export const PostPreview = (props: PostPreviewProps) => {
           initialVote={props.currentVote}
         />
       </div>
-      <div className={"grow px-4 py-2"}>
-        <div className={"mb-2 flex text-sm"}>
+      <div className={"flex grow flex-col gap-y-2 px-4 py-2"}>
+        <div className={"flex text-sm"}>
           {pathname === "/" ? (
             <button
               className={"hover:underline"}
@@ -124,14 +124,14 @@ export const PostPreview = (props: PostPreviewProps) => {
           <p>{formatTimeToNow(props.post.createdAt)}</p>
         </div>
         <h1
-          className={"my-2 cursor-pointer text-2xl font-semibold"}
+          className={"cursor-pointer text-2xl font-semibold"}
           onClick={() => goToPost()}
         >
           {props.post.title}
         </h1>
         <div
           className={
-            "relative my-4 max-h-[35rem] w-full cursor-pointer overflow-clip text-sm"
+            "relative max-h-[35rem] w-full cursor-pointer overflow-clip text-sm"
           }
           ref={contentRef}
           onLoad={() => checkOverflow()}
@@ -141,31 +141,33 @@ export const PostPreview = (props: PostPreviewProps) => {
           {blurDiv ? (
             <div
               className={
-                "absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-slate-50 to-transparent"
+                "absolute bottom-0 left-0 h-24 w-full cursor-pointer bg-gradient-to-t from-slate-100 to-transparent"
               }
             />
           ) : null}
         </div>
-        <div className={"flex w-full cursor-pointer items-center"}>
+        <div className={"flex-ai-center w-full cursor-pointer"}>
           <button
-            className={"text-md flex items-center"}
+            className={"text-md flex-ai-center gap-x-2"}
             onClick={() => goToPost()}
           >
-            <IoChatboxOutline className={"m-auto mr-2 block"} />
+            <IoChatboxOutline />
             <p>{comments} comments</p>
           </button>
         </div>
       </div>
       {props.session && props.post.authorId === props.session.user.id ? (
-        <button
-          className={"absolute right-0 top-0 m-4 text-lg"}
+        <div
+          className={
+            "absolute right-0 top-0 m-2 rounded-full p-2 transition-colors hover:bg-red-50"
+          }
           onClick={(e) => {
             e.preventDefault();
             deletePost();
           }}
         >
-          <IoTrashBinOutline className={"text-red-700"} />
-        </button>
+          <IoTrashBinOutline className={"text-lg text-red-700"} />
+        </div>
       ) : null}
     </div>
   );

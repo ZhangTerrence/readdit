@@ -19,7 +19,7 @@ type PostCommentProps = {
   comment: Comment & {
     author: {
       id: string;
-      username: string;
+      username: string | null;
       image: string;
     };
     commentVotes: CommentVote[];
@@ -66,23 +66,26 @@ export const PostComment = (props: PostCommentProps) => {
   };
 
   return (
-    <div ref={commentRef} className={"relative flex flex-col gap-y-2"}>
+    <div
+      ref={commentRef}
+      className={"relative flex min-w-[35rem] flex-col gap-y-2"}
+    >
       {props.comment.authorId === "" ? (
-        <div className={"flex items-center"}>
+        <div className={"flex-ai-center gap-x-2"}>
           <Image
-            className={"mr-2 rounded-full"}
+            className={"rounded-full"}
             src={props.comment.author.image}
             alt={"user image"}
             width={30}
             height={30}
           />
-          <p className={"mt-1"}>{props.comment.text}</p>
+          <p className={"mt-2"}>{props.comment.text}</p>
         </div>
       ) : (
         <>
-          <div className={"flex items-center"}>
+          <div className={"flex-ai-center gap-x-2"}>
             <Image
-              className={"mr-2 rounded-full"}
+              className={"rounded-full"}
               src={props.comment.author.image}
               alt={"user image"}
               width={30}
@@ -97,11 +100,11 @@ export const PostComment = (props: PostCommentProps) => {
             <BsDot />
             <p>{formatTimeToNow(props.comment.createdAt)}</p>
           </div>
-          <p className={"mt-1"}>{props.comment.text}</p>
+          <p className={"mt-2"}>{props.comment.text}</p>
         </>
       )}
-      <div className={"flex items-center"}>
-        <div className={"mr-2 flex items-center p-2 text-lg"}>
+      <div className={"flex-ai-center gap-x-2"}>
+        <div className={"flex-ai-center text-lg"}>
           <CommentVoteClient
             session={props.session}
             commentId={props.comment.id}
@@ -111,12 +114,12 @@ export const PostComment = (props: PostCommentProps) => {
         </div>
         <button
           className={
-            "flex items-center rounded-md p-2 text-lg hover:bg-slate-200"
+            "flex-ai-center gap-x-2 rounded-md p-2 text-lg hover:bg-gray-50"
           }
           onClick={() => setIsReplying(!isReplying)}
         >
           <IoChatboxOutline />
-          <p className={"ml-2"}>Reply</p>
+          <p>Reply</p>
         </button>
       </div>
       {isReplying ? (
@@ -128,15 +131,17 @@ export const PostComment = (props: PostCommentProps) => {
         />
       ) : null}
       {props.session && props.comment.authorId === props.session.user.id ? (
-        <button
-          className={"absolute right-0 top-0 m-4 text-lg"}
+        <div
+          className={
+            "absolute right-0 top-0 m-2 rounded-full p-2 transition-colors hover:bg-red-50"
+          }
           onClick={(e) => {
             e.preventDefault();
             deleteComment();
           }}
         >
-          <IoTrashBinOutline className={"text-red-700"} />
-        </button>
+          <IoTrashBinOutline className={"text-lg text-red-700"} />
+        </div>
       ) : null}
     </div>
   );

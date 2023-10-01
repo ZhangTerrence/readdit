@@ -10,49 +10,49 @@ export const ProfileInfo = (props: { session: Session }) => {
   const [dropdown, setDropdown] = useState(false);
 
   return (
-    <div className={"relative flex items-center rounded-md"}>
+    <div className={"flex-ai-center relative rounded-md"}>
       <div
-        className={
-          "flex cursor-pointer items-center rounded-md border border-solid border-slate-300 p-2"
-        }
+        className={`flex-ai-center cursor-pointer gap-x-4 rounded-md border border-solid border-gray-400 p-2 transition-colors`}
         onClick={() => setDropdown(!dropdown)}
       >
-        <div className={"mr-2 flex items-center"}>
+        <div className={"flex-ai-center gap-x-2 text-lg"}>
           <Image
-            className={
-              "m-auto block rounded-full border border-solid border-slate-950"
-            }
+            className={"rounded-full border border-solid border-black"}
             src={props.session.user.image!}
             alt={"user image"}
             width={30}
             height={30}
           />
-          <p className={"ml-2 text-xl"}>{props.session.user.username}</p>
+          <p className={"select-none"}>{props.session.user.username}</p>
         </div>
         <IoCaretDown
           className={`${
             dropdown ? "rotate-180" : "rotate-0"
-          } transition-[transform] duration-200 ease-in`}
+          } transition-[transform] duration-100 ease-in`}
         />
       </div>
       <ul
         className={`${
           dropdown ? "block" : "hidden"
-        } absolute top-full w-full rounded-md border border-solid border-slate-300 bg-white`}
+        } absolute top-full w-full overflow-hidden rounded-md border border-solid border-gray-400 bg-white`}
       >
         <li
-          className={"flex w-full cursor-pointer items-center p-2"}
+          className={
+            "flex-ai-center cursor-pointer gap-x-4 p-3 text-lg transition-colors hover:bg-gray-100"
+          }
           onClick={() => {}}
         >
-          <IoSettings className={"ml-1 mr-[.85rem] block text-xl"} />
-          <button className={"mb-[0.15rem] text-lg"}>User Settings</button>
+          <IoSettings />
+          <button>User Settings</button>
         </li>
         <li
-          className={"flex w-full cursor-pointer items-center p-2"}
+          className={
+            "flex-ai-center cursor-pointer gap-x-4 p-3 text-lg transition-colors hover:bg-gray-100"
+          }
           onClick={() => signOut()}
         >
-          <IoExit className={"ml-1 mr-[.85rem] block text-xl"} />
-          <button className={"mb-[0.15rem] text-lg"}>Log Out</button>
+          <IoExit />
+          <button>Log Out</button>
         </li>
       </ul>
     </div>

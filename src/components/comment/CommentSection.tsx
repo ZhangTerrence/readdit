@@ -11,7 +11,7 @@ type CommentSectionProps = {
     author: {
       image: string;
       id: string;
-      username: string;
+      username: string | null;
     };
     commentVotes: {
       userId: string;
@@ -22,7 +22,7 @@ type CommentSectionProps = {
       author: {
         image: string;
         id: string;
-        username: string;
+        username: string | null;
       };
       commentVotes: {
         userId: string;
@@ -31,18 +31,14 @@ type CommentSectionProps = {
       }[];
     })[];
   })[];
-  indent: number;
 };
 
 export const CommentSection = async (props: CommentSectionProps) => {
   return (
     <div
       className={
-        "mt-4 flex flex-col gap-y-6 border-l border-solid border-slate-950 pl-4"
+        "flex flex-col gap-y-4 border-l border-solid border-gray-400 pl-6"
       }
-      style={{
-        marginLeft: `${0 + 30 * props.indent}px`,
-      }}
     >
       {props.comments.map((comment) => {
         const votes = comment.commentVotes.reduce((n, vote) => {
@@ -70,7 +66,6 @@ export const CommentSection = async (props: CommentSectionProps) => {
                 session={props.session}
                 postId={props.postId}
                 comments={comment.replies}
-                indent={props.indent + 1}
               />
             ) : null}
             {!comment.replies ? (
@@ -78,7 +73,6 @@ export const CommentSection = async (props: CommentSectionProps) => {
                 session={props.session}
                 postId={props.postId}
                 id={comment.id}
-                indent={props.indent + 1}
               />
             ) : null}
           </div>

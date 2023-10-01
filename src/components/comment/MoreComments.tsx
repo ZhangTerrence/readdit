@@ -7,7 +7,6 @@ type MoreCommentsProps = {
   session: Session | null;
   postId: string;
   id: string;
-  indent: number;
 };
 
 export const MoreComments = async (props: MoreCommentsProps) => {
@@ -61,7 +60,6 @@ export const MoreComments = async (props: MoreCommentsProps) => {
         session={props.session}
         postId={props.postId}
         comments={comments.replies}
-        indent={props.indent + 1}
       />
     </ViewMoreComments>
   );

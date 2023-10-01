@@ -4,7 +4,7 @@ import { CreatePostVotePayload } from "@/lib/validators/vote";
 import { VoteTypes } from "@prisma/client";
 import type { Session } from "next-auth";
 import { useEffect, useState } from "react";
-import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
+import { PiArrowFatUpFill, PiArrowFatDownFill } from "react-icons/pi";
 import { toast } from "react-toastify";
 
 type PostVoteClientProps = {
@@ -76,7 +76,7 @@ export const PostVoteClient = (props: PostVoteClientProps) => {
           createPostVote(VoteTypes.UP);
         }}
       >
-        <IoArrowUpSharp
+        <PiArrowFatUpFill
           className={`${
             currentVote === "UP" ? "text-blue-700" : ""
           } m-auto block`}
@@ -89,7 +89,7 @@ export const PostVoteClient = (props: PostVoteClientProps) => {
           createPostVote(VoteTypes.DOWN);
         }}
       >
-        <IoArrowDownSharp
+        <PiArrowFatDownFill
           className={`${
             currentVote === "DOWN" ? "text-red-700" : ""
           } m-auto block`}

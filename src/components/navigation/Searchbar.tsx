@@ -9,12 +9,12 @@ export const Searchbar = () => {
   return (
     <div
       className={
-        "fixed left-0 right-0 top-0 m-auto mt-2 flex h-fit w-[40rem] items-center rounded-full border border-solid border-slate-950 bg-white p-[0.35rem]"
+        "flex-ai-center fixed left-0 right-0 top-0 m-auto mt-2.5 h-fit w-[40rem] overflow-hidden rounded-lg border border-solid border-black bg-gray-50 p-2 text-lg transition-all duration-200 ease-out"
       }
     >
-      <IoSearch className={"mx-2 text-lg"} />
+      <IoSearch className={"mx-2"} />
       <input
-        className={"grow text-lg outline-none"}
+        className={"grow bg-transparent outline-none"}
         type="text"
         name="searchbar"
         placeholder={"Search Readdit"}

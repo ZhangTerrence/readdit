@@ -13,10 +13,10 @@ export const HomeButton = () => {
 
   return (
     <button
-      className={"absolute left-0 top-0 m-4 flex items-center text-2xl"}
+      className={"absolute left-0 top-0 m-4 flex items-center gap-x-2 text-2xl"}
       onClick={() => goToHome()}
     >
-      <IoHomeSharp className={"mr-2"} />
+      <IoHomeSharp />
       <p>Home</p>
     </button>
   );

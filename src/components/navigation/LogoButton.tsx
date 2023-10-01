@@ -12,15 +12,12 @@ export const LogoButton = () => {
   };
 
   return (
-    <button className={"flex items-center"} onClick={() => goToHome()}>
-      <Image
-        className={"mr-4 block"}
-        src={"/readdit.png"}
-        alt={"readdit"}
-        width={25}
-        height={25}
-      />
-      <p className={"text-xl"}>Readdit</p>
+    <button
+      className={"flex-ai-center gap-x-3 text-xl"}
+      onClick={() => goToHome()}
+    >
+      <Image src={"/readdit.png"} alt={"readdit"} width={25} height={25} />
+      <p>Readdit</p>
     </button>
   );
 };

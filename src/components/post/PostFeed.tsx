@@ -11,7 +11,7 @@ type PostFeedProps =
       posts: (Post & {
         author: {
           id: string;
-          username: string;
+          username: string | null;
         };
         postVotes: PostVote[];
         comments: Comment[];
@@ -27,7 +27,7 @@ type PostFeedProps =
       posts: (Post & {
         author: {
           id: string;
-          username: string;
+          username: string | null;
         };
         subreaddit: {
           id: string;
@@ -40,7 +40,7 @@ type PostFeedProps =
 
 export const PostFeed = (props: PostFeedProps) => {
   return (
-    <div className={"flex flex-col items-center pt-4"}>
+    <div className={"flex-ai-center flex-col pt-4"}>
       {props.type === "single"
         ? props.posts.map((post, i) => {
             const currentVote = post.postVotes.find(

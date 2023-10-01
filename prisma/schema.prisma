@@ -39,7 +39,7 @@ model User {
   id String @id @default(cuid())
 
   name          String?
-  username      String    @unique
+  username      String?   @unique
   email         String?   @unique
   emailVerified DateTime?
   image         String    @default("https://utfs.io/f/3fbc2bf9-050e-4a0e-b15a-1c78ebaaeed0_DefaultUser.png")

@@ -4,7 +4,7 @@ import { CreateCommentVotePayload } from "@/lib/validators/vote";
 import { VoteTypes } from "@prisma/client";
 import type { Session } from "next-auth";
 import { useEffect, useState } from "react";
-import { IoArrowDownSharp, IoArrowUpSharp } from "react-icons/io5";
+import { PiArrowFatUpFill, PiArrowFatDownFill } from "react-icons/pi";
 import { toast } from "react-toastify";
 
 type CommentVoteClientProps = {
@@ -69,17 +69,15 @@ export const CommentVoteClient = (props: CommentVoteClientProps) => {
   };
 
   return (
-    <>
+    <div className={"flex gap-x-2"}>
       <button
         onClick={(e) => {
           e.preventDefault();
           createCommentVote(VoteTypes.UP);
         }}
       >
-        <IoArrowUpSharp
-          className={`${
-            currentVote === "UP" ? "text-blue-700" : ""
-          } m-auto block`}
+        <PiArrowFatUpFill
+          className={`${currentVote === "UP" ? "text-blue-700" : ""}`}
         />
       </button>
       <p className={"text-center"}>{commentVotes}</p>
@@ -89,12 +87,10 @@ export const CommentVoteClient = (props: CommentVoteClientProps) => {
           createCommentVote(VoteTypes.DOWN);
         }}
       >
-        <IoArrowDownSharp
-          className={`${
-            currentVote === "DOWN" ? "text-red-700" : ""
-          } m-auto block`}
+        <PiArrowFatDownFill
+          className={`${currentVote === "DOWN" ? "text-red-700" : ""}`}
         />
       </button>
-    </>
+    </div>
   );
 };

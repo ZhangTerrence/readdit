@@ -52,45 +52,50 @@ export const CreateComment = (props: CreateCommentProps) => {
   };
 
   return (
-    <div className={`flex w-full flex-col`}>
+    <div className={`flex w-full flex-col gap-y-4`}>
       {props.session ? (
-        <h4 className={"mb-2 text-sm text-gray-500"}>
+        <h4 className={"text-sm"}>
           Replying as u/{props.session.user.username}
         </h4>
       ) : null}
       <textarea
         id={"editor"}
         className={
-          "resize-none rounded-md border border-solid border-slate-950 p-2"
+          "h-20 max-h-60 rounded-md border border-solid border-black p-2 outline-none"
         }
         ref={textRef}
         placeholder={"Write your comment here..."}
       />
-      <div className={"self-end"}>
+      <div className={"flex gap-x-2 self-end"}>
         {props.closeReplying ? (
-          <button
+          <div
             className={
-              "mr-4 mt-2 w-fit self-end rounded-full bg-slate-300 px-4 py-2 text-sm text-slate-950"
+              "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-4 py-2 text-sm shadow-md active:shadow-none"
             }
             onClick={(e) => {
               e.preventDefault();
               props.closeReplying!();
             }}
           >
-            Cancel
-          </button>
+            <button className={"relative"}>Cancel</button>
+          </div>
         ) : null}
-        <button
+        <div
           className={
-            "mt-2 w-fit self-end rounded-full bg-gray-700 px-4 py-2 text-sm text-white"
+            "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm text-white shadow-md active:shadow-none"
           }
           onClick={(e) => {
             e.preventDefault();
             createComment();
           }}
         >
-          Comment
-        </button>
+          <span
+            className={
+              "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+            }
+          ></span>
+          <button className={"relative"}>Comment</button>
+        </div>
       </div>
     </div>
   );

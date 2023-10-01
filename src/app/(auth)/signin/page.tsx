@@ -4,19 +4,24 @@ import { HomeButton } from "@/components/navigation/HomeButton";
 
 export default async function SigninPage() {
   return (
-    <main className={"relative flex h-screen w-screen bg-slate-50"}>
+    <main
+      className={
+        "relative h-screen w-screen bg-gradient-to-r from-white to-gray-300"
+      }
+    >
       <HomeButton />
-      <form
+      <div
         className={
-          "ml-[20rem] flex h-full grow flex-col items-start justify-center border-l border-solid border-slate-950 bg-gradient-to-br from-slate-50 to-slate-300 pl-12"
+          "flex-jc-center ml-80 h-full flex-col items-start gap-y-8 border-l-2 border-solid border-black pl-12"
         }
       >
-        <h1 className={"mb-2 text-4xl underline"}>SIGN IN</h1>
-        <p className={"mb-6 text-lg"}>
-          By continuing, you agree to our
-          <a href=""> User Agreement</a> and
-          <a href=""> Privacy Policy</a>.
-        </p>
+        <div>
+          <h1 className={"mb-4 text-4xl underline"}>Sign In</h1>
+          <p className={"text-lg"}>
+            By continuing, you are creating a Readdit account and agree to our
+            User Agreement and Privacy Policy.
+          </p>
+        </div>
         <AuthProviders />
         <p className={"text-lg"}>
           New to Readdit?{" "}
@@ -24,7 +29,7 @@ export default async function SigninPage() {
             Sign Up
           </Link>
         </p>
-      </form>
+      </div>
     </main>
   );
 }

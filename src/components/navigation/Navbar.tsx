@@ -11,7 +11,7 @@ export const Navbar = async () => {
   return (
     <nav
       className={
-        "fixed left-0 right-0 z-20 mx-auto flex h-14 w-screen items-center justify-between border-b border-solid border-b-slate-500 bg-white px-4"
+        "flex-ai-center fixed top-0 z-20 h-16 w-screen justify-between border border-b border-black bg-white px-4"
       }
     >
       <LogoButton />
@@ -19,18 +19,32 @@ export const Navbar = async () => {
       {session ? (
         <ProfileInfo session={session} />
       ) : (
-        <div className={"flex"}>
+        <div className={"flex gap-x-2 text-lg"}>
           <Link
-            className={"mr-4 rounded-lg bg-slate-200 p-2 text-lg"}
+            className={
+              "group relative m-1 inline-flex cursor-pointer items-center justify-center rounded-md bg-slate-900 px-3.5 py-2 text-white shadow-lg active:shadow-none"
+            }
             href={"/signup"}
           >
-            Sign Up
+            <span
+              className={
+                "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-32"
+              }
+            ></span>
+            <span className="relative">Sign Up</span>
           </Link>
           <Link
-            className={"rounded-lg bg-gray-800 p-2 text-lg text-slate-50"}
+            className={
+              "group relative m-1 inline-flex cursor-pointer items-center justify-center rounded-md bg-slate-900 px-3.5 py-2 text-white shadow-lg active:shadow-none"
+            }
             href={"/signin"}
           >
-            Sign In
+            <span
+              className={
+                "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-32"
+              }
+            ></span>
+            <span className="relative">Sign In</span>
           </Link>
         </div>
       )}

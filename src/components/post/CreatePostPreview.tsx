@@ -17,11 +17,11 @@ export const CreatePostPreview = (props: {
   return (
     <div
       className={
-        "flex items-center rounded-md border border-solid border-slate-500 bg-gray-200 p-3"
+        "flex-ai-center gap-x-3 rounded-md border border-solid border-black bg-gray-100 p-3"
       }
     >
       <Image
-        className={"mr-3 rounded-full border border-solid border-slate-500"}
+        className={"rounded-full border border-solid border-black"}
         src={props.session.user.image!}
         alt={"user image"}
         width={40}
@@ -29,7 +29,7 @@ export const CreatePostPreview = (props: {
       />
       <input
         className={
-          "w-full rounded-md border border-solid border-slate-500 bg-slate-50 py-2 pl-2 text-lg outline-none"
+          "grow rounded-md border border-solid border-black py-2 pl-2 text-lg outline-none"
         }
         type="text"
         placeholder={"Create Post"}

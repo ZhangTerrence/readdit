@@ -63,30 +63,22 @@ export default async function SubreadditPage({
   return (
     <div className={"relative"}>
       <HomeButton />
-      <main
-        className={
-          "flex h-fit min-h-screen flex-col items-center bg-slate-200 py-8"
-        }
-      >
+      <main className={"flex-ai-center h-fit min-h-screen flex-col py-8"}>
         <div
-          className={
-            "flex w-[75rem] border-b-[2px] border-solid border-slate-950 pb-3"
-          }
+          className={"flex w-[75rem] border-b-2 border-solid border-black pb-4"}
         >
-          <div className={"flex w-full items-center justify-between"}>
-            <div className={"flex"}>
+          <div className={"flex-ai-center w-full justify-between"}>
+            <div className={"flex gap-x-4"}>
               <Image
-                className={
-                  "mr-4 rounded-full border-[2px] border-solid border-slate-950"
-                }
+                className={"rounded-full border-2 border-solid border-black"}
                 src={subreaddit.image}
                 alt={"subreaddit image"}
-                width={90}
-                height={90}
+                width={100}
+                height={100}
               />
-              <div className={"flex flex-col self-end"}>
-                <h1 className={"mb-1 text-4xl font-bold"}>{subreaddit.name}</h1>
-                <h2 className={"text-lg"}>r/{subreaddit.name}</h2>
+              <div className={"flex flex-col gap-y-1 self-end"}>
+                <h1 className={"text-6xl font-semibold"}>{subreaddit.name}</h1>
+                <h2 className={"text-2xl"}>r/{subreaddit.name}</h2>
               </div>
             </div>
             {subreaddit.creatorId !== session?.user.id ? (
@@ -98,8 +90,8 @@ export default async function SubreadditPage({
             ) : null}
           </div>
         </div>
-        <div className={"flex py-8"}>
-          <div className={"mr-10 flex w-[50rem] flex-col"}>
+        <div className={"flex gap-x-10 pt-8"}>
+          <div className={"flex w-[50rem] flex-col"}>
             <CreatePostPreview session={session} subreadditId={subreaddit.id} />
             <PostFeed
               type={"single"}
@@ -108,53 +100,55 @@ export default async function SubreadditPage({
               subreaddit={{ id: subreaddit.id, name: subreaddit.name }}
             />
           </div>
-          <div className={"flex flex-col"}>
+          <div className={"flex h-fit w-[22.5rem] flex-col gap-y-4"}>
             <div
               className={
-                "mb-4 h-fit w-[22.5rem] rounded-md border border-solid border-slate-500 bg-slate-50"
+                "overflow-hidden rounded-md border border-solid border-black"
               }
             >
-              <h1 className={"bg-slate-950 p-4 text-lg text-slate-50"}>
+              <h1 className={"bg-slate-950 p-4 text-lg text-white"}>
                 About Community
               </h1>
-              <div className={"p-4"}>
-                <p>{subreaddit.description}</p>
+              <div className={"flex flex-col gap-y-3 p-4"}>
+                <p className={"border-b border-solid border-gray-400 pb-3"}>
+                  {subreaddit.description}
+                </p>
                 <div
                   className={
-                    "mt-3 flex items-center border-b border-t border-solid border-slate-300 py-2"
+                    "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-3"
                   }
                 >
-                  <FaUser className={"mr-2"} />
-                  <p className={"text-gray-500"}>{subscribers} members</p>
+                  <FaUser />
+                  <p>{subscribers} members</p>
                 </div>
                 <div
                   className={
-                    "mt-3 flex items-center border-b border-solid border-slate-300 pb-2"
+                    "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-3"
                   }
                 >
-                  <FaBirthdayCake className={"mr-2"} />
-                  <p className={"text-gray-500"}>
-                    Created {format(subreaddit.createdAt, "MMMM d, yyyy")}
-                  </p>
+                  <FaBirthdayCake />
+                  <p>Created {format(subreaddit.createdAt, "MMMM d, yyyy")}</p>
                 </div>
                 <Link
+                  className={
+                    "group relative inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-slate-900 px-3.5 py-2 text-lg text-white shadow-md active:shadow-none"
+                  }
                   href={{
                     pathname: `/submit/${subreaddit.id}`,
                   }}
                 >
-                  <button
+                  <span
                     className={
-                      "mt-4 w-full rounded-full border border-solid border-slate-500 bg-gray-950 p-1 text-lg text-slate-50"
+                      "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
                     }
-                  >
-                    Create Post
-                  </button>
+                  ></span>
+                  <button className={"relative"}>Create Post</button>
                 </Link>
               </div>
             </div>
             <div
               className={
-                "h-fit w-[22.5rem] rounded-md border border-solid border-slate-500 bg-slate-50"
+                "overflow-hidden rounded-md border border-solid border-black "
               }
             >
               <h1 className={"bg-slate-950 p-4 text-lg text-slate-50"}>
@@ -165,7 +159,7 @@ export default async function SubreadditPage({
                   return (
                     <li
                       className={
-                        "w-full border-b border-solid border-slate-300 py-2"
+                        "w-full border-b border-solid border-gray-400 py-2"
                       }
                       key={i}
                     >

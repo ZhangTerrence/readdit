@@ -180,18 +180,18 @@ export const CreatePost = (props: {
   };
 
   return (
-    <div className={"mr-12"}>
+    <div className={"flex flex-col gap-y-4"}>
       <div
         className={
-          "flex items-center border-b-[2px] border-solid border-slate-50 text-xl"
+          "flex-ai-center gap-x-3 border-b border-solid border-gray-400 text-xl"
         }
       >
-        <IoPencil className={"-mt-3 mr-2"} />
-        <h1 className={"pb-4 font-bold"}>Create a post</h1>
+        <IoPencil className={"-mt-3"} />
+        <h1 className={"pb-3 font-bold"}>Create a post</h1>
       </div>
       <div
         className={
-          "mt-4 w-1/2 rounded-md border border-solid border-slate-500 text-lg"
+          "w-1/2 rounded-md border border-solid border-gray-500 text-lg"
         }
       >
         <input
@@ -202,17 +202,15 @@ export const CreatePost = (props: {
       </div>
       <div
         className={
-          "mt-4 flex w-[50rem] flex-col rounded-md border border-solid border-slate-500 bg-slate-50 p-4"
+          "flex w-[50rem] flex-col gap-y-4 rounded-md border border-solid border-gray-500 p-4"
         }
       >
         <div
-          className={
-            "relative mb-4 rounded-sm border border-solid border-slate-300"
-          }
+          className={"relative rounded-sm border border-solid border-gray-400"}
         >
           <input
             className={
-              "w-full bg-transparent py-2 pl-3 pr-16 text-2xl outline-none"
+              "w-full rounded-md bg-transparent py-2 pl-3 pr-16 text-2xl outline-none"
             }
             ref={titleRef}
             type="text"
@@ -233,34 +231,39 @@ export const CreatePost = (props: {
         </div>
         <div
           className={
-            "mb-4 h-fit rounded-sm border border-solid border-slate-300 p-4"
+            "h-fit rounded-sm border border-solid border-slate-300 p-4"
           }
         >
           <div id={"editor"} className={"break-words pl-4"} />
         </div>
-        <div className={"flex self-end"}>
-          <button
+        <div className={"flex gap-x-4 self-end"}>
+          <div
             className={
-              "mr-4 w-fit self-end rounded-full border border-solid border-slate-500 bg-slate-200 px-6 py-[0.65rem] text-sm leading-normal text-slate-950"
+              "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
             }
             onClick={(e) => {
               e.preventDefault();
               cancelCreatePost();
             }}
           >
-            Cancel
-          </button>
-          <button
+            <button className={"relative"}>Cancel</button>
+          </div>
+          <div
             className={
-              "w-fit self-end rounded-full bg-gray-700 px-6 py-[0.65rem] text-sm leading-normal text-white"
+              "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-6 py-2 text-xl text-white shadow-md active:shadow-none"
             }
             onClick={(e) => {
               e.preventDefault();
               createPost();
             }}
           >
-            Post
-          </button>
+            <span
+              className={
+                "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+              }
+            ></span>
+            <button className={"relative"}>Create Post</button>
+          </div>
         </div>
       </div>
     </div>

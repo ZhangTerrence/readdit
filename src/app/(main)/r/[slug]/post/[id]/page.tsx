@@ -105,15 +105,15 @@ export default async function PostPage({
   });
 
   return (
-    <div className={"flex h-fit min-h-screen justify-center bg-gray-900"}>
-      <div className={"flex max-w-[85rem] bg-slate-200 p-8"}>
+    <div className={"flex-jc-center h-fit min-h-screen bg-black"}>
+      <div className={"flex max-w-[85rem] gap-x-4 bg-white p-8"}>
         <div
           className={
-            "mr-4 flex w-[50rem] flex-col overflow-x-scroll rounded-md border border-solid border-slate-500 bg-slate-50 p-4"
+            "flex w-[50rem] flex-col gap-y-2 rounded-md border border-solid border-slate-500 p-4"
           }
         >
-          <div className={"mb-6 flex"}>
-            <div className={"mr-3 w-12 text-xl"}>
+          <div className={"flex gap-x-3 py-4"}>
+            <div className={"text-2xl"}>
               <PostVoteClient
                 session={session}
                 postId={post.id}
@@ -121,8 +121,12 @@ export default async function PostPage({
                 initialVote={currentVote?.type}
               />
             </div>
-            <div className={"grow"}>
-              <div className={"mb-2 flex text-sm"}>
+            <div
+              className={
+                "flex grow flex-col gap-y-2 border-l border-solid border-gray-400 pl-4"
+              }
+            >
+              <div className={"flex text-sm"}>
                 <GoToSubreaddit
                   style={"hover:underline"}
                   subreadditName={post.subreaddit.name}
@@ -145,55 +149,58 @@ export default async function PostPage({
               <ContentRenderer content={post.content} />
             </div>
           </div>
-          <hr className={"border-t border-slate-950 pb-4"} />
+          <hr className={"border-t border-solid border-black pb-4"} />
           <CreateComment session={session} postId={post.id} />
-          <CommentSection
-            session={session}
-            postId={post.id}
-            comments={post.comments.filter((comment) => !comment.replyingToId)}
-            indent={0}
-          />
+          <div className={"overflow-x-scroll"}>
+            <CommentSection
+              session={session}
+              postId={post.id}
+              comments={post.comments.filter(
+                (comment) => !comment.replyingToId,
+              )}
+            />
+          </div>
         </div>
-        <div className={"flex flex-col"}>
-          <div
-            className={
-              "mb-4 h-fit w-[22.5rem] rounded-md border border-solid border-slate-500 bg-slate-50"
-            }
-          >
-            <div className={"flex items-center px-4 pt-4"}>
+        <div className={"flex h-fit w-[22.5rem] flex-col gap-y-4"}>
+          <div className={"rounded-md border border-solid border-gray-500"}>
+            <div className={"flex-ai-center gap-x-4 px-4 pt-4"}>
               <Image
-                className={
-                  "mr-4 rounded-full border-[2px] border-solid border-slate-950"
-                }
+                className={"rounded-full border-2 border-solid border-black"}
                 src={post.subreaddit.image}
                 alt={"subreaddit image"}
                 width={65}
                 height={65}
               />
-              <GoToSubreaddit
-                style={"text-xl font-semibold"}
-                subreadditName={post.subreaddit.name}
-              >
-                r/{post.subreaddit.name}
+              <GoToSubreaddit subreadditName={post.subreaddit.name}>
+                <div className={"flex flex-col gap-y-1"}>
+                  <h1 className={"text-3xl font-semibold"}>
+                    {post.subreaddit.name}
+                  </h1>
+                  <h2 className={"text-start text-xl"}>
+                    r/{post.subreaddit.name}
+                  </h2>
+                </div>
               </GoToSubreaddit>
             </div>
-            <div className={"p-4"}>
-              <p>{post.subreaddit.description}</p>
+            <div className={"flex flex-col gap-y-3 p-4"}>
+              <p className={"border-b border-solid border-gray-400 pb-2"}>
+                {post.subreaddit.description}
+              </p>
               <div
                 className={
-                  "mt-3 flex items-center border-b border-t border-solid border-slate-300 py-2"
+                  "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-2"
                 }
               >
-                <FaUser className={"mr-2"} />
-                <p className={"text-gray-500"}>{subscribers} members</p>
+                <FaUser />
+                <p>{subscribers} members</p>
               </div>
               <div
                 className={
-                  "mt-3 flex items-center border-b border-solid border-slate-300 pb-2"
+                  "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-2"
                 }
               >
-                <FaBirthdayCake className={"mr-2"} />
-                <p className={"text-gray-500"}>
+                <FaBirthdayCake />
+                <p>
                   Created {format(post.subreaddit.createdAt, "MMMM d, yyyy")}
                 </p>
               </div>
@@ -207,18 +214,18 @@ export default async function PostPage({
               ) : null}
             </div>
           </div>
-          <div
-            className={
-              "h-fit w-[22.5rem] rounded-md border border-solid border-slate-500 bg-slate-50"
-            }
-          >
-            <h1 className={"bg-slate-950 p-4 text-lg text-slate-50"}>Rules</h1>
-            <ul className={"ml-4 list-decimal p-4"}>
+          <div className={"rounded-md border border-solid border-gray-500"}>
+            <h1
+              className={"overflow-hidden bg-slate-950 p-4 text-lg text-white"}
+            >
+              Rules
+            </h1>
+            <ul className={"ml-4 list-decimal px-4 pb-4 pt-2"}>
               {post.subreaddit.rules.map((rule, i) => {
                 return (
                   <li
                     className={
-                      "w-full border-b border-solid border-slate-300 py-2"
+                      "w-full border-b border-solid border-gray-400 py-2"
                     }
                     key={i}
                   >

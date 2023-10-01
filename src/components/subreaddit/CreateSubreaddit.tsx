@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 export const CreateSubreaddit = (props: { session: Session | null }) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const subreadditNameRef = useRef<HTMLInputElement | null>(null);
-  const subreadditDescRef = useRef<HTMLInputElement | null>(null);
+  const subreadditDescRef = useRef<HTMLTextAreaElement | null>(null);
   const [nameCharRemaining, setNameCharRemaining] = useState(21);
   const [nameError, setNameError] = useState<string | null>(null);
   const router = useRouter();
@@ -27,7 +27,7 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
   const checkName = (input: string) => {
     if (!input.match(/^[a-zA-Z0-9_]*$/) || input.length < 3) {
       setNameError(
-        "Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.",
+        "Community names must be between 3-21 characters, and can only contain letters, numbers, or underscores.",
       );
     } else setNameError(null);
   };
@@ -77,18 +77,16 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
 
   return (
     <>
-      <button
+      <div
         className={
-          "mt-4 w-full rounded-full border border-solid border-slate-500 p-1 text-xl"
+          "inline-flex w-full cursor-pointer items-center justify-center rounded-full border border-solid border-black px-3.5 py-2 text-xl shadow-md active:shadow-none"
         }
         onClick={() => modalRef.current?.showModal()}
       >
-        Create Community
-      </button>
+        <button className={"relative"}>Create Community</button>
+      </div>
       <dialog
-        className={
-          "absolute inset-0 m-auto backdrop:bg-slate-900 backdrop:opacity-30"
-        }
+        className={"fixed inset-0 m-auto backdrop:opacity-50"}
         ref={modalRef}
         open={false}
         onClick={(e) => {
@@ -97,30 +95,32 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
       >
         <form
           className={
-            "flex w-[40rem] flex-col border border-solid border-slate-950 p-4"
+            "flex w-[40rem] flex-col overflow-y-hidden rounded-md border border-solid border-black p-8"
           }
         >
           <div
             className={
-              "flex items-center justify-between border-b border-solid border-b-slate-950 pb-4"
+              "flex-ai-center justify-between border-b border-solid border-b-black pb-3"
             }
           >
             <h1 className={"text-xl"}>Create a community</h1>
-            <IoClose
-              className={"cursor-pointer text-2xl"}
-              onClick={() => closeModal()}
-            />
+            <div
+              className={"rounded-full p-2 transition-colors hover:bg-slate-50"}
+            >
+              <IoClose
+                className={"cursor-pointer text-2xl"}
+                onClick={() => closeModal()}
+              />
+            </div>
           </div>
           <h2 className={"mt-4 text-xl"}>Name</h2>
-          <div className={"mt-1 flex items-center text-sm"}>
-            <p className={"mr-2"}>
-              Community names including capitalization cannot be changed.
-            </p>
-            <div className={"relative mt-[1px]"}>
+          <div className={"flex-ai-center mt-1 gap-x-2 text-sm"}>
+            <p>Community names including capitalization cannot be changed.</p>
+            <div className={"relative"}>
               <IoInformationCircle className={"peer"} />
               <span
                 className={
-                  "invisible absolute -left-[7.25rem] top-full z-10 mt-2 w-[15rem] break-words rounded-md bg-gray-950 p-2 text-center text-sm text-slate-50 peer-hover:visible"
+                  "invisible absolute -left-[7.25rem] top-full z-10 mt-2 w-60 break-words rounded-md bg-black p-2 text-center text-sm text-slate-50 peer-hover:visible"
                 }
               >
                 {`Names cannot have spaces (e.g., "r/bookclub" not "r/book club"),
@@ -133,14 +133,14 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
           <div className={"relative mt-4"}>
             <span
               className={
-                "absolute bottom-0 left-0 top-0 my-auto ml-3 h-fit w-fit text-gray-500"
+                "absolute bottom-0 left-0 top-0 my-auto ml-3 h-fit w-fit text-gray-600"
               }
             >
               r/
             </span>
             <input
               className={
-                "w-full border border-solid border-slate-200 px-7 py-2"
+                "w-full rounded-md border border-solid border-gray-400 px-7 py-2 outline-none"
               }
               ref={subreadditNameRef}
               type="text"
@@ -156,47 +156,55 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
                 }
               }}
             />
+            <p
+              className={`${
+                nameCharRemaining === 0 ? "text-red-600" : ""
+              } absolute bottom-0 right-0 top-0 my-auto mr-3 h-fit select-none text-xs font-semibold`}
+            >
+              {nameCharRemaining}/21
+            </p>
           </div>
-          <p
-            className={`${
-              nameCharRemaining === 0 ? "text-red-600" : ""
-            } mt-4 text-sm`}
-          >
-            {nameCharRemaining} Characters remaining
-          </p>
           {nameError ? (
             <p className={"mt-2 text-sm text-red-600"}>{nameError}</p>
           ) : null}
-          <h2 className={"mt-4 flex items-center text-xl"}>
-            Description <p className={"ml-1 text-xs italic"}>(Optional)</p>
+          <h2 className={"flex-ai-center mt-4 text-xl"}>
+            Description (Optional)
           </h2>
-          <input
-            className={"mt-4 w-full border border-solid border-slate-200 p-2"}
+          <textarea
+            className={
+              "mt-4 max-h-40 w-full rounded-md border border-solid border-gray-400 p-3 outline-none"
+            }
             ref={subreadditDescRef}
-            type="text"
             placeholder={"A wonderful description."}
           />
-          <div className={"mt-8 flex justify-end"}>
-            <button
+          <div className={"mt-8 flex justify-end gap-x-4"}>
+            <div
               className={
-                "mr-4 rounded-md border border-solid border-slate-950 bg-slate-200 p-3 text-lg"
+                "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
               }
               onClick={(e) => {
                 e.preventDefault();
                 closeModal();
               }}
             >
-              Cancel
-            </button>
-            <button
-              className={"rounded-md bg-gray-950 p-3 text-lg text-slate-50"}
+              <button className={"relative"}>Cancel</button>
+            </div>
+            <div
+              className={
+                "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-6 py-2 text-xl text-white shadow-md active:shadow-none"
+              }
               onClick={(e) => {
                 e.preventDefault();
                 createSubreaddit();
               }}
             >
-              Create Community
-            </button>
+              <span
+                className={
+                  "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+                }
+              ></span>
+              <button className={"relative"}>Create Community</button>
+            </div>
           </div>
         </form>
       </dialog>
