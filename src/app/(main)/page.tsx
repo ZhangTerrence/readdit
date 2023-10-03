@@ -1,13 +1,10 @@
 import Link from "next/link";
 import { CreateSubreaddit } from "@/components/subreaddit/CreateSubreaddit";
 import { PostFeed } from "@/components/post/PostFeed";
-import { getAuthSession } from "@/lib/auth";
-import { IoChatbox, IoHome } from "react-icons/io5";
 import prisma from "@/lib/prisma";
+import { IoChatbox, IoHome } from "react-icons/io5";
 
 export default async function HomePage() {
-  const session = await getAuthSession();
-
   const posts = await prisma.post.findMany({
     include: {
       author: {
@@ -32,7 +29,7 @@ export default async function HomePage() {
   });
 
   return (
-    <main className={"flex-jc-center h-fit min-h-screen gap-x-12 py-8"}>
+    <main className={"flex h-fit min-h-screen justify-center gap-x-12 py-8"}>
       <div
         className={
           "w-[50rem] rounded-md border border-solid border-black px-8 py-6"
@@ -40,13 +37,13 @@ export default async function HomePage() {
       >
         <div
           className={
-            "flex-ai-center gap-x-4 border-b border-solid border-black pb-4 text-2xl font-bold"
+            "flex items-center gap-x-4 border-b border-solid border-black pb-4 text-2xl font-bold"
           }
         >
           <IoChatbox className={"mt-1"} />
           <h1>Your Feed</h1>
         </div>
-        <PostFeed type={"multiple"} session={session} posts={posts} />
+        <PostFeed type={"multiple"} posts={posts} />
       </div>
       <div
         className={
@@ -58,7 +55,7 @@ export default async function HomePage() {
             "flex flex-col gap-y-3 border-b border-solid border-black pb-4"
           }
         >
-          <div className={"flex-ai-center gap-x-4 text-2xl font-bold"}>
+          <div className={"flex items-center gap-x-4 text-2xl font-bold"}>
             <IoHome />
             <h1>Home</h1>
           </div>
@@ -81,7 +78,7 @@ export default async function HomePage() {
             ></span>
             <button className={"relative"}>Create Post</button>
           </Link>
-          <CreateSubreaddit session={session} />
+          <CreateSubreaddit />
         </div>
       </div>
     </main>

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const CreatePostValidator = z.object({
+  subreadditId: z.string(),
   title: z
     .string()
     .min(3, {
@@ -10,7 +11,6 @@ export const CreatePostValidator = z.object({
       message: "Title must be less than 128 characters long",
     }),
   content: z.any(),
-  subreadditId: z.string(),
 });
 
 export const UpdatePostValidator = z.object({

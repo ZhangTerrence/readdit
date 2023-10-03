@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 
-export const ViewMoreComments = ({
-  children,
-}: {
+type ViewMoreButtonProps = {
   children: React.ReactNode;
-}) => {
+};
+
+export const ViewMoreButton = (props: ViewMoreButtonProps) => {
   const [display, setDisplay] = useState(false);
 
   return display ? (
-    <div>{children}</div>
+    <div>{props.children}</div>
   ) : (
     <button className={"self-start"} onClick={() => setDisplay(true)}>
       View More

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { AuthProviders } from "@/components/AuthProviders";
 import { HomeButton } from "@/components/navigation/HomeButton";
+import { AuthButtons } from "@/components/auth/AuthButtons";
+import { IoHomeSharp } from "react-icons/io5";
 
 export default async function LoginPage() {
   return (
@@ -9,10 +10,17 @@ export default async function LoginPage() {
         "relative h-screen w-screen bg-gradient-to-r from-white to-gray-300"
       }
     >
-      <HomeButton />
+      <HomeButton
+        className={
+          "absolute left-0 top-0 m-4 flex items-center gap-x-2 text-2xl"
+        }
+      >
+        <IoHomeSharp />
+        <p>Home</p>
+      </HomeButton>
       <form
         className={
-          "flex-jc-center ml-80 h-full flex-col items-start gap-y-8 border-l-2 border-solid border-black pl-12"
+          "ml-80 flex h-full flex-col items-start justify-center gap-y-8 border-l-2 border-solid border-black pl-12"
         }
       >
         <div>
@@ -22,7 +30,7 @@ export default async function LoginPage() {
             User Agreement and Privacy Policy.
           </p>
         </div>
-        <AuthProviders />
+        <AuthButtons />
         <p className={"text-lg"}>
           Already a Readditor?{" "}
           <Link className={"font-bold underline"} href={"/signin"}>

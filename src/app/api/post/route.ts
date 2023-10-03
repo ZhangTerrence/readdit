@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { title, content, subreadditId } = CreatePostValidator.parse(body);
+    const { subreadditId, title, content } = CreatePostValidator.parse(body);
 
     const subscriptionExists = await prisma.subscription.findFirst({
       where: {
@@ -67,24 +67,46 @@ export async function DELETE(req: Request) {
 
     const { postId, subreadditId } = DeletePostValidator.parse(body);
 
-    const subscriptionExists = await prisma.subscription.findFirst({
+    const comments = await prisma.comment.findMany({
       where: {
-        subreadditId,
-        userId: session.user.id,
+        postId,
       },
     });
 
-    if (!subscriptionExists) {
-      return new Response("Must be subscribed to subreaddit.", {
-        status: 400,
+    comments.map(async (comment) => {
+      await prisma.commentVote.deleteMany({
+        where: {
+          commentId: comment.id,
+        },
+      });
+
+      await prisma.comment.delete({
+        where: {
+          id: comment.id,
+          postId,
+        },
+      });
+    });
+
+    const votes = await prisma.postVote.findMany({
+      where: {
+        postId,
+      },
+    });
+
+    if (votes) {
+      await prisma.postVote.deleteMany({
+        where: {
+          postId,
+        },
       });
     }
 
     await prisma.post.delete({
       where: {
-        subreadditId,
-        authorId: session.user.id,
         id: postId,
+        authorId: session.user.id,
+        subreadditId,
       },
     });
 
@@ -93,6 +115,8 @@ export async function DELETE(req: Request) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
     }
+
+    console.log(error);
 
     return new Response("Internal server error.", { status: 500 });
   }

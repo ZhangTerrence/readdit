@@ -1,24 +1,26 @@
 "use client";
 
-import type { Session } from "next-auth";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { CreateCommentPayload } from "@/lib/validators/comment";
 import { toast } from "react-toastify";
 
 type CreateCommentProps = {
-  session: Session | null;
-  postId: string;
-  replyingToId?: string;
-  closeReplying?: () => void;
+  post: {
+    id: string;
+  };
+  replyId?: string;
+  hide?: () => void;
 };
 
 export const CreateComment = (props: CreateCommentProps) => {
+  const { data: session } = useSession();
   const textRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
 
   const createComment = async () => {
-    if (!props.session) {
+    if (!session) {
       router.push("/signin");
       return;
     }
@@ -29,9 +31,9 @@ export const CreateComment = (props: CreateCommentProps) => {
     }
 
     const payload: CreateCommentPayload = {
-      postId: props.postId,
+      postId: props.post.id,
       text: textRef.current.value,
-      replyingToId: props.replyingToId,
+      replyingToId: props.replyId,
     };
 
     await fetch("/api/comment", {
@@ -45,37 +47,35 @@ export const CreateComment = (props: CreateCommentProps) => {
         const error = await response.text();
         toast.error(error);
       } else {
-        const success = await response.text();
-        toast.success(success);
+        if (textRef.current?.value) textRef.current.value = "";
+        if (props.hide) props.hide();
+        setTimeout(() => {
+          router.refresh();
+        }, 100);
       }
     });
   };
 
   return (
     <div className={`flex w-full flex-col gap-y-4`}>
-      {props.session ? (
-        <h4 className={"text-sm"}>
-          Replying as u/{props.session.user.username}
-        </h4>
+      {session ? (
+        <h4 className={"text-sm"}>Replying as u/{session.user.username}</h4>
       ) : null}
       <textarea
         id={"editor"}
         className={
-          "h-20 max-h-60 rounded-md border border-solid border-black p-2 outline-none"
+          "max-h-60 min-h-[5rem] rounded-md border border-solid border-black p-2 outline-none"
         }
         ref={textRef}
         placeholder={"Write your comment here..."}
       />
       <div className={"flex gap-x-2 self-end"}>
-        {props.closeReplying ? (
+        {props.hide ? (
           <div
             className={
               "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-4 py-2 text-sm shadow-md active:shadow-none"
             }
-            onClick={(e) => {
-              e.preventDefault();
-              props.closeReplying!();
-            }}
+            onClick={() => props.hide!()}
           >
             <button className={"relative"}>Cancel</button>
           </div>
@@ -84,14 +84,11 @@ export const CreateComment = (props: CreateCommentProps) => {
           className={
             "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm text-white shadow-md active:shadow-none"
           }
-          onClick={(e) => {
-            e.preventDefault();
-            createComment();
-          }}
+          onClick={() => createComment()}
         >
           <span
             className={
-              "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+              "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
             }
           ></span>
           <button className={"relative"}>Comment</button>

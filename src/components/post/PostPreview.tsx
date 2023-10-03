@@ -1,21 +1,24 @@
 "use client";
 
-import type { Session } from "next-auth";
 import type { Post, PostVote, Comment } from "@prisma/client";
+import { VoteTypes } from "@prisma/client";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { ContentRenderer } from "../renderers/ContentRenderer";
+import { PostVoteButtons } from "./PostVoteButtons";
 import { formatTimeToNow } from "@/lib/formatter";
 import { DeletePostPayload } from "@/lib/validators/post";
-import { VoteTypes } from "@prisma/client";
 import { BsDot } from "react-icons/bs";
 import { IoChatboxOutline, IoTrashBinOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import { PostVoteClient } from "../vote/PostVoteClient";
 
 type PostPreviewProps = {
-  session: Session | null;
+  subreaddit: {
+    id: string;
+    name: string;
+  };
   post: Post & {
     author: {
       id: string;
@@ -24,40 +27,48 @@ type PostPreviewProps = {
     postVotes: PostVote[];
     comments: Comment[];
   };
-  subreadditId: string;
-  subreadditName: string;
-  currentVote?: VoteTypes | undefined;
+  userVote: VoteTypes | undefined;
 };
 
 export const PostPreview = (props: PostPreviewProps) => {
+  const { data: session } = useSession();
   const contentRef = useRef<HTMLDivElement>(null);
-  const [blurDiv, setBlurDiv] = useState(false);
+  const [divBlur, setDivBlur] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-  const votes = props.post.postVotes.reduce((n, vote) => {
+  const postVotes = props.post.postVotes.reduce((n, vote) => {
     if (vote.type === VoteTypes.UP) return n + 1;
     if (vote.type === VoteTypes.DOWN) return n - 1;
     return n;
   }, 0);
-
   const comments = props.post.comments.length;
 
   const checkOverflow = () => {
     contentRef.current?.clientHeight === 560
-      ? setBlurDiv(true)
-      : setBlurDiv(false);
+      ? setDivBlur(true)
+      : setDivBlur(false);
+  };
+
+  const goToSubreaddit = () => {
+    router.refresh();
+    router.push(`/r/${props.subreaddit.name}`);
+  };
+
+  const goToPost = () => {
+    router.refresh();
+    router.push(`/r/${props.subreaddit.name}/post/${props.post.id}`);
   };
 
   const deletePost = async () => {
-    if (!props.session) {
+    if (!session) {
       router.push("/signin");
       return;
     }
 
     const payload: DeletePostPayload = {
       postId: props.post.id,
-      subreadditId: props.subreadditId,
+      subreadditId: props.subreaddit.id,
     };
 
     await fetch("/api/post", {
@@ -73,18 +84,11 @@ export const PostPreview = (props: PostPreviewProps) => {
       } else {
         const success = await response.text();
         toast.success(success);
+        setInterval(() => {
+          router.refresh();
+        }, 500);
       }
     });
-  };
-
-  const goToSubreaddit = () => {
-    router.refresh();
-    router.push(`/r/${props.subreadditName}`);
-  };
-
-  const goToPost = () => {
-    router.refresh();
-    router.push(`/r/${props.subreadditName}/post/${props.post.id}`);
   };
 
   return (
@@ -93,12 +97,15 @@ export const PostPreview = (props: PostPreviewProps) => {
         "relative mb-4 flex h-fit w-full overflow-hidden rounded-md border border-solid border-gray-500"
       }
     >
-      <div className={"w-12 bg-gray-100 p-3 text-xl"}>
-        <PostVoteClient
-          session={props.session}
-          postId={props.post.id}
-          initialVotes={votes}
-          initialVote={props.currentVote}
+      <div
+        className={"flex w-12 flex-col items-center bg-gray-100 p-3 text-xl"}
+      >
+        <PostVoteButtons
+          post={{
+            id: props.post.id,
+          }}
+          postVotes={postVotes}
+          userVote={props.userVote}
         />
       </div>
       <div className={"flex grow flex-col gap-y-2 px-4 py-2"}>
@@ -108,7 +115,7 @@ export const PostPreview = (props: PostPreviewProps) => {
               className={"hover:underline"}
               onClick={() => goToSubreaddit()}
             >
-              <span>r/{props.subreadditName}</span>
+              <span>r/{props.subreaddit.name}</span>
               <BsDot className={"inline-block"} />
             </button>
           ) : null}
@@ -138,7 +145,7 @@ export const PostPreview = (props: PostPreviewProps) => {
           onClick={() => goToPost()}
         >
           <ContentRenderer content={props.post.content} />
-          {blurDiv ? (
+          {divBlur ? (
             <div
               className={
                 "absolute bottom-0 left-0 h-24 w-full cursor-pointer bg-gradient-to-t from-slate-100 to-transparent"
@@ -146,9 +153,9 @@ export const PostPreview = (props: PostPreviewProps) => {
             />
           ) : null}
         </div>
-        <div className={"flex-ai-center w-full cursor-pointer"}>
+        <div className={"flex w-full cursor-pointer items-center"}>
           <button
-            className={"text-md flex-ai-center gap-x-2"}
+            className={"text-md flex items-center gap-x-2"}
             onClick={() => goToPost()}
           >
             <IoChatboxOutline />
@@ -156,15 +163,12 @@ export const PostPreview = (props: PostPreviewProps) => {
           </button>
         </div>
       </div>
-      {props.session && props.post.authorId === props.session.user.id ? (
+      {session && props.post.authorId === session.user.id ? (
         <div
           className={
             "absolute right-0 top-0 m-2 rounded-full p-2 transition-colors hover:bg-red-50"
           }
-          onClick={(e) => {
-            e.preventDefault();
-            deletePost();
-          }}
+          onClick={() => deletePost()}
         >
           <IoTrashBinOutline className={"text-lg text-red-700"} />
         </div>

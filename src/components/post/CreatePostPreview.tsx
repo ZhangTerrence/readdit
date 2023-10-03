@@ -1,28 +1,32 @@
 "use client";
 
-import type { Session } from "next-auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export const CreatePostPreview = (props: {
-  session: Session | null;
-  subreadditId: string;
-}) => {
+type CreatePostPreview = {
+  subreaddit: {
+    id: string;
+  };
+};
+
+export const CreatePostPreview = (props: CreatePostPreview) => {
+  const { data: session } = useSession();
   const router = useRouter();
 
-  if (!props.session) {
+  if (!session) {
     return null;
   }
 
   return (
     <div
       className={
-        "flex-ai-center gap-x-3 rounded-md border border-solid border-black bg-gray-100 p-3"
+        "flex items-center gap-x-3 rounded-md border border-solid border-black bg-gray-100 p-3"
       }
     >
       <Image
         className={"rounded-full border border-solid border-black"}
-        src={props.session.user.image!}
+        src={session.user.image!}
         alt={"user image"}
         width={40}
         height={40}
@@ -33,7 +37,7 @@ export const CreatePostPreview = (props: {
         }
         type="text"
         placeholder={"Create Post"}
-        onClick={() => router.push(`/submit/${props.subreadditId}`)}
+        onClick={() => router.push(`/submit/${props.subreaddit.id}`)}
       />
     </div>
   );

@@ -33,21 +33,3 @@
     border: solid 1.75px transparent;
   }
 }
-
-@layer components {
-  .flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .flex-jc-center {
-    display: flex;
-    justify-content: center;
-  }
-
-  .flex-ai-center {
-    display: flex;
-    align-items: center;
-  }
-}

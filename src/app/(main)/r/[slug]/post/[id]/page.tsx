@@ -1,19 +1,19 @@
+import { VoteTypes } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
+import { CommentSection } from "@/components/comment/CommentSection";
+import { CreateComment } from "@/components/comment/CreateComment";
+import { PostVoteButtons } from "@/components/post/PostVoteButtons";
+import { SubreadditButton } from "@/components/subreaddit/SubreadditButton";
 import { ContentRenderer } from "@/components/renderers/ContentRenderer";
-import { SubscriptionButton } from "@/components/subscription/SubscriptionButton";
+import { SubscriptionButton } from "@/components/subscription/SubscriptionButtons";
 import { formatTimeToNow } from "@/lib/formatter";
 import { getAuthSession } from "@/lib/auth";
-import { VoteTypes } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
-import { CommentSection } from "@/components/comment/CommentSection";
-import { CreateComment } from "@/components/comment/CreateComment";
-import { PostVoteClient } from "@/components/vote/PostVoteClient";
-import { GoToSubreaddit } from "@/components/subreaddit/GoToSubreaddit";
 
 export default async function PostPage({
   params,
@@ -68,10 +68,22 @@ export default async function PostPage({
                   },
                   commentVotes: true,
                 },
+                orderBy: {
+                  createdAt: "desc",
+                },
+                take: 5,
               },
             },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 5,
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
       },
     },
   });
@@ -88,13 +100,13 @@ export default async function PostPage({
     : null;
   const isSubscribed = !!subscription;
 
-  const votes = post.postVotes.reduce((n, vote) => {
+  const postVotes = post.postVotes.reduce((n, vote) => {
     if (vote.type === VoteTypes.UP) return n + 1;
     if (vote.type === VoteTypes.DOWN) return n - 1;
     return n;
   }, 0);
 
-  const currentVote = post.postVotes.find(
+  const userVote = post.postVotes.find(
     (vote: { userId: string }) => vote.userId === session?.user.id,
   );
 
@@ -105,7 +117,7 @@ export default async function PostPage({
   });
 
   return (
-    <div className={"flex-jc-center h-fit min-h-screen bg-black"}>
+    <div className={"flex h-fit min-h-screen justify-center bg-black"}>
       <div className={"flex max-w-[85rem] gap-x-4 bg-white p-8"}>
         <div
           className={
@@ -114,11 +126,12 @@ export default async function PostPage({
         >
           <div className={"flex gap-x-3 py-4"}>
             <div className={"text-2xl"}>
-              <PostVoteClient
-                session={session}
-                postId={post.id}
-                initialVotes={votes}
-                initialVote={currentVote?.type}
+              <PostVoteButtons
+                post={{
+                  id: post.id,
+                }}
+                postVotes={postVotes}
+                userVote={userVote?.type}
               />
             </div>
             <div
@@ -127,13 +140,15 @@ export default async function PostPage({
               }
             >
               <div className={"flex text-sm"}>
-                <GoToSubreaddit
-                  style={"hover:underline"}
-                  subreadditName={post.subreaddit.name}
+                <SubreadditButton
+                  className={"hover:underline"}
+                  subreaddit={{
+                    name: post.subreaddit.name,
+                  }}
                 >
                   <span>r/{post.subreaddit.name}</span>
                   <BsDot className={"inline-block"} />
-                </GoToSubreaddit>
+                </SubreadditButton>
                 <p className={"mr-2"}>
                   Posted by{" "}
                   <Link
@@ -150,11 +165,16 @@ export default async function PostPage({
             </div>
           </div>
           <hr className={"border-t border-solid border-black pb-4"} />
-          <CreateComment session={session} postId={post.id} />
+          <CreateComment
+            post={{
+              id: post.id,
+            }}
+          />
           <div className={"overflow-x-scroll"}>
             <CommentSection
-              session={session}
-              postId={post.id}
+              post={{
+                id: post.id,
+              }}
               comments={post.comments.filter(
                 (comment) => !comment.replyingToId,
               )}
@@ -163,7 +183,7 @@ export default async function PostPage({
         </div>
         <div className={"flex h-fit w-[22.5rem] flex-col gap-y-4"}>
           <div className={"rounded-md border border-solid border-gray-500"}>
-            <div className={"flex-ai-center gap-x-4 px-4 pt-4"}>
+            <div className={"flex items-center gap-x-4 px-4 pt-4"}>
               <Image
                 className={"rounded-full border-2 border-solid border-black"}
                 src={post.subreaddit.image}
@@ -171,7 +191,11 @@ export default async function PostPage({
                 width={65}
                 height={65}
               />
-              <GoToSubreaddit subreadditName={post.subreaddit.name}>
+              <SubreadditButton
+                subreaddit={{
+                  name: post.subreaddit.name,
+                }}
+              >
                 <div className={"flex flex-col gap-y-1"}>
                   <h1 className={"text-3xl font-semibold"}>
                     {post.subreaddit.name}
@@ -180,7 +204,7 @@ export default async function PostPage({
                     r/{post.subreaddit.name}
                   </h2>
                 </div>
-              </GoToSubreaddit>
+              </SubreadditButton>
             </div>
             <div className={"flex flex-col gap-y-3 p-4"}>
               <p className={"border-b border-solid border-gray-400 pb-2"}>
@@ -188,7 +212,7 @@ export default async function PostPage({
               </p>
               <div
                 className={
-                  "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-2"
+                  "flex items-center gap-x-2 border-b border-solid border-gray-400 pb-2"
                 }
               >
                 <FaUser />
@@ -196,7 +220,7 @@ export default async function PostPage({
               </div>
               <div
                 className={
-                  "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-2"
+                  "flex items-center gap-x-2 border-b border-solid border-gray-400 pb-2"
                 }
               >
                 <FaBirthdayCake />
@@ -206,10 +230,11 @@ export default async function PostPage({
               </div>
               {post.subreaddit.creatorId !== session?.user.id ? (
                 <SubscriptionButton
-                  session={session}
-                  subreadditId={post.subreaddit.id}
+                  subreaddit={{
+                    id: post.subreaddit.id,
+                  }}
                   isSubscribed={isSubscribed}
-                  classNames={"w-full mt-4 py-[0.5rem]"}
+                  className={"w-full py-1.5"}
                 />
               ) : null}
             </div>

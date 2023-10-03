@@ -1,19 +1,29 @@
 "use client";
 
-import type { Session } from "next-auth";
 import type { CreateSubreadditPayload } from "@/lib/validators/subreaddit";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { IoClose, IoInformationCircle } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-export const CreateSubreaddit = (props: { session: Session | null }) => {
+export const CreateSubreaddit = () => {
+  const { data: session } = useSession();
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const subreadditNameRef = useRef<HTMLInputElement | null>(null);
   const subreadditDescRef = useRef<HTMLTextAreaElement | null>(null);
   const [nameCharRemaining, setNameCharRemaining] = useState(21);
   const [nameError, setNameError] = useState<string | null>(null);
+  const [descCharRemaining, setDescCharRemaining] = useState(300);
   const router = useRouter();
+
+  const validateName = (input: string) => {
+    if (!input.match(/^[a-zA-Z0-9_]*$/) || input.length < 3) {
+      setNameError(
+        "Community names must be between 3-21 characters, and can only contain letters, numbers, or underscores.",
+      );
+    } else setNameError(null);
+  };
 
   const closeModal = () => {
     if (subreadditNameRef.current) {
@@ -24,16 +34,8 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
     modalRef.current?.close();
   };
 
-  const checkName = (input: string) => {
-    if (!input.match(/^[a-zA-Z0-9_]*$/) || input.length < 3) {
-      setNameError(
-        "Community names must be between 3-21 characters, and can only contain letters, numbers, or underscores.",
-      );
-    } else setNameError(null);
-  };
-
   const createSubreaddit = async () => {
-    if (!props.session) {
+    if (!session) {
       router.push("/signin");
       return;
     }
@@ -50,11 +52,11 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
 
     const payload: CreateSubreadditPayload = {
       name: subreadditNameRef.current.value,
-      description: !subreadditDescRef.current
-        ? "A wonderful description"
-        : subreadditDescRef.current.value.length === 0
-        ? "A wonderful description"
-        : subreadditDescRef.current.value,
+      description:
+        !subreadditDescRef.current ||
+        subreadditDescRef.current.value.length === 0
+          ? "A wonderful description."
+          : subreadditDescRef.current.value,
     };
 
     await fetch("/api/subreaddit", {
@@ -100,7 +102,7 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
         >
           <div
             className={
-              "flex-ai-center justify-between border-b border-solid border-b-black pb-3"
+              "flex items-center justify-between border-b border-solid border-b-black pb-3"
             }
           >
             <h1 className={"text-xl"}>Create a community</h1>
@@ -114,7 +116,7 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
             </div>
           </div>
           <h2 className={"mt-4 text-xl"}>Name</h2>
-          <div className={"flex-ai-center mt-1 gap-x-2 text-sm"}>
+          <div className={"mt-1 flex items-center gap-x-2 text-sm"}>
             <p>Community names including capitalization cannot be changed.</p>
             <div className={"relative"}>
               <IoInformationCircle className={"peer"} />
@@ -147,13 +149,7 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
               maxLength={21}
               onChange={(e) => {
                 setNameCharRemaining(21 - e.currentTarget.value.length);
-                checkName(e.currentTarget.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.code === "Enter") {
-                  e.preventDefault();
-                  createSubreaddit();
-                }
+                validateName(e.currentTarget.value);
               }}
             />
             <p
@@ -167,43 +163,50 @@ export const CreateSubreaddit = (props: { session: Session | null }) => {
           {nameError ? (
             <p className={"mt-2 text-sm text-red-600"}>{nameError}</p>
           ) : null}
-          <h2 className={"flex-ai-center mt-4 text-xl"}>
+          <h2 className={"mt-4 flex items-center text-xl"}>
             Description (Optional)
           </h2>
-          <textarea
-            className={
-              "mt-4 max-h-40 w-full rounded-md border border-solid border-gray-400 p-3 outline-none"
-            }
-            ref={subreadditDescRef}
-            placeholder={"A wonderful description."}
-          />
-          <div className={"mt-8 flex justify-end gap-x-4"}>
+          <div className={"relative mt-4"}>
+            <textarea
+              className={
+                "max-h-44 min-h-[5rem] w-full rounded-md border border-solid border-gray-400 p-3 outline-none"
+              }
+              ref={subreadditDescRef}
+              placeholder={"A wonderful description."}
+              maxLength={300}
+              onChange={(e) =>
+                setDescCharRemaining(300 - e.currentTarget.value.length)
+              }
+            />
+            <p
+              className={`${
+                descCharRemaining === 0 ? "text-red-600" : ""
+              } absolute bottom-0 right-0 m-4 h-fit select-none text-xs font-semibold`}
+            >
+              {descCharRemaining}/300
+            </p>
+          </div>
+          <div className={"mt-4 flex justify-end gap-x-4"}>
             <div
               className={
                 "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
               }
-              onClick={(e) => {
-                e.preventDefault();
-                closeModal();
-              }}
+              onClick={() => closeModal()}
             >
-              <button className={"relative"}>Cancel</button>
+              <p className={"relative"}>Cancel</p>
             </div>
             <div
               className={
                 "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-6 py-2 text-xl text-white shadow-md active:shadow-none"
               }
-              onClick={(e) => {
-                e.preventDefault();
-                createSubreaddit();
-              }}
+              onClick={() => createSubreaddit()}
             >
               <span
                 className={
-                  "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+                  "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
                 }
               ></span>
-              <button className={"relative"}>Create Community</button>
+              <p className={"relative"}>Create Community</p>
             </div>
           </div>
         </form>

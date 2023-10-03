@@ -1,8 +1,8 @@
+import { VoteTypes } from "@prisma/client";
 import { z } from "zod";
 import { CreatePostVoteValidator } from "@/lib/validators/vote";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { VoteTypes } from "@prisma/client";
 
 export async function PATCH(req: Request) {
   try {

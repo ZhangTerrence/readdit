@@ -1,18 +1,23 @@
-import type { Session } from "next-auth";
-import { ViewMoreComments } from "./ViewMoreComments";
+import { ViewMoreButton } from "./ViewMoreButton";
 import { CommentSection } from "./CommentSection";
 import prisma from "@/lib/prisma";
+import { getAuthSession } from "@/lib/auth";
 
 type MoreCommentsProps = {
-  session: Session | null;
-  postId: string;
-  id: string;
+  comment: {
+    id: string;
+  };
+  post: {
+    id: string;
+  };
 };
 
-export const MoreComments = async (props: MoreCommentsProps) => {
+export const FetchMoreComments = async (props: MoreCommentsProps) => {
+  const session = await getAuthSession();
+
   const comments = await prisma.comment.findFirst({
     where: {
-      id: props.id,
+      id: props.comment.id,
     },
     include: {
       author: {
@@ -55,12 +60,13 @@ export const MoreComments = async (props: MoreCommentsProps) => {
   }
 
   return (
-    <ViewMoreComments>
+    <ViewMoreButton>
       <CommentSection
-        session={props.session}
-        postId={props.postId}
+        post={{
+          id: props.post.id,
+        }}
         comments={comments.replies}
       />
-    </ViewMoreComments>
+    </ViewMoreButton>
   );
 };

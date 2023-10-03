@@ -1,13 +1,16 @@
 "use client";
 
-import type { Session } from "next-auth";
 import type { Post, PostVote, Comment } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { PostPreview } from "./PostPreview";
 
 type PostFeedProps =
   | {
       type: "single";
-      session: Session | null;
+      subreaddit: {
+        id: string;
+        name: string;
+      };
       posts: (Post & {
         author: {
           id: string;
@@ -16,14 +19,9 @@ type PostFeedProps =
         postVotes: PostVote[];
         comments: Comment[];
       })[];
-      subreaddit: {
-        id: string;
-        name: string;
-      };
     }
   | {
       type: "multiple";
-      session: Session | null;
       posts: (Post & {
         author: {
           id: string;
@@ -39,40 +37,42 @@ type PostFeedProps =
     };
 
 export const PostFeed = (props: PostFeedProps) => {
+  const { data: session } = useSession();
+
   return (
-    <div className={"flex-ai-center flex-col pt-4"}>
+    <div className={"flex flex-col justify-center pt-4"}>
       {props.type === "single"
-        ? props.posts.map((post, i) => {
-            const currentVote = post.postVotes.find(
-              (vote: { userId: string }) =>
-                vote.userId === props.session?.user.id,
+        ? props.posts.map((post) => {
+            const userVote = post.postVotes.find(
+              (vote: { userId: string }) => vote.userId === session?.user.id,
             );
 
             return (
               <PostPreview
-                key={i}
-                session={props.session}
-                subreadditId={props.subreaddit.id}
-                subreadditName={props.subreaddit.name}
+                key={post.id}
+                subreaddit={{
+                  id: props.subreaddit.id,
+                  name: props.subreaddit.name,
+                }}
+                userVote={userVote?.type}
                 post={post}
-                currentVote={currentVote?.type}
               />
             );
           })
-        : props.posts.map((post, i) => {
-            const currentVote = post.postVotes.find(
-              (vote: { userId: string }) =>
-                vote.userId === props.session?.user.id,
+        : props.posts.map((post) => {
+            const userVote = post.postVotes.find(
+              (vote: { userId: string }) => vote.userId === session?.user.id,
             );
 
             return (
               <PostPreview
-                key={i}
-                session={props.session}
-                subreadditId={post.subreaddit.id}
-                subreadditName={post.subreaddit.name}
+                key={post.id}
+                subreaddit={{
+                  id: post.subreaddit.id,
+                  name: post.subreaddit.name,
+                }}
+                userVote={userVote?.type}
                 post={post}
-                currentVote={currentVote?.type}
               />
             );
           })}

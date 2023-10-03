@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const CreateSubreadditValidator = z.object({
   name: z.string().min(3).max(21),
-  description: z.string(),
+  description: z.string().max(300),
 });
 
 export const UpdateSubreadditValidator = z.object({

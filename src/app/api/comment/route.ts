@@ -47,11 +47,11 @@ export async function DELETE(req: Request) {
 
     const body = await req.json();
 
-    const { id } = DeleteCommentValidator.parse(body);
+    const { commentId } = DeleteCommentValidator.parse(body);
 
     await prisma.comment.update({
       where: {
-        id,
+        id: commentId,
         authorId: session.user.id,
       },
       data: {

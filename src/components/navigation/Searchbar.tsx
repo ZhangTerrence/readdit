@@ -9,10 +9,10 @@ export const Searchbar = () => {
   return (
     <div
       className={
-        "flex-ai-center fixed left-0 right-0 top-0 m-auto mt-2.5 h-fit w-[40rem] overflow-hidden rounded-lg border border-solid border-black bg-gray-50 p-2 text-lg transition-all duration-200 ease-out"
+        "fixed left-0 right-0 top-0 m-auto mt-2.5 flex h-fit w-[40rem] items-center gap-x-2 overflow-hidden rounded-lg border border-solid border-black bg-gray-50 p-2 text-lg transition-all duration-200 ease-out"
       }
     >
-      <IoSearch className={"mx-2"} />
+      <IoSearch className={"mx-1"} />
       <input
         className={"grow bg-transparent outline-none"}
         type="text"

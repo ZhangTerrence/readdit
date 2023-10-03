@@ -1,6 +1,5 @@
 "use client";
 
-import type { Session } from "next-auth";
 import type {
   CreateSubscriptionPayload,
   DeleteSubscriptionPayload,
@@ -8,15 +7,18 @@ import type {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
 
 type SubscriptionButtonTypes = {
-  session: Session | null;
-  subreadditId: string;
+  subreaddit: {
+    id: string;
+  };
   isSubscribed: boolean;
-  classNames?: string;
+  className?: string;
 };
 
 export const SubscriptionButton = (props: SubscriptionButtonTypes) => {
+  const { data: session } = useSession();
   const [isSubscribed, setIsSubscribed] = useState(props.isSubscribed);
   const router = useRouter();
 
@@ -25,13 +27,13 @@ export const SubscriptionButton = (props: SubscriptionButtonTypes) => {
   }, [props.isSubscribed]);
 
   const joinSubreaddit = async () => {
-    if (!props.session) {
+    if (!session) {
       router.push("/signin");
       return;
     }
 
     const payload: CreateSubscriptionPayload = {
-      subreadditId: props.subreadditId,
+      subreadditId: props.subreaddit.id,
     };
 
     await fetch("/api/subscribe", {
@@ -54,7 +56,7 @@ export const SubscriptionButton = (props: SubscriptionButtonTypes) => {
 
   const leaveSubreaddit = async () => {
     const payload: DeleteSubscriptionPayload = {
-      subreadditId: props.subreadditId,
+      subreadditId: props.subreaddit.id,
     };
 
     await fetch("/api/subscribe", {
@@ -75,19 +77,24 @@ export const SubscriptionButton = (props: SubscriptionButtonTypes) => {
     });
   };
 
-  return props.session && isSubscribed ? (
-    <button
-      className={`rounded-full border border-solid border-slate-950 bg-slate-50 px-8 py-4 text-lg ${props.classNames}`}
+  return session && isSubscribed ? (
+    <div
+      className={`${props.className} group relative inline-flex cursor-pointer items-center justify-center rounded-full border-2 border-solid border-black px-20 py-4 text-2xl shadow-md active:shadow-none`}
       onClick={() => leaveSubreaddit()}
     >
-      Leave
-    </button>
+      <button className={`relative`}>Leave</button>
+    </div>
   ) : (
-    <button
-      className={`rounded-full bg-gray-950 px-8 py-4 text-lg text-slate-50 ${props.classNames}`}
+    <div
+      className={`${props.className} group relative inline-flex cursor-pointer items-center justify-center rounded-full bg-slate-900 px-20 py-4 text-2xl text-white shadow-md active:shadow-none`}
       onClick={() => joinSubreaddit()}
     >
-      Join
-    </button>
+      <span
+        className={
+          "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+        }
+      ></span>
+      <button className={`relative`}>Join</button>
+    </div>
   );
 };

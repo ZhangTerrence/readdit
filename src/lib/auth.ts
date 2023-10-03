@@ -1,9 +1,9 @@
-import { randomUsername } from "./usernames";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession, AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "./prisma";
+import { randomUsername } from "./usernames";
 
 const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),

@@ -1,28 +1,28 @@
 "use client";
 
-import type EditorJS from "@editorjs/editorjs";
-import type { Session } from "next-auth";
 import type { CreatePostPayload } from "@/lib/validators/post";
+import type EditorJS from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { uploadFiles } from "@/lib/uploadthing";
 import { IoPencil } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-export const CreatePost = (props: {
-  session: Session | null;
-  subreadditId: string | undefined;
-  subreadditName: string | undefined;
-}) => {
+type CreatePostProps = {
+  subreaddit: {
+    id: string;
+    name: string;
+  } | null;
+};
+
+export const CreatePost = (props: CreatePostProps) => {
+  const { data: session } = useSession();
   const editorRef = useRef<EditorJS | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [subreadditId, setSubreadditId] = useState<string | undefined>(
-    undefined,
-  );
-  const [subreadditName, setSubreadditName] = useState<string | undefined>(
-    undefined,
-  );
+  const [subreadditId, setSubreadditId] = useState<string | null>(null);
+  const [subreadditName, setSubreadditName] = useState<string | null>(null);
   const [titleCharRemaining, setTitleCharRemaining] = useState(128);
   const [titleError, setTitleError] = useState<string | null>(null);
   const router = useRouter();
@@ -98,9 +98,14 @@ export const CreatePost = (props: {
   }, []);
 
   useEffect(() => {
-    setSubreadditId(props.subreadditId);
-    setSubreadditName(props.subreadditName);
-  }, [props.subreadditId, props.subreadditName]);
+    if (props.subreaddit) {
+      setSubreadditId(props.subreaddit.id);
+      setSubreadditName(props.subreaddit.name);
+    } else {
+      setSubreadditId(null);
+      setSubreadditName(null);
+    }
+  }, [props.subreaddit]);
 
   useEffect(() => {
     const initializeEditor = async () => {
@@ -132,8 +137,9 @@ export const CreatePost = (props: {
   };
 
   const createPost = async () => {
-    if (!props.session) {
+    if (!session) {
       router.push("/signin");
+      return;
     }
 
     if (!titleRef.current?.value) {
@@ -154,9 +160,9 @@ export const CreatePost = (props: {
     const blocks = await editorRef.current?.save();
 
     const payload: CreatePostPayload = {
+      subreadditId,
       title: titleRef.current?.value,
       content: blocks,
-      subreadditId,
     };
 
     await fetch("/api/post", {
@@ -173,8 +179,9 @@ export const CreatePost = (props: {
         const success = await response.text();
         toast.success(success);
         setTimeout(() => {
+          router.refresh();
           router.push(`/r/${subreadditName}`);
-        }, 5000);
+        }, 500);
       }
     });
   };
@@ -183,7 +190,7 @@ export const CreatePost = (props: {
     <div className={"flex flex-col gap-y-4"}>
       <div
         className={
-          "flex-ai-center gap-x-3 border-b border-solid border-gray-400 text-xl"
+          "flex items-center gap-x-3 border-b border-solid border-gray-400 text-xl"
         }
       >
         <IoPencil className={"-mt-3"} />
@@ -196,7 +203,7 @@ export const CreatePost = (props: {
       >
         <input
           className={"w-full rounded-md p-2"}
-          defaultValue={subreadditName}
+          defaultValue={subreadditName ?? undefined}
           type="text"
         />
       </div>
@@ -241,10 +248,7 @@ export const CreatePost = (props: {
             className={
               "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
             }
-            onClick={(e) => {
-              e.preventDefault();
-              cancelCreatePost();
-            }}
+            onClick={() => cancelCreatePost()}
           >
             <button className={"relative"}>Cancel</button>
           </div>
@@ -252,14 +256,11 @@ export const CreatePost = (props: {
             className={
               "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-6 py-2 text-xl text-white shadow-md active:shadow-none"
             }
-            onClick={(e) => {
-              e.preventDefault();
-              createPost();
-            }}
+            onClick={() => createPost()}
           >
             <span
               className={
-                "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
+                "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
               }
             ></span>
             <button className={"relative"}>Create Post</button>

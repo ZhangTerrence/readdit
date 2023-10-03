@@ -4,18 +4,17 @@ import type { Comment, CommentVote, VoteTypes } from "@prisma/client";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { CreateComment } from "./CreateComment";
+import { CommentVoteButtons } from "./CommentVoteButtons";
+import { DeleteCommentPayload } from "@/lib/validators/comment";
 import { formatTimeToNow } from "@/lib/formatter";
 import { BsDot } from "react-icons/bs";
 import { IoChatboxOutline, IoTrashBinOutline } from "react-icons/io5";
-import { CreateComment } from "./CreateComment";
-import { Session } from "next-auth";
-import { useRouter } from "next/navigation";
-import { DeleteCommentPayload } from "@/lib/validators/comment";
 import { toast } from "react-toastify";
-import { CommentVoteClient } from "../vote/CommentVoteClient";
+import { useSession } from "next-auth/react";
 
 type PostCommentProps = {
-  session: Session | null;
   comment: Comment & {
     author: {
       id: string;
@@ -24,28 +23,29 @@ type PostCommentProps = {
     };
     commentVotes: CommentVote[];
   };
-  initialVotes: number;
-  initialVote: VoteTypes | undefined;
+  commentVotes: number;
+  userVote: VoteTypes | undefined;
 };
 
 export const PostComment = (props: PostCommentProps) => {
+  const { data: session } = useSession();
   const commentRef = useRef<HTMLDivElement>(null);
-  const [isReplying, setIsReplying] = useState(false);
+  const [replying, setReplying] = useState(false);
 
   const router = useRouter();
 
-  const closeReplying = () => {
-    setIsReplying(false);
+  const hide = () => {
+    setReplying(false);
   };
 
   const deleteComment = async () => {
-    if (!props.session) {
+    if (!session) {
       router.push("/signin");
       return;
     }
 
     const payload: DeleteCommentPayload = {
-      id: props.comment.id,
+      commentId: props.comment.id,
     };
 
     await fetch("/api/comment", {
@@ -71,7 +71,7 @@ export const PostComment = (props: PostCommentProps) => {
       className={"relative flex min-w-[35rem] flex-col gap-y-2"}
     >
       {props.comment.authorId === "" ? (
-        <div className={"flex-ai-center gap-x-2"}>
+        <div className={"flex items-center gap-x-2"}>
           <Image
             className={"rounded-full"}
             src={props.comment.author.image}
@@ -83,7 +83,7 @@ export const PostComment = (props: PostCommentProps) => {
         </div>
       ) : (
         <>
-          <div className={"flex-ai-center gap-x-2"}>
+          <div className={"flex items-center gap-x-2"}>
             <Image
               className={"rounded-full"}
               src={props.comment.author.image}
@@ -100,45 +100,46 @@ export const PostComment = (props: PostCommentProps) => {
             <BsDot />
             <p>{formatTimeToNow(props.comment.createdAt)}</p>
           </div>
-          <p className={"mt-2"}>{props.comment.text}</p>
+          <p className={"mt-2 min-w-[35rem] break-words pr-4"}>
+            {props.comment.text}
+          </p>
         </>
       )}
-      <div className={"flex-ai-center gap-x-2"}>
-        <div className={"flex-ai-center text-lg"}>
-          <CommentVoteClient
-            session={props.session}
-            commentId={props.comment.id}
-            initialVotes={props.initialVotes}
-            initialVote={props.initialVote}
+      <div className={"flex items-center gap-x-2"}>
+        <div className={"flex items-center text-lg"}>
+          <CommentVoteButtons
+            comment={{
+              id: props.comment.id,
+            }}
+            commentVotes={props.commentVotes}
+            userVote={props.userVote}
           />
         </div>
         <button
           className={
-            "flex-ai-center gap-x-2 rounded-md p-2 text-lg hover:bg-gray-50"
+            "flex items-center gap-x-2 rounded-md p-2 text-lg hover:bg-gray-50"
           }
-          onClick={() => setIsReplying(!isReplying)}
+          onClick={() => setReplying(!replying)}
         >
           <IoChatboxOutline />
           <p>Reply</p>
         </button>
       </div>
-      {isReplying ? (
+      {replying ? (
         <CreateComment
-          session={props.session}
-          postId={props.comment.postId}
-          replyingToId={props.comment.id}
-          closeReplying={closeReplying}
+          post={{
+            id: props.comment.postId,
+          }}
+          replyId={props.comment.id}
+          hide={hide}
         />
       ) : null}
-      {props.session && props.comment.authorId === props.session.user.id ? (
+      {session && props.comment.authorId === session.user.id ? (
         <div
           className={
             "absolute right-0 top-0 m-2 rounded-full p-2 transition-colors hover:bg-red-50"
           }
-          onClick={(e) => {
-            e.preventDefault();
-            deleteComment();
-          }}
+          onClick={() => deleteComment()}
         >
           <IoTrashBinOutline className={"text-lg text-red-700"} />
         </div>

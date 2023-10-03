@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
@@ -19,20 +20,15 @@ export default function RootLayout(props: {
   return (
     <html lang="en">
       <body className={ubuntu.className}>
+        <AuthProvider>
+          {props.authModals}
+          {props.children}
+        </AuthProvider>
         <ToastContainer
           position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
+          autoClose={1500}
           theme="light"
         />
-        {props.authModals}
-        {props.children}
       </body>
     </html>
   );

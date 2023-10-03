@@ -3,13 +3,11 @@
 import { signIn } from "next-auth/react";
 import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 
-export const AuthProviders = () => {
-  const handleProvider = async (provider: "google" | "github") => {
-    try {
-      await signIn(provider);
-    } catch (error) {
+export const AuthButtons = () => {
+  const handleAuth = async (provider: "google" | "github") => {
+    await signIn(provider).catch((error) => {
       console.log(error);
-    }
+    });
   };
 
   return (
@@ -25,8 +23,8 @@ export const AuthProviders = () => {
           }
         ></span>
         <button
-          className={"flex-ai-center relative gap-x-2 text-xl"}
-          onClick={() => handleProvider("google")}
+          className={"relative flex items-center gap-x-2 text-xl"}
+          onClick={() => handleAuth("google")}
         >
           <IoLogoGoogle />
           <p>Continue with Google</p>
@@ -43,8 +41,8 @@ export const AuthProviders = () => {
           }
         ></span>
         <button
-          className={"flex-ai-center gap-x-2 text-xl"}
-          onClick={() => handleProvider("github")}
+          className={"flex items-center gap-x-2 text-xl"}
+          onClick={() => handleAuth("github")}
         >
           <IoLogoGithub />
           <p>Continue with Github</p>

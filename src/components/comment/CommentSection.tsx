@@ -1,12 +1,13 @@
-import type { Session } from "next-auth";
 import type { Comment } from "@prisma/client";
 import { VoteTypes } from "@prisma/client";
 import { PostComment } from "./PostComment";
-import { MoreComments } from "./MoreComments";
+import { FetchMoreComments } from "./FetchMoreComments";
+import { getAuthSession } from "@/lib/auth";
 
 type CommentSectionProps = {
-  session: Session | null;
-  postId: string;
+  post: {
+    id: string;
+  };
   comments: (Comment & {
     author: {
       image: string;
@@ -34,45 +35,50 @@ type CommentSectionProps = {
 };
 
 export const CommentSection = async (props: CommentSectionProps) => {
+  const session = await getAuthSession();
+
   return (
     <div
       className={
-        "flex flex-col gap-y-4 border-l border-solid border-gray-400 pl-6"
+        "mt-4 flex flex-col gap-y-4 border-l border-solid border-gray-400 pl-6"
       }
     >
       {props.comments.map((comment) => {
-        const votes = comment.commentVotes.reduce((n, vote) => {
+        const commentVotes = comment.commentVotes.reduce((n, vote) => {
           if (vote.type === VoteTypes.UP) return n + 1;
           if (vote.type === VoteTypes.DOWN) return n - 1;
           return n;
         }, 0);
 
-        const currentVote = comment.commentVotes.find(
-          (vote: { userId: string }) => vote.userId === props.session?.user.id,
+        const userVote = comment.commentVotes.find(
+          (vote: { userId: string }) => vote.userId === session?.user.id,
         );
 
         return (
           <div key={comment.id} className={"flex flex-col"}>
             <div className={"mb-2"}>
               <PostComment
-                session={props.session}
                 comment={comment}
-                initialVotes={votes}
-                initialVote={currentVote?.type}
+                commentVotes={commentVotes}
+                userVote={userVote?.type}
               />
             </div>
             {comment.replies ? (
               <CommentSection
-                session={props.session}
-                postId={props.postId}
+                post={{
+                  id: props.post.id,
+                }}
                 comments={comment.replies}
               />
             ) : null}
             {!comment.replies ? (
-              <MoreComments
-                session={props.session}
-                postId={props.postId}
-                id={comment.id}
+              <FetchMoreComments
+                comment={{
+                  id: comment.id,
+                }}
+                post={{
+                  id: props.post.id,
+                }}
               />
             ) : null}
           </div>

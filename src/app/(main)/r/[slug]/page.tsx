@@ -2,10 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
-import { HomeButton } from "@/components/navigation/HomeButton";
 import { CreatePostPreview } from "@/components/post/CreatePostPreview";
 import { PostFeed } from "@/components/post/PostFeed";
-import { SubscriptionButton } from "@/components/subscription/SubscriptionButton";
+import { SubscriptionButton } from "@/components/subscription/SubscriptionButtons";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
@@ -38,6 +37,10 @@ export default async function SubreadditPage({
           postVotes: true,
           comments: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
       },
     },
   });
@@ -62,12 +65,11 @@ export default async function SubreadditPage({
 
   return (
     <div className={"relative"}>
-      <HomeButton />
-      <main className={"flex-ai-center h-fit min-h-screen flex-col py-8"}>
+      <main className={"flex h-fit min-h-screen flex-col items-center py-8"}>
         <div
           className={"flex w-[75rem] border-b-2 border-solid border-black pb-4"}
         >
-          <div className={"flex-ai-center w-full justify-between"}>
+          <div className={"flex w-full items-center justify-between"}>
             <div className={"flex gap-x-4"}>
               <Image
                 className={"rounded-full border-2 border-solid border-black"}
@@ -83,8 +85,9 @@ export default async function SubreadditPage({
             </div>
             {subreaddit.creatorId !== session?.user.id ? (
               <SubscriptionButton
-                session={session}
-                subreadditId={subreaddit.id}
+                subreaddit={{
+                  id: subreaddit.id,
+                }}
                 isSubscribed={isSubscribed}
               />
             ) : null}
@@ -92,10 +95,13 @@ export default async function SubreadditPage({
         </div>
         <div className={"flex gap-x-10 pt-8"}>
           <div className={"flex w-[50rem] flex-col"}>
-            <CreatePostPreview session={session} subreadditId={subreaddit.id} />
+            <CreatePostPreview
+              subreaddit={{
+                id: subreaddit.id,
+              }}
+            />
             <PostFeed
               type={"single"}
-              session={session}
               posts={subreaddit.posts}
               subreaddit={{ id: subreaddit.id, name: subreaddit.name }}
             />
@@ -115,7 +121,7 @@ export default async function SubreadditPage({
                 </p>
                 <div
                   className={
-                    "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-3"
+                    "flex items-center gap-x-2 border-b border-solid border-gray-400 pb-3"
                   }
                 >
                   <FaUser />
@@ -123,7 +129,7 @@ export default async function SubreadditPage({
                 </div>
                 <div
                   className={
-                    "flex-ai-center gap-x-2 border-b border-solid border-gray-400 pb-3"
+                    "flex items-center gap-x-2 border-b border-solid border-gray-400 pb-3"
                   }
                 >
                   <FaBirthdayCake />
