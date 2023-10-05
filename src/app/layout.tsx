@@ -3,6 +3,7 @@ import { Ubuntu } from "next/font/google";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "@uploadthing/react/styles.css";
 import "./globals.css";
 
 const ubuntu = Ubuntu({ weight: "400", subsets: ["latin"] });

@@ -84,7 +84,7 @@ export const PostPreview = (props: PostPreviewProps) => {
       } else {
         const success = await response.text();
         toast.success(success);
-        setInterval(() => {
+        setTimeout(() => {
           router.refresh();
         }, 500);
       }

@@ -18,17 +18,21 @@ export async function POST(req: Request) {
 
     const { subreadditId, title, content } = CreatePostValidator.parse(body);
 
-    const subscriptionExists = await prisma.subscription.findFirst({
+    const subscription = await prisma.subscription.findFirst({
       where: {
         subreadditId,
         userId: session.user.id,
       },
       include: {
-        subreaddit: true,
+        subreaddit: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
-    if (!subscriptionExists) {
+    if (!subscription) {
       return new Response("Must be subscribed to subreaddit.", {
         status: 400,
       });
@@ -44,7 +48,8 @@ export async function POST(req: Request) {
     });
 
     return new Response(
-      `Successfully posted to ${subscriptionExists.subreaddit.name}`,
+      `Successfully posted to ${subscription.subreaddit.name}`,
+      { status: 200 },
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -67,41 +72,6 @@ export async function DELETE(req: Request) {
 
     const { postId, subreadditId } = DeletePostValidator.parse(body);
 
-    const comments = await prisma.comment.findMany({
-      where: {
-        postId,
-      },
-    });
-
-    comments.map(async (comment) => {
-      await prisma.commentVote.deleteMany({
-        where: {
-          commentId: comment.id,
-        },
-      });
-
-      await prisma.comment.delete({
-        where: {
-          id: comment.id,
-          postId,
-        },
-      });
-    });
-
-    const votes = await prisma.postVote.findMany({
-      where: {
-        postId,
-      },
-    });
-
-    if (votes) {
-      await prisma.postVote.deleteMany({
-        where: {
-          postId,
-        },
-      });
-    }
-
     await prisma.post.delete({
       where: {
         id: postId,
@@ -110,7 +80,7 @@ export async function DELETE(req: Request) {
       },
     });
 
-    return new Response(`Successfully deleted post.`);
+    return new Response(`Successfully deleted post.`, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });

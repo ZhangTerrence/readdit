@@ -30,10 +30,10 @@ export default async function HomePage() {
 
   return (
     <main className={"flex h-fit justify-center gap-x-12 py-8"}>
-      <div className={"w-[50rem] rounded-md px-8 py-6"}>
+      <div className={"w-[50rem] rounded-md px-8 pb-6"}>
         <div
           className={
-            "flex items-center gap-x-4 border-b border-solid border-black pb-4 text-2xl font-bold"
+            "mb-6 flex items-center gap-x-4 border-b border-solid border-black pb-4 text-2xl font-bold"
           }
         >
           <IoChatbox className={"mt-1"} />

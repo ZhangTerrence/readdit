@@ -69,7 +69,7 @@ model Subscription {
 model Subreaddit {
   id String @id @default(cuid())
 
-  creator   User   @relation("createdBy", fields: [creatorId], references: [id])
+  creator   User   @relation("createdBy", fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId String
 
   name        String   @unique
@@ -89,7 +89,7 @@ model Subreaddit {
 model Post {
   id String @id @default(cuid())
 
-  subreaddit   Subreaddit @relation(fields: [subreadditId], references: [id])
+  subreaddit   Subreaddit @relation(fields: [subreadditId], references: [id], onDelete: Cascade)
   subreadditId String
   author       User       @relation(fields: [authorId], references: [id])
   authorId     String
@@ -107,7 +107,7 @@ model Post {
 model Comment {
   id String @id @default(cuid())
 
-  post     Post   @relation(fields: [postId], references: [id])
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId   String
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
@@ -129,9 +129,9 @@ enum VoteTypes {
 }
 
 model PostVote {
-  user   User      @relation(fields: [userId], references: [id])
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  post   Post      @relation(fields: [postId], references: [id])
+  post   Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
   type   VoteTypes
 
@@ -139,9 +139,9 @@ model PostVote {
 }
 
 model CommentVote {
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  comment   Comment   @relation(fields: [commentId], references: [id])
+  comment   Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String
   type      VoteTypes
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   CreateSubreadditValidator,
+  DeleteSubreadditValidator,
   UpdateSubreadditValidator,
 } from "@/lib/validators/subreaddit";
 import { getAuthSession } from "@/lib/auth";
@@ -37,6 +38,10 @@ export async function POST(req: Request) {
         name,
         description,
       },
+      select: {
+        id: true,
+        name: true,
+      },
     });
 
     await prisma.subscription.create({
@@ -46,7 +51,9 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response(`Successfully created ${subreaddit.name}.`);
+    return new Response(`Successfully created ${subreaddit.name}.`, {
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
@@ -66,16 +73,19 @@ export async function PATCH(req: Request) {
 
     const body = await req.json();
 
-    const { subreadditId, description, rules } =
+    const { subreadditId, description, rules, image } =
       UpdateSubreadditValidator.parse(body);
 
-    const subreadditExists = await prisma.subreaddit.findUnique({
+    const subreaddit = await prisma.subreaddit.findUnique({
       where: {
         id: subreadditId,
       },
+      select: {
+        name: true,
+      },
     });
 
-    if (!subreadditExists) {
+    if (!subreaddit) {
       return new Response("Subreaddit does not exist.", { status: 404 });
     }
 
@@ -86,15 +96,66 @@ export async function PATCH(req: Request) {
       data: {
         description,
         rules,
+        image,
       },
     });
 
-    return new Response(`Successfully updated ${subreadditExists.name}.`);
+    return new Response(`Successfully updated ${subreaddit.name}.`, {
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
     }
 
+    return new Response("Internal server error.", { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getAuthSession();
+
+    if (!session?.user) {
+      return new Response("Unauthorized.", { status: 401 });
+    }
+
+    const body = await req.json();
+
+    const { subreadditId } = DeleteSubreadditValidator.parse(body);
+
+    const subreaddit = await prisma.subreaddit.findUnique({
+      where: {
+        id: subreadditId,
+      },
+      select: {
+        name: true,
+        posts: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!subreaddit) {
+      return new Response("Subreaddit does not exist.", { status: 404 });
+    }
+
+    await prisma.subreaddit.delete({
+      where: {
+        id: subreadditId,
+      },
+    });
+
+    return new Response(`Successfully deleted ${subreaddit.name}.`, {
+      status: 200,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return new Response(error.message, { status: 422 });
+    }
+    console.log(error);
     return new Response("Internal server error.", { status: 500 });
   }
 }

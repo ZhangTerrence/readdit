@@ -37,12 +37,17 @@ export async function POST(req: Request) {
         userId: session.user.id,
       },
       include: {
-        subreaddit: true,
+        subreaddit: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
     return new Response(
       `Successfully subscribed to ${subscription.subreaddit.name}`,
+      { status: 200 },
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -86,12 +91,17 @@ export async function DELETE(req: Request) {
         },
       },
       include: {
-        subreaddit: true,
+        subreaddit: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
     return new Response(
       `Successfully unsubscribed from ${subscription.subreaddit.name}`,
+      { status: 200 },
     );
   } catch (error) {
     if (error instanceof z.ZodError) {

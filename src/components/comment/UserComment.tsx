@@ -105,14 +105,14 @@ export const UserComment = (props: UserCommentProps) => {
       } else {
         setTimeout(() => {
           router.refresh();
-        }, 100);
+        }, 500);
       }
     });
   };
 
   return (
     <div className={"relative flex min-w-[35rem] flex-col gap-y-2"}>
-      {props.comment.authorId === "" ? (
+      {props.comment.authorId === "[deleted]" ? (
         <div className={"flex items-center gap-x-2"}>
           <Image
             className={"rounded-full"}

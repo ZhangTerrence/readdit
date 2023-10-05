@@ -5,8 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SubreadditRule } from "./SubreadditRule";
 import { AddSubreadditRule } from "./AddSubreadditRule";
-import { IoClose } from "react-icons/io5";
+import { UploadButton, uploadFiles } from "@/lib/uploadthing";
+import { IoClose, IoFileTray } from "react-icons/io5";
 import { toast } from "react-toastify";
+import Image from "next/image";
+import { FaFileCirclePlus } from "react-icons/fa6";
 
 type EditSubreadditTypes = {
   subreaddit: {
@@ -14,6 +17,7 @@ type EditSubreadditTypes = {
     name: string;
     description: string;
     rules: string[];
+    image: string;
   };
 };
 
@@ -22,6 +26,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
   const subreadditDescRef = useRef<HTMLTextAreaElement>(null);
   const draggedItemRef = useRef<number | null>(null);
   const draggedOverItemRef = useRef<number | null>(null);
+  const [newImageUrl, setNewImageUrl] = useState(props.subreaddit.image);
   const [descCharRemaining, setDescCharRemaining] = useState(300);
   const [rules, setRules] = useState(props.subreaddit.rules);
   const router = useRouter();
@@ -82,6 +87,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
       subreadditId: props.subreaddit.id,
       description: subreadditDescRef.current.value,
       rules,
+      image: newImageUrl,
     };
 
     await fetch("/api/subreaddit", {
@@ -143,35 +149,77 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
               />
             </div>
           </div>
-          <div className={"flex items-center gap-x-4 text-xl"}>
-            <h2>Name</h2>
-            <input
-              className={"grow rounded-md bg-gray-200 p-2 outline-none"}
-              value={props.subreaddit.name}
-              readOnly={true}
-            />
-          </div>
-          <div className={"relative flex flex-col gap-y-2"}>
-            <h2 className={"text-xl"}>Description</h2>
-            <textarea
+          <div className={"flex grow gap-x-4"}>
+            <div
               className={
-                "max-h-32 min-h-[5rem] w-full rounded-md border border-solid border-gray-400 p-3 text-lg outline-none"
+                "group relative aspect-square w-64 cursor-pointer overflow-hidden rounded-full transition-all duration-300 hover:opacity-80"
               }
-              ref={subreadditDescRef}
-              defaultValue={props.subreaddit.description}
-              placeholder={"Edit description here..."}
-              maxLength={300}
-              onChange={(e) =>
-                setDescCharRemaining(300 - e.currentTarget.value.length)
-              }
-            ></textarea>
-            <p
-              className={`${
-                descCharRemaining === 0 ? "text-red-600" : ""
-              } absolute bottom-0 right-0 m-4 h-fit select-none text-xs font-semibold`}
             >
-              {descCharRemaining}/300
-            </p>
+              <Image
+                src={newImageUrl}
+                alt={"edit image"}
+                fill={true}
+                objectFit={"cover"}
+              />
+              <div
+                className={
+                  "absolute hidden h-full w-full flex-col items-center justify-center gap-y-2 object-cover text-white transition-all duration-300 group-hover:flex"
+                }
+              >
+                <FaFileCirclePlus className={"text-3xl"} />
+                <div>Upload file</div>
+              </div>
+              <input
+                className={"absolute h-full w-full opacity-0"}
+                type="file"
+                onChange={async (e) => {
+                  if (e.target.files) {
+                    const files = Array.from(e.target.files);
+
+                    const [res] = await uploadFiles({
+                      files,
+                      endpoint: "imageUploader",
+                    });
+
+                    if (res) setNewImageUrl(res.url);
+                  }
+                }}
+              />
+            </div>
+            <div className={"flex grow flex-col gap-y-4"}>
+              <div className={"flex gap-x-4"}>
+                <div className={"flex grow-[1] items-center gap-x-4 text-xl"}>
+                  <h2>Name</h2>
+                  <input
+                    className={"grow rounded-md bg-gray-200 p-2 outline-none"}
+                    value={props.subreaddit.name}
+                    readOnly={true}
+                  />
+                </div>
+              </div>
+              <div className={"relative flex flex-col gap-y-2"}>
+                <h2 className={"text-xl"}>Description</h2>
+                <textarea
+                  className={
+                    "min-h-[10rem] w-full resize-none rounded-md border border-solid border-gray-400 p-3 text-lg outline-none"
+                  }
+                  ref={subreadditDescRef}
+                  defaultValue={props.subreaddit.description}
+                  placeholder={"Edit description here..."}
+                  maxLength={300}
+                  onChange={(e) =>
+                    setDescCharRemaining(300 - e.currentTarget.value.length)
+                  }
+                ></textarea>
+                <p
+                  className={`${
+                    descCharRemaining === 0 ? "text-red-600" : ""
+                  } absolute bottom-0 right-0 m-4 h-fit select-none text-xs font-semibold`}
+                >
+                  {descCharRemaining}/300
+                </p>
+              </div>
+            </div>
           </div>
           <div className={"flex flex-col gap-y-2"}>
             <h2 className={"text-xl"}>Rules</h2>

@@ -94,14 +94,27 @@ export default async function SubreadditPage({
               />
             ) : (
               <div className={"flex flex-col gap-y-2"}>
-                <EditSubreaddit subreaddit={subreaddit} />
-                <DeleteSubreadditButton />
+                <EditSubreaddit
+                  subreaddit={{
+                    id: subreaddit.id,
+                    name: subreaddit.name,
+                    description: subreaddit.description,
+                    rules: subreaddit.rules,
+                    image: subreaddit.image,
+                  }}
+                />
+                <DeleteSubreadditButton
+                  subreaddit={{
+                    id: subreaddit.id,
+                    name: subreaddit.name,
+                  }}
+                />
               </div>
             )}
           </div>
         </div>
         <div className={"flex gap-x-10 pt-8"}>
-          <div className={"flex w-[50rem] flex-col"}>
+          <div className={"flex w-[50rem] flex-col gap-y-4"}>
             <CreatePostPreview
               subreaddit={{
                 id: subreaddit.id,

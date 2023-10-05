@@ -67,6 +67,7 @@ export const CreateComment = (props: CreateCommentProps) => {
           "max-h-60 min-h-[5rem] rounded-md border border-solid border-black p-2 outline-none"
         }
         ref={textRef}
+        maxLength={2000}
         placeholder={"Write your comment here..."}
       />
       <div className={"flex gap-x-2 self-end"}>

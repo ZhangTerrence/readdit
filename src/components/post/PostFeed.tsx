@@ -40,7 +40,7 @@ export const PostFeed = (props: PostFeedProps) => {
   const { data: session } = useSession();
 
   return (
-    <div className={"flex flex-col justify-center pt-4"}>
+    <div className={"flex flex-col justify-center"}>
       {props.type === "single"
         ? props.posts.map((post) => {
             const userVote = post.postVotes.find(

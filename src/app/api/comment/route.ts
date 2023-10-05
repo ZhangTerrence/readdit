@@ -121,12 +121,12 @@ export async function DELETE(req: Request) {
         authorId: session.user.id,
       },
       data: {
-        authorId: "",
+        authorId: "[deleted]",
         text: "Comment deleted by user.",
       },
     });
 
-    return new Response(`Successfully deleted comment.`);
+    return new Response(`Successfully deleted comment.`, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
