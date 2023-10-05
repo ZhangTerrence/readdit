@@ -9,15 +9,15 @@ import { toast } from "react-toastify";
 
 export const CreateSubreaddit = () => {
   const { data: session } = useSession();
-  const modalRef = useRef<HTMLDialogElement | null>(null);
-  const subreadditNameRef = useRef<HTMLInputElement | null>(null);
-  const subreadditDescRef = useRef<HTMLTextAreaElement | null>(null);
+  const modalRef = useRef<HTMLDialogElement>(null);
+  const subreadditNameRef = useRef<HTMLInputElement>(null);
+  const subreadditDescRef = useRef<HTMLTextAreaElement>(null);
   const [nameCharRemaining, setNameCharRemaining] = useState(21);
   const [nameError, setNameError] = useState<string | null>(null);
-  const [descCharRemaining, setDescCharRemaining] = useState(300);
+  const [descCharRemaining, setDescCharRemaining] = useState(277);
   const router = useRouter();
 
-  const validateName = (input: string) => {
+  const checkName = (input: string) => {
     if (!input.match(/^[a-zA-Z0-9_]*$/) || input.length < 3) {
       setNameError(
         "Community names must be between 3-21 characters, and can only contain letters, numbers, or underscores.",
@@ -28,6 +28,9 @@ export const CreateSubreaddit = () => {
   const closeModal = () => {
     if (subreadditNameRef.current) {
       subreadditNameRef.current.value = "";
+    }
+    if (subreadditDescRef.current) {
+      subreadditDescRef.current.value = "An awesome description.";
     }
     setNameCharRemaining(21);
     setNameError(null);
@@ -45,6 +48,11 @@ export const CreateSubreaddit = () => {
       return;
     }
 
+    if (!subreadditDescRef.current?.value) {
+      toast.error("Description is required.");
+      return;
+    }
+
     if (nameError) {
       toast.error(nameError);
       return;
@@ -52,11 +60,7 @@ export const CreateSubreaddit = () => {
 
     const payload: CreateSubreadditPayload = {
       name: subreadditNameRef.current.value,
-      description:
-        !subreadditDescRef.current ||
-        subreadditDescRef.current.value.length === 0
-          ? "A wonderful description."
-          : subreadditDescRef.current.value,
+      description: subreadditDescRef.current.value,
     };
 
     await fetch("/api/subreaddit", {
@@ -97,7 +101,7 @@ export const CreateSubreaddit = () => {
       >
         <form
           className={
-            "flex w-[40rem] flex-col overflow-y-hidden rounded-md border border-solid border-black p-8"
+            "flex w-[40rem] flex-col overflow-hidden rounded-md border border-solid border-black p-8"
           }
         >
           <div
@@ -105,12 +109,12 @@ export const CreateSubreaddit = () => {
               "flex items-center justify-between border-b border-solid border-b-black pb-3"
             }
           >
-            <h1 className={"text-xl"}>Create a community</h1>
+            <h1 className={"text-3xl"}>Create a community</h1>
             <div
-              className={"rounded-full p-2 transition-colors hover:bg-slate-50"}
+              className={"rounded-full p-2 transition-colors hover:bg-gray-50"}
             >
               <IoClose
-                className={"cursor-pointer text-2xl"}
+                className={"cursor-pointer text-3xl"}
                 onClick={() => closeModal()}
               />
             </div>
@@ -149,7 +153,7 @@ export const CreateSubreaddit = () => {
               maxLength={21}
               onChange={(e) => {
                 setNameCharRemaining(21 - e.currentTarget.value.length);
-                validateName(e.currentTarget.value);
+                checkName(e.currentTarget.value);
               }}
             />
             <p
@@ -163,16 +167,15 @@ export const CreateSubreaddit = () => {
           {nameError ? (
             <p className={"mt-2 text-sm text-red-600"}>{nameError}</p>
           ) : null}
-          <h2 className={"mt-4 flex items-center text-xl"}>
-            Description (Optional)
-          </h2>
+          <h2 className={"mt-4 flex items-center text-xl"}>Description</h2>
           <div className={"relative mt-4"}>
             <textarea
               className={
                 "max-h-44 min-h-[5rem] w-full rounded-md border border-solid border-gray-400 p-3 outline-none"
               }
               ref={subreadditDescRef}
-              placeholder={"A wonderful description."}
+              defaultValue={"An awesome description."}
+              placeholder={"Enter description here..."}
               maxLength={300}
               onChange={(e) =>
                 setDescCharRemaining(300 - e.currentTarget.value.length)
@@ -191,22 +194,28 @@ export const CreateSubreaddit = () => {
               className={
                 "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
               }
-              onClick={() => closeModal()}
+              onClick={(e) => {
+                e.preventDefault();
+                closeModal();
+              }}
             >
-              <p className={"relative"}>Cancel</p>
+              <button>Cancel</button>
             </div>
             <div
               className={
                 "group relative inline-flex cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-6 py-2 text-xl text-white shadow-md active:shadow-none"
               }
-              onClick={() => createSubreaddit()}
+              onClick={(e) => {
+                e.preventDefault();
+                createSubreaddit();
+              }}
             >
               <span
                 className={
                   "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
                 }
               ></span>
-              <p className={"relative"}>Create Community</p>
+              <button className={"relative"}>Create Community</button>
             </div>
           </div>
         </form>

@@ -7,6 +7,8 @@ export const CreateSubreadditValidator = z.object({
 
 export const UpdateSubreadditValidator = z.object({
   subreadditId: z.string(),
+  description: z.string().max(300),
+  rules: z.string().max(100).array(),
 });
 
 export const DeleteSubreadditValidator = z.object({

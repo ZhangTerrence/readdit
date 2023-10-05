@@ -1,6 +1,7 @@
 "use client";
 
 import type { Post, PostVote, Comment } from "@prisma/client";
+import type { DeletePostPayload } from "@/lib/validators/post";
 import { VoteTypes } from "@prisma/client";
 import { useRef, useState } from "react";
 import Link from "next/link";
@@ -9,7 +10,6 @@ import { useSession } from "next-auth/react";
 import { ContentRenderer } from "../renderers/ContentRenderer";
 import { PostVoteButtons } from "./PostVoteButtons";
 import { formatTimeToNow } from "@/lib/formatter";
-import { DeletePostPayload } from "@/lib/validators/post";
 import { BsDot } from "react-icons/bs";
 import { IoChatboxOutline, IoTrashBinOutline } from "react-icons/io5";
 import { toast } from "react-toastify";

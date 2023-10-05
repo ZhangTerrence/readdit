@@ -1,9 +1,9 @@
 "use client";
 
+import type { CreateCommentPayload } from "@/lib/validators/comment";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { CreateCommentPayload } from "@/lib/validators/comment";
 import { toast } from "react-toastify";
 
 type CreateCommentProps = {
@@ -77,7 +77,7 @@ export const CreateComment = (props: CreateCommentProps) => {
             }
             onClick={() => props.hide!()}
           >
-            <button className={"relative"}>Cancel</button>
+            <button>Cancel</button>
           </div>
         ) : null}
         <div

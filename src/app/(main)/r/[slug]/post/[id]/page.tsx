@@ -117,14 +117,12 @@ export default async function PostPage({
   });
 
   return (
-    <div className={"flex h-fit min-h-screen justify-center bg-black"}>
+    <div
+      className={"flex h-fit min-h-[calc(100vh-4rem)] justify-center bg-black"}
+    >
       <div className={"flex max-w-[85rem] gap-x-4 bg-white p-8"}>
-        <div
-          className={
-            "flex w-[50rem] flex-col gap-y-2 rounded-md border border-solid border-slate-500 p-4"
-          }
-        >
-          <div className={"flex gap-x-3 py-4"}>
+        <div className={"flex w-[50rem] flex-col gap-y-2 rounded-md p-4"}>
+          <div className={"flex gap-x-3 pb-4"}>
             <div className={"text-2xl"}>
               <PostVoteButtons
                 post={{

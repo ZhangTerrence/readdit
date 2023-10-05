@@ -1,7 +1,6 @@
 import { ViewMoreButton } from "./ViewMoreButton";
 import { CommentSection } from "./CommentSection";
 import prisma from "@/lib/prisma";
-import { getAuthSession } from "@/lib/auth";
 
 type MoreCommentsProps = {
   comment: {
@@ -13,8 +12,6 @@ type MoreCommentsProps = {
 };
 
 export const FetchMoreComments = async (props: MoreCommentsProps) => {
-  const session = await getAuthSession();
-
   const comments = await prisma.comment.findFirst({
     where: {
       id: props.comment.id,

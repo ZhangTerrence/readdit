@@ -27,6 +27,7 @@ export default function RootLayout(props: {
         <ToastContainer
           position="bottom-right"
           autoClose={1500}
+          hideProgressBar={true}
           theme="light"
         />
       </body>

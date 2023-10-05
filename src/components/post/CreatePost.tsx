@@ -203,7 +203,7 @@ export const CreatePost = (props: CreatePostProps) => {
       >
         <input
           className={"w-full rounded-md p-2"}
-          defaultValue={subreadditName ?? undefined}
+          value={subreadditName ?? undefined}
           type="text"
         />
       </div>
@@ -250,7 +250,7 @@ export const CreatePost = (props: CreatePostProps) => {
             }
             onClick={() => cancelCreatePost()}
           >
-            <button className={"relative"}>Cancel</button>
+            <button>Cancel</button>
           </div>
           <div
             className={

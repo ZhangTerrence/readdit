@@ -5,6 +5,8 @@ import { format } from "date-fns";
 import { CreatePostPreview } from "@/components/post/CreatePostPreview";
 import { PostFeed } from "@/components/post/PostFeed";
 import { SubscriptionButton } from "@/components/subscription/SubscriptionButtons";
+import { EditSubreaddit } from "@/components/subreaddit/EditSubreaddit";
+import { DeleteSubreadditButton } from "@/components/subreaddit/DeleteSubreadditButton";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
@@ -65,7 +67,7 @@ export default async function SubreadditPage({
 
   return (
     <div className={"relative"}>
-      <main className={"flex h-fit min-h-screen flex-col items-center py-8"}>
+      <main className={"flex h-fit flex-col items-center py-8"}>
         <div
           className={"flex w-[75rem] border-b-2 border-solid border-black pb-4"}
         >
@@ -90,7 +92,12 @@ export default async function SubreadditPage({
                 }}
                 isSubscribed={isSubscribed}
               />
-            ) : null}
+            ) : (
+              <div className={"flex flex-col gap-y-2"}>
+                <EditSubreaddit subreaddit={subreaddit} />
+                <DeleteSubreadditButton />
+              </div>
+            )}
           </div>
         </div>
         <div className={"flex gap-x-10 pt-8"}>

@@ -1,6 +1,6 @@
 import type { Comment } from "@prisma/client";
 import { VoteTypes } from "@prisma/client";
-import { PostComment } from "./PostComment";
+import { UserComment } from "./UserComment";
 import { FetchMoreComments } from "./FetchMoreComments";
 import { getAuthSession } from "@/lib/auth";
 
@@ -57,7 +57,7 @@ export const CommentSection = async (props: CommentSectionProps) => {
         return (
           <div key={comment.id} className={"flex flex-col"}>
             <div className={"mb-2"}>
-              <PostComment
+              <UserComment
                 comment={comment}
                 commentVotes={commentVotes}
                 userVote={userVote?.type}
