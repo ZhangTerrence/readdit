@@ -1,6 +1,6 @@
 import { CreatePost } from "@/components/post/CreatePost";
-import prisma from "@/lib/prisma";
 import { FaCircleExclamation } from "react-icons/fa6";
+import prisma from "@/lib/prisma";
 
 export default async function CreatePage({
   params,
@@ -21,6 +21,7 @@ export default async function CreatePage({
           select: {
             id: true,
             name: true,
+            image: true,
           },
         })
       : null;

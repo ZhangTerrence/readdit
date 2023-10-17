@@ -1,10 +1,12 @@
 "use client";
 
 import type { CreatePostPayload } from "@/lib/validators/post";
+import type { DeleteUploadthingPayload } from "@/lib/validators/uploadthing";
 import type EditorJS from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { SearchSubreaddit } from "../subreaddit/SearchSubreaddit";
 import { uploadFiles } from "@/lib/uploadthing";
 import { IoPencil } from "react-icons/io5";
 import { toast } from "react-toastify";
@@ -13,6 +15,7 @@ type CreatePostProps = {
   subreaddit: {
     id: string;
     name: string;
+    image: string;
   } | null;
 };
 
@@ -21,8 +24,11 @@ export const CreatePost = (props: CreatePostProps) => {
   const editorRef = useRef<EditorJS | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [subreadditId, setSubreadditId] = useState<string | null>(null);
-  const [subreadditName, setSubreadditName] = useState<string | null>(null);
+  const [subreaddit, setSubreaddit] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [files, setFiles] = useState<string[]>([]);
   const [titleCharRemaining, setTitleCharRemaining] = useState(128);
   const [titleError, setTitleError] = useState<string | null>(null);
   const router = useRouter();
@@ -75,6 +81,9 @@ export const CreatePost = (props: CreatePostProps) => {
                     files: [file],
                     endpoint: "imageUploader",
                   });
+
+                  setFiles((files) => [...files, res.key]);
+
                   return {
                     success: 1,
                     file: {
@@ -99,11 +108,9 @@ export const CreatePost = (props: CreatePostProps) => {
 
   useEffect(() => {
     if (props.subreaddit) {
-      setSubreadditId(props.subreaddit.id);
-      setSubreadditName(props.subreaddit.name);
+      setSubreaddit(props.subreaddit);
     } else {
-      setSubreadditId(null);
-      setSubreadditName(null);
+      setSubreaddit(null);
     }
   }, [props.subreaddit]);
 
@@ -127,13 +134,36 @@ export const CreatePost = (props: CreatePostProps) => {
     } else setTitleError(null);
   };
 
-  const cancelCreatePost = () => {
-    if (!(subreadditId && subreadditName)) {
-      router.push("/");
-      return;
-    }
+  const changeSubreaddit = (subreaddit: { id: string; name: string }) => {
+    setSubreaddit(subreaddit);
+  };
 
-    router.push(`/r/${subreadditName}`);
+  const cancelCreatePost = async () => {
+    if (files.length > 0) {
+      const payload: DeleteUploadthingPayload = {
+        files,
+      };
+
+      await fetch("/api/uploadthing", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }).then(async (response) => {
+        if (response.status < 200 || response.status >= 300) {
+          const error = await response.text();
+          toast.error(error);
+        } else {
+          setTimeout(() => {
+            router.refresh();
+            router.push(subreaddit?.name ? `/r/${subreaddit.name}` : "/");
+          }, 500);
+        }
+      });
+    } else {
+      router.push(subreaddit?.name ? `/r/${subreaddit.name}` : "/");
+    }
   };
 
   const createPost = async () => {
@@ -152,7 +182,7 @@ export const CreatePost = (props: CreatePostProps) => {
       return;
     }
 
-    if (!(subreadditId && subreadditName)) {
+    if (!(subreaddit?.id && subreaddit?.name)) {
       toast.error("No subreaddit selected.");
       return;
     }
@@ -160,7 +190,7 @@ export const CreatePost = (props: CreatePostProps) => {
     const blocks = await editorRef.current?.save();
 
     const payload: CreatePostPayload = {
-      subreadditId,
+      subreadditId: subreaddit.id,
       title: titleRef.current?.value,
       content: blocks,
     };
@@ -180,7 +210,7 @@ export const CreatePost = (props: CreatePostProps) => {
         toast.success(success);
         setTimeout(() => {
           router.refresh();
-          router.push(`/r/${subreadditName}`);
+          router.push(`/r/${subreaddit.name}`);
         }, 500);
       }
     });
@@ -196,17 +226,10 @@ export const CreatePost = (props: CreatePostProps) => {
         <IoPencil className={"-mt-3"} />
         <h1 className={"pb-3 font-bold"}>Create a post</h1>
       </div>
-      <div
-        className={
-          "w-1/2 rounded-md border border-solid border-gray-500 text-lg"
-        }
-      >
-        <input
-          className={"w-full rounded-md p-2"}
-          value={subreadditName ?? undefined}
-          type="text"
-        />
-      </div>
+      <SearchSubreaddit
+        subreaddit={props.subreaddit}
+        changeSubreaddit={changeSubreaddit}
+      />
       <div
         className={
           "flex w-[50rem] flex-col gap-y-4 rounded-md border border-solid border-gray-500 p-4"

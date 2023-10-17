@@ -13,16 +13,10 @@ export const CreatePostValidator = z.object({
   content: z.any(),
 });
 
-export const UpdatePostValidator = z.object({
-  postId: z.string(),
-  subreadditId: z.string(),
-});
-
 export const DeletePostValidator = z.object({
   postId: z.string(),
   subreadditId: z.string(),
 });
 
 export type CreatePostPayload = z.infer<typeof CreatePostValidator>;
-export type UpdatePostPayload = z.infer<typeof UpdatePostValidator>;
 export type DeletePostPayload = z.infer<typeof DeletePostValidator>;

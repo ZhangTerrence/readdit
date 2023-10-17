@@ -63,6 +63,34 @@ export async function POST(req: Request) {
   }
 }
 
+export async function GET() {
+  try {
+    const subreaddits = await prisma.subreaddit.findMany({
+      where: {
+        name: {
+          startsWith: "",
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        subscribers: true,
+      },
+      take: 5,
+    });
+
+    return new Response(JSON.stringify({ subreaddits }), { status: 200 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return new Response(error.message, { status: 422 });
+    }
+
+    return new Response("Internal server error.", { status: 500 });
+  }
+}
+
 export async function PATCH(req: Request) {
   try {
     const session = await getAuthSession();

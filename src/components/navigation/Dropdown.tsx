@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
 
@@ -33,30 +33,38 @@ export const Dropdown = () => {
           } transition-[transform] duration-100 ease-in`}
         />
       </div>
-      <ul
-        className={`${
-          dropdown ? "block" : "hidden"
-        } absolute top-full w-full overflow-hidden rounded-md border border-solid border-gray-400 bg-white`}
-      >
-        <li
-          className={
-            "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
-          }
-          onClick={() => {}}
-        >
-          <IoSettings />
-          <button>Settings</button>
-        </li>
-        <li
-          className={
-            "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
-          }
-          onClick={() => signOut()}
-        >
-          <IoExit />
-          <button>Log Out</button>
-        </li>
-      </ul>
+      {dropdown ? (
+        <>
+          <ul
+            className={
+              "absolute top-full w-full overflow-hidden rounded-md border border-solid border-gray-400 bg-white"
+            }
+          >
+            <li
+              className={
+                "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
+              }
+              onClick={() => {}}
+            >
+              <IoSettings />
+              <button>Settings</button>
+            </li>
+            <li
+              className={
+                "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
+              }
+              onClick={() => signOut()}
+            >
+              <IoExit />
+              <button>Log Out</button>
+            </li>
+          </ul>
+          <div
+            className={"fixed left-0 top-0 h-screen w-screen"}
+            onClick={() => setDropdown(false)}
+          ></div>
+        </>
+      ) : null}
     </div>
   );
 };

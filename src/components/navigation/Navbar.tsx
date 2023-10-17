@@ -11,7 +11,7 @@ export const Navbar = async () => {
   return (
     <nav
       className={
-        "fixed top-0 z-20 flex h-16 w-screen items-center justify-between border border-b border-black bg-white px-4"
+        "fixed top-0 z-10 flex h-16 w-screen items-center justify-between border border-b border-black bg-white px-4"
       }
     >
       <HomeButton className={"flex items-center gap-x-3 text-xl leading-3"}>
