@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const DeleteUploadthingValidator = z.object({
-  files: z.string().array(),
+  images: z.string().array().optional(),
+  image: z.string().optional(),
 });
 
 export type DeleteUploadthingPayload = z.infer<

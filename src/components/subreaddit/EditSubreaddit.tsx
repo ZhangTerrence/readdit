@@ -10,6 +10,7 @@ import { IoClose, IoFileTray } from "react-icons/io5";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { FaFileCirclePlus } from "react-icons/fa6";
+import { DeleteUploadthingPayload } from "@/lib/validators/uploadthing";
 
 type EditSubreadditTypes = {
   subreaddit: {
@@ -26,7 +27,8 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
   const subreadditDescRef = useRef<HTMLTextAreaElement>(null);
   const draggedItemRef = useRef<number | null>(null);
   const draggedOverItemRef = useRef<number | null>(null);
-  const [newImageUrl, setNewImageUrl] = useState(props.subreaddit.image);
+  const [newImageKey, setNewImageKey] = useState("");
+  const [imageUrl, setImageUrl] = useState(props.subreaddit.image);
   const [descCharRemaining, setDescCharRemaining] = useState(300);
   const [rules, setRules] = useState(props.subreaddit.rules);
   const router = useRouter();
@@ -37,11 +39,30 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
     setDescCharRemaining(300 - props.subreaddit.description.length);
   }, [props.subreaddit.description]);
 
-  const closeModal = () => {
+  const closeModal = async () => {
     if (subreadditDescRef.current)
       subreadditDescRef.current.value = props.subreaddit.description;
     setRules(props.subreaddit.rules);
     modalRef.current?.close();
+    setImageUrl(props.subreaddit.image);
+    if (newImageKey !== "") {
+      const payload: DeleteUploadthingPayload = {
+        image: newImageKey,
+      };
+
+      await fetch("/api/uploadthing", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }).then(async (response) => {
+        if (response.status < 200 || response.status >= 300) {
+          const error = await response.text();
+          toast.error(error);
+        }
+      });
+    }
   };
 
   const editRule = (i: number, editedRule: string) => {
@@ -87,7 +108,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
       subreadditId: props.subreaddit.id,
       description: subreadditDescRef.current.value,
       rules,
-      image: newImageUrl,
+      image: imageUrl,
     };
 
     await fetch("/api/subreaddit", {
@@ -152,18 +173,18 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
           <div className={"flex grow gap-x-4"}>
             <div
               className={
-                "group relative aspect-square w-64 cursor-pointer overflow-hidden rounded-full transition-all duration-300 hover:opacity-80"
+                "group relative aspect-square w-64 cursor-pointer overflow-hidden rounded-full border border-solid border-black transition-all duration-300"
               }
             >
               <Image
-                src={newImageUrl}
+                src={imageUrl}
                 alt={"edit image"}
                 fill={true}
                 objectFit={"cover"}
               />
               <div
                 className={
-                  "absolute hidden h-full w-full flex-col items-center justify-center gap-y-2 object-cover text-white transition-all duration-300 group-hover:flex"
+                  "absolute hidden h-full w-full flex-col items-center justify-center gap-y-2 object-cover text-white transition-all duration-300 group-hover:flex group-hover:backdrop-blur-lg"
                 }
               >
                 <FaFileCirclePlus className={"text-3xl"} />
@@ -181,7 +202,10 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
                       endpoint: "imageUploader",
                     });
 
-                    if (res) setNewImageUrl(res.url);
+                    if (res) {
+                      setNewImageKey(res.key);
+                      setImageUrl(res.url);
+                    }
                   }
                 }}
               />

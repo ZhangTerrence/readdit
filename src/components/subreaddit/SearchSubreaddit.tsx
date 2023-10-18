@@ -168,6 +168,7 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
                 type={"text"}
                 value={searchName}
                 onClick={() => setSearching(true)}
+                readOnly={true}
               ></input>
               <FaCaretDown
                 className={"cursor-pointer"}

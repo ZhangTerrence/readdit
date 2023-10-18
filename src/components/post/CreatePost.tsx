@@ -28,7 +28,7 @@ export const CreatePost = (props: CreatePostProps) => {
     id: string;
     name: string;
   } | null>(null);
-  const [files, setFiles] = useState<string[]>([]);
+  const [imageKeys, setImageKeys] = useState<string[]>([]);
   const [titleCharRemaining, setTitleCharRemaining] = useState(128);
   const [titleError, setTitleError] = useState<string | null>(null);
   const router = useRouter();
@@ -82,7 +82,7 @@ export const CreatePost = (props: CreatePostProps) => {
                     endpoint: "imageUploader",
                   });
 
-                  setFiles((files) => [...files, res.key]);
+                  setImageKeys((imageKeys) => [...imageKeys, res.key]);
 
                   return {
                     success: 1,
@@ -139,9 +139,9 @@ export const CreatePost = (props: CreatePostProps) => {
   };
 
   const cancelCreatePost = async () => {
-    if (files.length > 0) {
+    if (imageKeys.length > 0) {
       const payload: DeleteUploadthingPayload = {
-        files,
+        images: imageKeys,
       };
 
       await fetch("/api/uploadthing", {

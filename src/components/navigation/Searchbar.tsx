@@ -22,6 +22,7 @@ export const Searchbar = () => {
           if (e.code === "Enter") {
             let subreadditName = e.currentTarget.value;
             subreadditName = subreadditName.split(" ").join("");
+            router.refresh();
             router.push(`/r/${subreadditName}`);
             e.currentTarget.value = "";
           }

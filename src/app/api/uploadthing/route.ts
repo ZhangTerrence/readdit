@@ -12,11 +12,9 @@ export async function DELETE(req: Request) {
   try {
     const body = await req.json();
 
-    const { files } = DeleteUploadthingValidator.parse(body);
+    const { images, image } = DeleteUploadthingValidator.parse(body);
 
-    console.log(files);
-
-    await utapi.deleteFiles(files);
+    await utapi.deleteFiles(images ?? image ?? "");
 
     return new Response("Successfully deleted files.", { status: 200 });
   } catch (error) {

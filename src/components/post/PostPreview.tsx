@@ -60,6 +60,11 @@ export const PostPreview = (props: PostPreviewProps) => {
     router.push(`/r/${props.subreaddit.name}/post/${props.post.id}`);
   };
 
+  const goToUser = () => {
+    router.refresh();
+    router.push(`/u/${props.post.author.id}`);
+  };
+
   const deletePost = async () => {
     if (!session) {
       router.push("/signin");
@@ -110,7 +115,7 @@ export const PostPreview = (props: PostPreviewProps) => {
       </div>
       <div className={"flex grow flex-col gap-y-2 px-4 py-2"}>
         <div className={"flex text-sm"}>
-          {pathname === "/" ? (
+          {!pathname.includes("/r/") ? (
             <button
               className={"hover:underline"}
               onClick={() => goToSubreaddit()}
@@ -121,12 +126,12 @@ export const PostPreview = (props: PostPreviewProps) => {
           ) : null}
           <p className={"mr-2"}>
             Posted by{" "}
-            <Link
-              className={"hover:underline"}
-              href={`/u/${props.post.author.id}`}
+            <a
+              className={"cursor-pointer hover:underline"}
+              onClick={() => goToUser()}
             >
               u/{props.post.author.username}
-            </Link>
+            </a>
           </p>
           <p>{formatTimeToNow(props.post.createdAt)}</p>
         </div>

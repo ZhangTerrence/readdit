@@ -1,6 +1,5 @@
 import { VoteTypes } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { CommentSection } from "@/components/comment/CommentSection";
@@ -14,6 +13,7 @@ import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
+import { UserButton } from "@/components/user/UserButton";
 
 export default async function PostPage({
   params,
@@ -149,12 +149,13 @@ export default async function PostPage({
                 </SubreadditButton>
                 <p className={"mr-2"}>
                   Posted by{" "}
-                  <Link
-                    className={"hover:underline"}
-                    href={`/u/${post.author.id}`}
+                  <UserButton
+                    user={{
+                      id: post.author.id,
+                    }}
                   >
                     u/{post.author.username}
-                  </Link>
+                  </UserButton>
                 </p>
                 <p>{formatTimeToNow(post.createdAt)}</p>
               </div>

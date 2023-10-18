@@ -58,6 +58,7 @@ export const CommentSection = async (props: CommentSectionProps) => {
           <div key={comment.id} className={"flex flex-col"}>
             <div className={"mb-2"}>
               <UserComment
+                key={comment.id}
                 comment={comment}
                 commentVotes={commentVotes}
                 userVote={userVote?.type}
@@ -65,6 +66,7 @@ export const CommentSection = async (props: CommentSectionProps) => {
             </div>
             {comment.replies ? (
               <CommentSection
+                key={comment.id}
                 post={{
                   id: props.post.id,
                 }}
@@ -73,6 +75,7 @@ export const CommentSection = async (props: CommentSectionProps) => {
             ) : null}
             {!comment.replies ? (
               <FetchMoreComments
+                key={comment.id}
                 comment={{
                   id: comment.id,
                 }}
