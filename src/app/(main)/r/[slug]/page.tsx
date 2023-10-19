@@ -42,7 +42,7 @@ export default async function SubreadditPage({
         orderBy: {
           createdAt: "desc",
         },
-        take: 5,
+        take: 10,
       },
     },
   });

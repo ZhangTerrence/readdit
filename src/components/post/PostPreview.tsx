@@ -4,7 +4,6 @@ import type { Post, PostVote, Comment } from "@prisma/client";
 import type { DeletePostPayload } from "@/lib/validators/post";
 import { VoteTypes } from "@prisma/client";
 import { useRef, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ContentRenderer } from "../renderers/ContentRenderer";
@@ -125,7 +124,7 @@ export const PostPreview = (props: PostPreviewProps) => {
             </button>
           ) : null}
           <p className={"mr-2"}>
-            Posted by{" "}
+            Posted by
             <a
               className={"cursor-pointer hover:underline"}
               onClick={() => goToUser()}
@@ -133,7 +132,7 @@ export const PostPreview = (props: PostPreviewProps) => {
               u/{props.post.author.username}
             </a>
           </p>
-          <p>{formatTimeToNow(props.post.createdAt)}</p>
+          <p>{formatTimeToNow(new Date(props.post.createdAt))}</p>
         </div>
         <h1
           className={"cursor-pointer text-2xl font-semibold"}

@@ -180,7 +180,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
                 src={imageUrl}
                 alt={"edit image"}
                 fill={true}
-                objectFit={"cover"}
+                style={{ objectFit: "contain" }}
               />
               <div
                 className={

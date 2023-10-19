@@ -71,19 +71,19 @@ export default async function PostPage({
                 orderBy: {
                   createdAt: "desc",
                 },
-                take: 5,
+                take: 10,
               },
             },
             orderBy: {
               createdAt: "desc",
             },
-            take: 5,
+            take: 10,
           },
         },
         orderBy: {
           createdAt: "desc",
         },
-        take: 5,
+        take: 10,
       },
     },
   });

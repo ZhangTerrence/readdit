@@ -51,7 +51,7 @@ export const UserInfo = (props: UserInfoTypes) => {
           />
           <div
             className={
-              "w-20 cursor-pointer border border-solid border-gray-400 p-2 text-center peer-checked:bg-black peer-checked:text-white"
+              "w-20 cursor-pointer rounded-bl-md rounded-tl-md border border-solid border-gray-400 p-2 text-center peer-checked:bg-black peer-checked:text-white"
             }
           >
             Posts
@@ -67,7 +67,7 @@ export const UserInfo = (props: UserInfoTypes) => {
           />
           <div
             className={
-              "w-30 cursor-pointer border border-solid border-gray-400 p-2 text-center peer-checked:bg-black peer-checked:text-white"
+              "w-30 cursor-pointer rounded-br-md rounded-tr-md border border-solid border-gray-400 p-2 text-center peer-checked:bg-black peer-checked:text-white"
             }
           >
             Comments
