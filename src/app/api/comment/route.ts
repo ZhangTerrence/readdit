@@ -38,6 +38,51 @@ export async function POST(req: Request) {
   }
 }
 
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+
+  try {
+    const { page, userId } = z
+      .object({
+        page: z.string(),
+        userId: z.string(),
+      })
+      .parse({
+        page: url.searchParams.get("page"),
+        userId: url.searchParams.get("user"),
+      });
+
+    const comments = await prisma.comment.findMany({
+      where: {
+        authorId: userId,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            image: true,
+          },
+        },
+        commentVotes: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 10,
+      skip: parseInt(page) * 10,
+    });
+
+    return new Response(JSON.stringify(comments), { status: 200 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return new Response(error.message, { status: 422 });
+    }
+
+    return new Response("Internal server error.", { status: 500 });
+  }
+}
+
 export async function PATCH(req: Request) {
   try {
     const session = await getAuthSession();

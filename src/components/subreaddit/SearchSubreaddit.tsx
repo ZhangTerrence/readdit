@@ -11,7 +11,7 @@ type SearchSubreadditProps = {
     name: string;
     image: string;
   } | null;
-  changeSubreaddit: (subreaddit: { id: string; name: string }) => void;
+  changeSubreaddit?: (subreaddit: { id: string; name: string } | null) => void;
 };
 
 export const SearchSubreaddit = (props: SearchSubreadditProps) => {
@@ -21,7 +21,7 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
     image: string;
   } | null>(null);
   const [searching, setSearching] = useState(false);
-  const [searchName, setSearchName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchedSubreaddits, setSearchedSubreaddits] = useState<
     (Subreaddit & {
       subscribers: Subscription[];
@@ -31,14 +31,14 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
   useEffect(() => {
     if (props.subreaddit) {
       setSubreaddit(props.subreaddit);
-      setSearchName(props.subreaddit.name);
+      setSearchQuery(props.subreaddit.name);
     } else {
       setSubreaddit(null);
     }
   }, [props.subreaddit]);
 
   const searchSubreaddits = async () => {
-    await fetch(`/api/subreaddit/${searchName}`, {
+    await fetch(`/api/subreaddit?subreaddit=${searchQuery}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -51,15 +51,13 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
     });
   };
 
-  useEffect(() => {
-    searchSubreaddits();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchName]);
-
   const stopSearching = () => {
-    setSearching(false);
+    if (props.changeSubreaddit) {
+      props.changeSubreaddit(null);
+    }
     setSubreaddit(null);
-    setSearchName("");
+    setSearching(false);
+    setSearchQuery("");
     setSearchedSubreaddits([]);
   };
 
@@ -70,48 +68,50 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
       {searching ? (
         <div className={"relative"}>
           <div
-            className={
-              "z-10 flex w-full items-center gap-x-2 rounded-md p-2 px-3"
-            }
+            className={"flex w-full items-center gap-x-2 rounded-md p-2 px-3"}
           >
             <FaSearch />
             <input
               className={"grow pr-2 outline-none"}
-              value={searchName}
+              value={searchQuery}
               placeholder={"Search communities"}
               type="text"
-              onChange={(e) => setSearchName(`${e.target.value}`)}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyUp={() => searchSubreaddits()}
             />
             <FaCaretDown className={"cursor-pointer"} />
           </div>
           <div
             className={
-              "absolute top-full z-10 w-full overflow-hidden rounded-md border border-solid border-gray-500"
+              "absolute top-full z-[60] w-full rounded-md border border-solid border-gray-500"
             }
           >
             {searchedSubreaddits.map((subreaddit) => {
               return (
                 <div
                   className={
-                    "z-10 flex w-full cursor-pointer items-center gap-x-2 rounded-md bg-white p-2 px-3 hover:bg-gray-100"
+                    "flex w-full cursor-pointer items-center gap-x-2 rounded-md bg-white p-2 px-3 hover:bg-gray-100"
                   }
                   key={subreaddit.id}
                   onClick={() => {
-                    props.changeSubreaddit({
-                      id: subreaddit.id,
-                      name: subreaddit.name,
-                    });
+                    if (props.changeSubreaddit) {
+                      props.changeSubreaddit({
+                        id: subreaddit.id,
+                        name: subreaddit.name,
+                      });
+                    }
                     setSubreaddit({
                       id: subreaddit.id,
                       name: subreaddit.name,
                       image: subreaddit.image,
                     });
                     setSearching(false);
-                    setSearchName(subreaddit.name);
+                    setSearchQuery(subreaddit.name);
                     setSearchedSubreaddits([]);
                   }}
                 >
                   <Image
+                    className={"aspect-square rounded-full"}
                     src={subreaddit.image}
                     alt={"subreaddit image"}
                     width={30}
@@ -126,7 +126,7 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
             })}
           </div>
           <div
-            className={"fixed left-0 top-0 h-screen w-screen"}
+            className={"fixed left-0 top-0 z-50 h-screen w-screen"}
             onClick={() => stopSearching()}
           ></div>
         </div>
@@ -137,6 +137,7 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
               className={"flex w-full items-center gap-x-2 rounded-md p-2 px-3"}
             >
               <Image
+                className={"aspect-square rounded-full"}
                 src={subreaddit.image}
                 alt={"subreaddit image"}
                 width={30}
@@ -144,14 +145,20 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
               />
               <input
                 className={"grow outline-none"}
-                value={searchName}
+                value={searchQuery}
                 type="text"
-                onClick={() => setSearching(true)}
+                onClick={() => {
+                  setSearching(true);
+                  searchSubreaddits();
+                }}
                 readOnly={true}
               />
               <FaCaretDown
                 className={"cursor-pointer"}
-                onClick={() => setSearching(true)}
+                onClick={() => {
+                  setSearching(true);
+                  searchSubreaddits();
+                }}
               />
             </div>
           ) : (
@@ -166,13 +173,19 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
               <input
                 className={"grow outline-none"}
                 type={"text"}
-                value={searchName}
-                onClick={() => setSearching(true)}
+                value={searchQuery}
+                onClick={() => {
+                  setSearching(true);
+                  searchSubreaddits();
+                }}
                 readOnly={true}
               ></input>
               <FaCaretDown
                 className={"cursor-pointer"}
-                onClick={() => setSearching(true)}
+                onClick={() => {
+                  setSearching(true);
+                  searchSubreaddits();
+                }}
               />
             </div>
           )}

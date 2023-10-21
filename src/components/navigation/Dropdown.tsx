@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
 
@@ -37,7 +37,7 @@ export const Dropdown = () => {
         <>
           <ul
             className={
-              "absolute top-full w-full overflow-hidden rounded-md border border-solid border-gray-400 bg-white"
+              "absolute top-full z-20 w-full rounded-md border border-solid border-gray-400 bg-white"
             }
           >
             <li

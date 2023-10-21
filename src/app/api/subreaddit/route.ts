@@ -63,12 +63,22 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+
   try {
+    const { subreadditName } = z
+      .object({
+        subreadditName: z.string(),
+      })
+      .parse({
+        subreadditName: url.searchParams.get("subreaddit"),
+      });
+
     const subreaddits = await prisma.subreaddit.findMany({
       where: {
         name: {
-          startsWith: "",
+          startsWith: subreadditName,
           mode: "insensitive",
         },
       },
@@ -78,7 +88,7 @@ export async function GET() {
         image: true,
         subscribers: true,
       },
-      take: 5,
+      take: 10,
     });
 
     return new Response(JSON.stringify({ subreaddits }), { status: 200 });

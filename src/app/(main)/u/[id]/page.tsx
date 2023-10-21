@@ -36,7 +36,7 @@ export default async function UserPage({
         orderBy: {
           createdAt: "desc",
         },
-        take: 5,
+        take: 10,
       },
       postVotes: true,
       comments: {
@@ -53,7 +53,7 @@ export default async function UserPage({
         orderBy: {
           createdAt: "desc",
         },
-        take: 5,
+        take: 10,
       },
       commentVotes: true,
     },
@@ -76,7 +76,11 @@ export default async function UserPage({
   return (
     <main className={"flex h-fit justify-center gap-x-12 py-8"}>
       <div className={"w-[50rem] rounded-md px-8 pb-6"}>
-        <UserInfo posts={user.posts} comments={user.comments} />
+        <UserInfo
+          user={{ id: user.id }}
+          posts={user.posts}
+          comments={user.comments}
+        />
       </div>
       <div
         className={

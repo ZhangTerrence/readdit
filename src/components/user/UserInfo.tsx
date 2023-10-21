@@ -2,12 +2,16 @@
 
 import type { Post, Comment, PostVote } from "@prisma/client";
 import { VoteTypes } from "@prisma/client";
-import { useState } from "react";
-import { PostPreview } from "../post/PostPreview";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
+import { PostPreview } from "../post/PostPreview";
 import { UserComment } from "../comment/UserComment";
+import { toast } from "react-toastify";
 
 type UserInfoTypes = {
+  user: {
+    id: string;
+  };
   posts: (Post & {
     author: {
       id: string;
@@ -36,7 +40,104 @@ type UserInfoTypes = {
 
 export const UserInfo = (props: UserInfoTypes) => {
   const { data: session } = useSession();
+  const bottomPostRef = useRef<HTMLDivElement | null>(null);
+  const bottomCommentRef = useRef<HTMLDivElement | null>(null);
   const [type, setType] = useState<"posts" | "comments">("posts");
+  const [postsData, setPostsData] = useState(props.posts);
+  const [commentsData, setCommentsData] = useState(props.comments);
+
+  useEffect(() => {
+    let observer: IntersectionObserver;
+
+    if (bottomPostRef.current) {
+      observer = new IntersectionObserver(
+        async (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting) {
+            await fetch(
+              `/api/post?page=${Math.ceil(postsData.length / 10)}&user=${
+                props.user.id
+              }`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              },
+            ).then(async (response) => {
+              if (response.status < 200 || response.status >= 300) {
+                const error = await response.text();
+                toast.error(error);
+              } else {
+                const success = await response.json();
+                if (success) {
+                  success.map((post: any) => {
+                    setPostsData((data) => [...data, post]);
+                  });
+                }
+              }
+            });
+          }
+        },
+        { threshold: 1 },
+      );
+
+      observer.observe(bottomPostRef.current);
+    }
+
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [postsData, props.user.id, type]);
+
+  useEffect(() => {
+    let observer: IntersectionObserver;
+
+    if (bottomCommentRef.current) {
+      observer = new IntersectionObserver(
+        async (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting) {
+            console.log("A");
+            await fetch(
+              `/api/comment?page=${Math.ceil(commentsData.length / 10)}&user=${
+                props.user.id
+              }`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              },
+            ).then(async (response) => {
+              if (response.status < 200 || response.status >= 300) {
+                const error = await response.text();
+                toast.error(error);
+              } else {
+                const success = await response.json();
+                if (success) {
+                  success.map((comment: any) => {
+                    setCommentsData((data) => [...data, comment]);
+                  });
+                }
+              }
+            });
+          }
+        },
+        { threshold: 1 },
+      );
+
+      observer.observe(bottomCommentRef.current);
+    }
+
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [commentsData, props.user.id, type]);
 
   return (
     <div className={"flex flex-col gap-y-4"}>
@@ -84,10 +185,26 @@ export const UserInfo = (props: UserInfoTypes) => {
             >
               Posts
             </h1>
-            {props.posts.map((post) => {
+            {postsData.map((post, i) => {
               const userVote = post.postVotes.find(
                 (vote: { userId: string }) => vote.userId === session?.user.id,
               );
+
+              if (i === postsData.length - 1) {
+                return (
+                  <div key={i} ref={bottomPostRef}>
+                    <PostPreview
+                      key={post.id}
+                      subreaddit={{
+                        id: post.subreaddit.id,
+                        name: post.subreaddit.name,
+                      }}
+                      userVote={userVote?.type}
+                      post={post}
+                    />
+                  </div>
+                );
+              }
 
               return (
                 <PostPreview
@@ -112,7 +229,7 @@ export const UserInfo = (props: UserInfoTypes) => {
               Comments
             </h1>
             <div className={"flex flex-col gap-y-6"}>
-              {props.comments.map((comment) => {
+              {commentsData.map((comment, i) => {
                 const commentVotes = comment.commentVotes.reduce((n, vote) => {
                   if (vote.type === VoteTypes.UP) return n + 1;
                   if (vote.type === VoteTypes.DOWN) return n - 1;
@@ -123,6 +240,19 @@ export const UserInfo = (props: UserInfoTypes) => {
                   (vote: { userId: string }) =>
                     vote.userId === session?.user.id,
                 );
+
+                if (i === commentsData.length - 1) {
+                  return (
+                    <div key={i} ref={bottomCommentRef}>
+                      <UserComment
+                        key={comment.id}
+                        comment={comment}
+                        commentVotes={commentVotes}
+                        userVote={userVote?.type}
+                      />
+                    </div>
+                  );
+                }
 
                 return (
                   <UserComment

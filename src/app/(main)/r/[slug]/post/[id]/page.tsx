@@ -184,7 +184,9 @@ export default async function PostPage({
           <div className={"rounded-md border border-solid border-gray-500"}>
             <div className={"flex items-center gap-x-4 px-4 pt-4"}>
               <Image
-                className={"rounded-full border-2 border-solid border-black"}
+                className={
+                  "aspect-square rounded-full border-2 border-solid border-black"
+                }
                 src={post.subreaddit.image}
                 alt={"subreaddit image"}
                 width={65}

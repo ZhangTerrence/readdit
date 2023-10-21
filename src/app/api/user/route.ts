@@ -2,27 +2,33 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: Request) {
-  try {
-    const params = req.url;
-    const name = params.split("/")[5];
+  const url = new URL(req.url);
 
-    const subreaddits = await prisma.subreaddit.findMany({
+  try {
+    const { username } = z
+      .object({
+        username: z.string(),
+      })
+      .parse({
+        username: url.searchParams.get("username"),
+      });
+
+    const users = await prisma.user.findMany({
       where: {
-        name: {
-          startsWith: name,
+        username: {
+          startsWith: username,
           mode: "insensitive",
         },
       },
       select: {
         id: true,
-        name: true,
+        username: true,
         image: true,
-        subscribers: true,
       },
-      take: 5,
+      take: 10,
     });
 
-    return new Response(JSON.stringify({ subreaddits }), { status: 200 });
+    return new Response(JSON.stringify({ users }), { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });

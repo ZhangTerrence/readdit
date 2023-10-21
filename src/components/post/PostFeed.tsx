@@ -86,7 +86,6 @@ export const PostFeed = (props: PostFeedProps) => {
               ).then(async (response) => {
                 if (response.status < 200 || response.status >= 300) {
                   const error = await response.text();
-                  console.log(error);
                   toast.error(error);
                 } else {
                   const success = await response.json();
@@ -114,7 +113,9 @@ export const PostFeed = (props: PostFeedProps) => {
     }
 
     return () => {
-      observer.disconnect();
+      if (observer) {
+        observer.disconnect();
+      }
     };
   }, [data]);
 
@@ -140,19 +141,19 @@ export const PostFeed = (props: PostFeedProps) => {
                   />
                 </div>
               );
-            } else {
-              return (
-                <PostPreview
-                  key={post.id}
-                  subreaddit={{
-                    id: data.subreaddit.id,
-                    name: data.subreaddit.name,
-                  }}
-                  userVote={userVote?.type}
-                  post={post}
-                />
-              );
             }
+
+            return (
+              <PostPreview
+                key={post.id}
+                subreaddit={{
+                  id: data.subreaddit.id,
+                  name: data.subreaddit.name,
+                }}
+                userVote={userVote?.type}
+                post={post}
+              />
+            );
           })
         : data.posts.map((post, i) => {
             const userVote = post.postVotes.find(
@@ -173,19 +174,19 @@ export const PostFeed = (props: PostFeedProps) => {
                   />
                 </div>
               );
-            } else {
-              return (
-                <PostPreview
-                  key={post.id}
-                  subreaddit={{
-                    id: post.subreaddit.id,
-                    name: post.subreaddit.name,
-                  }}
-                  userVote={userVote?.type}
-                  post={post}
-                />
-              );
             }
+
+            return (
+              <PostPreview
+                key={post.id}
+                subreaddit={{
+                  id: post.subreaddit.id,
+                  name: post.subreaddit.name,
+                }}
+                userVote={userVote?.type}
+                post={post}
+              />
+            );
           })}
     </div>
   );

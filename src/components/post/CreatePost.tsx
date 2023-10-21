@@ -134,7 +134,9 @@ export const CreatePost = (props: CreatePostProps) => {
     } else setTitleError(null);
   };
 
-  const changeSubreaddit = (subreaddit: { id: string; name: string }) => {
+  const changeSubreaddit = (
+    subreaddit: { id: string; name: string } | null,
+  ) => {
     setSubreaddit(subreaddit);
   };
 

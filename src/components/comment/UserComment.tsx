@@ -141,9 +141,9 @@ export const UserComment = (props: UserCommentProps) => {
                 u/{props.comment.author.username}
               </Link>
               <BsDot />
-              <p>{formatTimeToNow(props.comment.createdAt)}</p>
-              {props.comment.updatedAt.getTime() !==
-              props.comment.createdAt.getTime() ? (
+              <p>{formatTimeToNow(new Date(props.comment.createdAt))}</p>
+              {new Date(props.comment.updatedAt).getTime() !==
+              new Date(props.comment.createdAt).getTime() ? (
                 <p className={"ml-2 italic"}>Edited</p>
               ) : null}
             </div>

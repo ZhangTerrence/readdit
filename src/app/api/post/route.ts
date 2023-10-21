@@ -64,14 +64,16 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
 
   try {
-    const { page, subreadditId } = z
+    const { page, subreadditId, userId } = z
       .object({
         page: z.string(),
         subreadditId: z.string().nullish().optional(),
+        userId: z.string().nullish().optional(),
       })
       .parse({
         page: url.searchParams.get("page"),
         subreadditId: url.searchParams.get("subreaddit"),
+        userId: url.searchParams.get("user"),
       });
 
     let where = {};
@@ -87,6 +89,27 @@ export async function GET(req: Request) {
           select: {
             id: true,
             username: true,
+          },
+        },
+        postVotes: true,
+        comments: true,
+      };
+    } else if (userId) {
+      where = {
+        authorId: userId,
+      };
+
+      include = {
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        subreaddit: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         postVotes: true,

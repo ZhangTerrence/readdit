@@ -88,9 +88,7 @@ export const PostPreview = (props: PostPreviewProps) => {
       } else {
         const success = await response.text();
         toast.success(success);
-        setTimeout(() => {
-          router.refresh();
-        }, 500);
+        window.location.reload();
       }
     });
   };
@@ -124,7 +122,7 @@ export const PostPreview = (props: PostPreviewProps) => {
             </button>
           ) : null}
           <p className={"mr-2"}>
-            Posted by
+            Posted by{" "}
             <a
               className={"cursor-pointer hover:underline"}
               onClick={() => goToUser()}
