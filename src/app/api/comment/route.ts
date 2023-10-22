@@ -176,7 +176,7 @@ export async function DELETE(req: Request) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
     }
-    console.log(error);
+
     return new Response("Internal server error.", { status: 500 });
   }
 }

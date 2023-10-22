@@ -100,7 +100,6 @@ export const UserInfo = (props: UserInfoTypes) => {
         async (entries) => {
           const entry = entries[0];
           if (entry.isIntersecting) {
-            console.log("A");
             await fetch(
               `/api/comment?page=${Math.ceil(commentsData.length / 10)}&user=${
                 props.user.id

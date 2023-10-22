@@ -17,9 +17,13 @@ import { UserButton } from "@/components/user/UserButton";
 
 export default async function PostPage({
   params,
+  searchParams,
 }: {
   params: {
     id: string;
+  };
+  searchParams: {
+    take: string;
   };
 }) {
   const session = await getAuthSession();
@@ -83,7 +87,7 @@ export default async function PostPage({
         orderBy: {
           createdAt: "desc",
         },
-        take: 10,
+        take: searchParams.take ? parseInt(searchParams.take) * 10 + 10 : 10,
       },
     },
   });
@@ -113,6 +117,17 @@ export default async function PostPage({
   const subscribers = await prisma.subscription.count({
     where: {
       subreadditId: post.subreaddit.id,
+    },
+  });
+
+  const topLevelComments = post.comments.filter(
+    (comment) => !comment.replyingToId,
+  );
+
+  const totalTopLevelComments = await prisma.comment.count({
+    where: {
+      postId: post.id,
+      replyingToId: null,
     },
   });
 
@@ -174,9 +189,8 @@ export default async function PostPage({
               post={{
                 id: post.id,
               }}
-              comments={post.comments.filter(
-                (comment) => !comment.replyingToId,
-              )}
+              comments={topLevelComments}
+              totalTopLevelComments={totalTopLevelComments}
             />
           </div>
         </div>

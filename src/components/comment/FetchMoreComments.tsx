@@ -1,17 +1,20 @@
+import "server-only";
+
 import { ViewMoreButton } from "./ViewMoreButton";
 import { CommentSection } from "./CommentSection";
 import prisma from "@/lib/prisma";
 
-type MoreCommentsProps = {
+type FetchMoreCommentsProps = {
   comment: {
     id: string;
   };
   post: {
     id: string;
   };
+  totalTopLevelComments: number;
 };
 
-export const FetchMoreComments = async (props: MoreCommentsProps) => {
+export const FetchMoreComments = async (props: FetchMoreCommentsProps) => {
   const comments = await prisma.comment.findFirst({
     where: {
       id: props.comment.id,
@@ -52,18 +55,15 @@ export const FetchMoreComments = async (props: MoreCommentsProps) => {
     },
   });
 
-  if (!(comments && comments.replies.length > 0)) {
-    return null;
-  }
-
-  return (
+  return comments && comments.replies.length > 0 ? (
     <ViewMoreButton>
       <CommentSection
         post={{
           id: props.post.id,
         }}
         comments={comments.replies}
+        totalTopLevelComments={props.totalTopLevelComments}
       />
     </ViewMoreButton>
-  );
+  ) : null;
 };
