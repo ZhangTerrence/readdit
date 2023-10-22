@@ -23,39 +23,7 @@ export const CommentVoteButtons = (props: CommentVoteButtonsProps) => {
     setUserVote(props.userVote);
   }, [props.userVote]);
 
-  const createCommentVote = async (type: VoteTypes) => {
-    const payload: CreateCommentVotePayload = {
-      commentId: props.comment.id,
-      type,
-    };
-
-    if (type === "UP") {
-      if (userVote === "UP") {
-        setCommentVotes((commentVotes) => commentVotes - 1);
-        setPreviousUserVote(userVote);
-        setUserVote(undefined);
-        return;
-      }
-      if (userVote === "DOWN") {
-        setCommentVotes((commentVotes) => commentVotes + 1);
-      }
-      setCommentVotes((commentVotes) => commentVotes + 1);
-    }
-    if (type === "DOWN") {
-      if (userVote === "DOWN") {
-        setCommentVotes((commentVotes) => commentVotes + 1);
-        setPreviousUserVote(userVote);
-        setUserVote(undefined);
-        return;
-      }
-      if (userVote === "UP") {
-        setCommentVotes((commentVotes) => commentVotes - 1);
-      }
-      setCommentVotes((commentVotes) => commentVotes - 1);
-    }
-    setPreviousUserVote(userVote);
-    setUserVote(type);
-
+  const changeVote = async (payload: CreateCommentVotePayload) => {
     await fetch("/api/comment/vote", {
       method: "PATCH",
       headers: {
@@ -69,6 +37,43 @@ export const CommentVoteButtons = (props: CommentVoteButtonsProps) => {
         toast.error(error);
       }
     });
+  };
+
+  const createCommentVote = async (type: VoteTypes) => {
+    const payload: CreateCommentVotePayload = {
+      commentId: props.comment.id,
+      type,
+    };
+
+    if (type === "UP") {
+      if (userVote === "UP") {
+        setCommentVotes((commentVotes) => commentVotes - 1);
+        setPreviousUserVote(userVote);
+        setUserVote(undefined);
+        changeVote(payload);
+        return;
+      }
+      if (userVote === "DOWN") {
+        setCommentVotes((commentVotes) => commentVotes + 1);
+      }
+      setCommentVotes((commentVotes) => commentVotes + 1);
+    }
+    if (type === "DOWN") {
+      if (userVote === "DOWN") {
+        setCommentVotes((commentVotes) => commentVotes + 1);
+        setPreviousUserVote(userVote);
+        setUserVote(undefined);
+        changeVote(payload);
+        return;
+      }
+      if (userVote === "UP") {
+        setCommentVotes((commentVotes) => commentVotes - 1);
+      }
+      setCommentVotes((commentVotes) => commentVotes - 1);
+    }
+    setPreviousUserVote(userVote);
+    setUserVote(type);
+    changeVote(payload);
   };
 
   return (

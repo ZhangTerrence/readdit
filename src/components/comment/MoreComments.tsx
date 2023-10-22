@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 type MoreCommentsTypes = {
   commentAmount: number;
@@ -9,12 +9,8 @@ type MoreCommentsTypes = {
 export const MoreComments = (props: MoreCommentsTypes) => {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const getMoreComments = () => {
-    // const currentPath = `${pathname}${
-    //   searchParams.get("take") ? `?take=${searchParams.get("take")}` : ""
-    // }`;
     const newPath = `${pathname}?take=${Math.ceil(props.commentAmount / 10)}`;
     router.replace(newPath);
   };

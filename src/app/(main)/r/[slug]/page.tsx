@@ -6,7 +6,7 @@ import { CreatePostPreview } from "@/components/post/CreatePostPreview";
 import { PostFeed } from "@/components/post/PostFeed";
 import { SubscriptionButton } from "@/components/subscription/SubscriptionButtons";
 import { EditSubreaddit } from "@/components/subreaddit/EditSubreaddit";
-import { DeleteSubreadditButton } from "@/components/subreaddit/DeleteSubreadditButton";
+import { DeleteSubreaddit } from "@/components/subreaddit/DeleteSubreaddit";
 import { getAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { FaBirthdayCake, FaUser } from "react-icons/fa";
@@ -103,7 +103,7 @@ export default async function SubreadditPage({
                     image: subreaddit.image,
                   }}
                 />
-                <DeleteSubreadditButton
+                <DeleteSubreaddit
                   subreaddit={{
                     id: subreaddit.id,
                     name: subreaddit.name,

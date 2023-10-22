@@ -1,27 +1,26 @@
 "use client";
 
-import type { DeleteSubreadditPayload } from "@/lib/validators/subreaddit";
-import { useRef } from "react";
+import { DeleteUserPayload } from "@/lib/validators/user";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { toast } from "react-toastify";
 
-type DeleteSubreadditButtonTypes = {
-  subreaddit: {
+type DeleteUserTypes = {
+  user: {
     id: string;
-    name: string;
   };
 };
 
-export const DeleteSubreadditButton = (props: DeleteSubreadditButtonTypes) => {
+export const DeleteUser = (props: DeleteUserTypes) => {
   const modalRef = useRef<HTMLDialogElement>(null);
   const router = useRouter();
 
-  const deleteSubreaddit = async () => {
-    const payload: DeleteSubreadditPayload = {
-      subreadditId: props.subreaddit.id,
+  const deleteUser = async () => {
+    const payload: DeleteUserPayload = {
+      id: props.user.id,
     };
 
-    await fetch("/api/subreaddit", {
+    await fetch("/api/user", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +45,7 @@ export const DeleteSubreadditButton = (props: DeleteSubreadditButtonTypes) => {
     <>
       <div
         className={
-          "inline-flex max-w-full cursor-pointer items-center justify-center rounded-full border-2 border-solid border-red-600 px-16 py-2 text-lg text-red-600 shadow-md shadow-red-200 active:shadow-none"
+          "inline-flex max-w-full cursor-pointer items-center justify-center rounded-xl border-2 border-solid border-red-600 px-4 py-2 text-lg text-red-600 shadow-md shadow-red-200 active:shadow-none"
         }
         onClick={() => modalRef.current?.showModal()}
       >
@@ -66,7 +65,7 @@ export const DeleteSubreadditButton = (props: DeleteSubreadditButtonTypes) => {
           }
         >
           <h1 className={"text-center text-2xl"}>
-            Are you sure you want to delete r/{props.subreaddit.name}?
+            Are you sure you want to delete your account?
           </h1>
           <div className={"flex justify-between"}>
             <div
@@ -86,7 +85,7 @@ export const DeleteSubreadditButton = (props: DeleteSubreadditButtonTypes) => {
               }
               onClick={(e) => {
                 e.preventDefault();
-                deleteSubreaddit();
+                deleteUser();
               }}
             >
               <span

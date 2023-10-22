@@ -23,39 +23,7 @@ export const PostVoteButtons = (props: PostVoteButtonsProps) => {
     setUserVote(props.userVote);
   }, [props.userVote]);
 
-  const createPostVote = async (type: VoteTypes) => {
-    const payload: CreatePostVotePayload = {
-      postId: props.post.id,
-      type,
-    };
-
-    if (type === "UP") {
-      if (userVote === "UP") {
-        setPostVotes((postVotes) => postVotes - 1);
-        setPreviousUserVote(userVote);
-        setUserVote(undefined);
-        return;
-      }
-      if (userVote === "DOWN") {
-        setPostVotes((postVotes) => postVotes + 1);
-      }
-      setPostVotes((postVotes) => postVotes + 1);
-    }
-    if (type === "DOWN") {
-      if (userVote === "DOWN") {
-        setPostVotes((postVotes) => postVotes + 1);
-        setPreviousUserVote(userVote);
-        setUserVote(undefined);
-        return;
-      }
-      if (userVote === "UP") {
-        setPostVotes((postVotes) => postVotes - 1);
-      }
-      setPostVotes((postVotes) => postVotes - 1);
-    }
-    setPreviousUserVote(userVote);
-    setUserVote(type);
-
+  const changeVote = async (payload: CreatePostVotePayload) => {
     await fetch("/api/post/vote", {
       method: "PATCH",
       headers: {
@@ -69,6 +37,43 @@ export const PostVoteButtons = (props: PostVoteButtonsProps) => {
         setUserVote(previousUserVote);
       }
     });
+  };
+
+  const createPostVote = async (type: VoteTypes) => {
+    const payload: CreatePostVotePayload = {
+      postId: props.post.id,
+      type,
+    };
+
+    if (type === "UP") {
+      if (userVote === "UP") {
+        setPostVotes((postVotes) => postVotes - 1);
+        setPreviousUserVote(userVote);
+        setUserVote(undefined);
+        changeVote(payload);
+        return;
+      }
+      if (userVote === "DOWN") {
+        setPostVotes((postVotes) => postVotes + 1);
+      }
+      setPostVotes((postVotes) => postVotes + 1);
+    }
+    if (type === "DOWN") {
+      if (userVote === "DOWN") {
+        setPostVotes((postVotes) => postVotes + 1);
+        setPreviousUserVote(userVote);
+        setUserVote(undefined);
+        changeVote(payload);
+        return;
+      }
+      if (userVote === "UP") {
+        setPostVotes((postVotes) => postVotes - 1);
+      }
+      setPostVotes((postVotes) => postVotes - 1);
+    }
+    setPreviousUserVote(userVote);
+    setUserVote(type);
+    changeVote(payload);
   };
 
   return (

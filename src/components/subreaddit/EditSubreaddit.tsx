@@ -124,11 +124,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
       } else {
         const success = await response.text();
         toast.success(success);
-        if (subreadditDescRef.current)
-          subreadditDescRef.current.value = props.subreaddit.description;
-        setRules(props.subreaddit.rules);
         modalRef.current?.close();
-        setImageUrl(props.subreaddit.image);
         setTimeout(() => {
           router.refresh();
         }, 500);

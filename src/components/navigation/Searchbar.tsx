@@ -137,7 +137,7 @@ export const Searchbar = () => {
                   return (
                     <div
                       className={
-                        "flex w-full cursor-pointer items-center gap-x-2 rounded-md p-2 px-3 hover:bg-gray-100"
+                        "flex w-full cursor-pointer items-center gap-x-4 rounded-md p-2 px-3 hover:bg-gray-100"
                       }
                       key={subreaddit.id}
                       onClick={() => {
@@ -175,7 +175,7 @@ export const Searchbar = () => {
                   return (
                     <div
                       className={
-                        "flex w-full cursor-pointer items-center gap-x-2 rounded-md p-2 px-3 hover:bg-gray-100"
+                        "flex w-full cursor-pointer items-center gap-x-4 rounded-md p-2 px-3 hover:bg-gray-100"
                       }
                       key={user.id}
                       onClick={() => {

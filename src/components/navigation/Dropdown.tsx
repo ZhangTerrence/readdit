@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { IoCaretDown, IoExit, IoSettings } from "react-icons/io5";
@@ -14,7 +15,7 @@ export const Dropdown = () => {
   return (
     <div className={"relative flex items-center rounded-md"}>
       <div
-        className={`flex cursor-pointer items-center gap-x-4 rounded-md border border-solid border-gray-400 p-2.5 transition-colors`}
+        className={`flex min-w-[10rem] cursor-pointer items-center justify-between gap-x-4 rounded-md border border-solid border-gray-400 p-2.5 transition-colors`}
         onClick={() => setDropdown(!dropdown)}
       >
         <div className={"flex items-center gap-x-2 text-lg leading-3"}>
@@ -40,15 +41,18 @@ export const Dropdown = () => {
               "absolute top-full z-20 w-full rounded-md border border-solid border-gray-400 bg-white"
             }
           >
-            <li
+            <Link
               className={
                 "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
               }
-              onClick={() => {}}
+              href={`/settings/${session.user.id}`}
+              onClick={() => {
+                setDropdown(false);
+              }}
             >
               <IoSettings />
               <button>Settings</button>
-            </li>
+            </Link>
             <li
               className={
                 "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
