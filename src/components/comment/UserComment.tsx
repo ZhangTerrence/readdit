@@ -111,7 +111,11 @@ export const UserComment = (props: UserCommentProps) => {
   };
 
   return (
-    <div className={"relative flex min-w-[35rem] flex-col gap-y-2"}>
+    <div
+      className={
+        "relative flex min-w-[35rem] flex-col gap-y-2 max-md:min-w-[25rem] max-sm:min-w-[15rem]"
+      }
+    >
       {props.comment.authorId === "[deleted]" ? (
         <div className={"flex items-center gap-x-2"}>
           <Image
@@ -125,46 +129,56 @@ export const UserComment = (props: UserCommentProps) => {
         </div>
       ) : (
         <>
-          <div className={"flex items-center gap-x-2"}>
+          <div className={"flex w-fit items-center gap-x-2"}>
             <Image
-              className={"rounded-full"}
+              className={"aspect-square rounded-full max-sm:w-10"}
               src={props.comment.author.image}
               alt={"user image"}
               width={30}
               height={30}
             />
-            <div className={"flex items-center"}>
+            <div className={"flex max-sm:flex-col"}>
               <Link
-                className={"hover:underline"}
+                className={"hover:underline max-sm:text-sm"}
                 href={`/u/${props.comment.author.id}`}
               >
                 u/{props.comment.author.username}
               </Link>
-              <BsDot />
-              <p>{formatTimeToNow(new Date(props.comment.createdAt))}</p>
-              {new Date(props.comment.updatedAt).getTime() !==
-              new Date(props.comment.createdAt).getTime() ? (
-                <p className={"ml-2 italic"}>Edited</p>
-              ) : null}
+              <BsDot className={"max-sm:hidden"} />
+              <div className={"flex"}>
+                <p className={"max-sm:text-sm"}>
+                  {formatTimeToNow(new Date(props.comment.createdAt))}
+                </p>
+                {new Date(props.comment.updatedAt).getTime() !==
+                new Date(props.comment.createdAt).getTime() ? (
+                  <p className={"ml-2 italic max-sm:text-sm"}>Edited</p>
+                ) : null}
+              </div>
             </div>
           </div>
           {editing ? (
             <textarea
               className={
-                "mt-2 max-h-60 min-h-[5rem] rounded-md border border-solid border-black p-2 outline-none"
+                "mt-2 max-h-60 min-h-[5rem] rounded-md border border-solid border-black p-2 outline-none max-sm:text-sm"
               }
               value={editText}
               placeholder={"Editing comment..."}
               onChange={(e) => setEditText(e.target.value)}
             ></textarea>
           ) : (
-            <p className={"mt-2 min-w-[35rem] break-words pr-4"}>{text}</p>
+            <p
+              className={
+                "mt-2 min-w-[35rem] break-words pr-4 max-md:min-w-[25rem] max-sm:min-w-[15rem] max-sm:text-sm"
+              }
+            >
+              {text}
+            </p>
           )}
         </>
       )}
-      <div className={"flex justify-between"}>
+      <div className={"flex w-full justify-between"}>
         <div className={"flex items-center gap-x-2"}>
-          <div className={"flex items-center text-lg"}>
+          <div className={"flex items-center"}>
             <CommentVoteButtons
               comment={{
                 id: props.comment.id,
@@ -175,7 +189,7 @@ export const UserComment = (props: UserCommentProps) => {
           </div>
           <button
             className={
-              "flex items-center gap-x-2 rounded-md p-2 text-lg hover:bg-gray-50"
+              "flex items-center gap-x-2 rounded-md p-2 text-lg hover:bg-gray-50 max-sm:text-sm"
             }
             onClick={() => setReplying(!replying)}
           >
@@ -209,7 +223,11 @@ export const UserComment = (props: UserCommentProps) => {
         />
       ) : null}
       {session && props.comment.authorId === session.user.id ? (
-        <div className={"absolute right-0 top-0 m-2 flex text-lg"}>
+        <div
+          className={
+            "absolute right-0 top-0 mb-2 ml-2 flex text-lg max-xs:text-sm"
+          }
+        >
           <div
             className={"rounded-full p-2 transition-colors hover:bg-gray-50"}
             onClick={() => setEditing(!editing)}

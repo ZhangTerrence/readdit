@@ -89,7 +89,7 @@ export const CreateSubreaddit = () => {
         }
         onClick={() => modalRef.current?.showModal()}
       >
-        <button className={"relative"}>Create Community</button>
+        <button className={"max-xs:text-sm relative"}>Create Community</button>
       </div>
       <dialog
         className={"fixed inset-0 m-auto backdrop:opacity-50"}
@@ -101,7 +101,7 @@ export const CreateSubreaddit = () => {
       >
         <form
           className={
-            "flex w-[40rem] flex-col overflow-hidden rounded-md border border-solid border-black p-8"
+            "flex w-[40rem] flex-col overflow-hidden rounded-md border border-solid border-black p-8 max-md:w-full"
           }
         >
           <div
@@ -109,19 +109,21 @@ export const CreateSubreaddit = () => {
               "flex items-center justify-between border-b border-solid border-b-black pb-3"
             }
           >
-            <h1 className={"text-3xl"}>Create a community</h1>
+            <h1 className={"text-3xl max-md:text-xl"}>Create a community</h1>
             <div
               className={"rounded-full p-2 transition-colors hover:bg-gray-50"}
             >
               <IoClose
-                className={"cursor-pointer text-3xl"}
+                className={"cursor-pointer text-3xl max-md:text-xl"}
                 onClick={() => closeModal()}
               />
             </div>
           </div>
-          <h2 className={"mt-4 text-xl"}>Name</h2>
+          <h2 className={"mt-4 text-xl max-md:text-lg"}>Name</h2>
           <div className={"mt-1 flex items-center gap-x-2 text-sm"}>
-            <p>Community names including capitalization cannot be changed.</p>
+            <p className={"max-md:text-xs"}>
+              Community names including capitalization cannot be changed.
+            </p>
             <div className={"relative"}>
               <IoInformationCircle className={"peer"} />
               <span
@@ -136,7 +138,7 @@ export const CreateSubreaddit = () => {
               </span>
             </div>
           </div>
-          <div className={"relative mt-4"}>
+          <div className={"relative mt-4 max-md:text-sm"}>
             <span
               className={
                 "absolute bottom-0 left-0 top-0 my-auto ml-3 h-fit w-fit text-gray-600"
@@ -146,7 +148,7 @@ export const CreateSubreaddit = () => {
             </span>
             <input
               className={
-                "w-full rounded-md border border-solid border-gray-400 px-7 py-2 outline-none"
+                "w-full rounded-md border border-solid border-gray-400 px-7 py-2 outline-none max-md:text-sm"
               }
               ref={subreadditNameRef}
               type="text"
@@ -165,13 +167,17 @@ export const CreateSubreaddit = () => {
             </p>
           </div>
           {nameError ? (
-            <p className={"mt-2 text-sm text-red-600"}>{nameError}</p>
+            <p className={"mt-2 text-sm text-red-600 max-md:text-xs"}>
+              {nameError}
+            </p>
           ) : null}
-          <h2 className={"mt-4 flex items-center text-xl"}>Description</h2>
+          <h2 className={"mt-4 flex items-center text-xl max-md:text-lg"}>
+            Description
+          </h2>
           <div className={"relative mt-4"}>
             <textarea
               className={
-                "max-h-44 min-h-[5rem] w-full rounded-md border border-solid border-gray-400 p-3 outline-none"
+                "max-h-44 min-h-[5rem] w-full rounded-md border border-solid border-gray-400 p-3 outline-none max-md:text-sm"
               }
               ref={subreadditDescRef}
               defaultValue={"An awesome description."}
@@ -189,7 +195,7 @@ export const CreateSubreaddit = () => {
               {descCharRemaining}/300
             </p>
           </div>
-          <div className={"mt-4 flex justify-end gap-x-4"}>
+          <div className={"max-xs:flex-col mt-4 flex justify-end gap-4"}>
             <div
               className={
                 "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
@@ -199,7 +205,7 @@ export const CreateSubreaddit = () => {
                 closeModal();
               }}
             >
-              <button>Cancel</button>
+              <button className={"max-md:text-sm"}>Cancel</button>
             </div>
             <div
               className={
@@ -215,7 +221,9 @@ export const CreateSubreaddit = () => {
                   "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
                 }
               ></span>
-              <button className={"relative"}>Create Community</button>
+              <button className={"relative max-md:text-sm"}>
+                Create Community
+              </button>
             </div>
           </div>
         </form>

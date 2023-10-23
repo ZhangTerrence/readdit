@@ -124,6 +124,7 @@ export async function DELETE(req: Request) {
       },
       select: {
         id: true,
+        posts: true,
         comments: true,
       },
     });
@@ -135,6 +136,14 @@ export async function DELETE(req: Request) {
     if (user.id !== session.user.id) {
       return new Response("Unauthorized.", { status: 401 });
     }
+
+    user.posts.map(async (post) => {
+      await prisma.post.delete({
+        where: {
+          id: post.id,
+        },
+      });
+    });
 
     user.comments.map(async (comment) => {
       await prisma.comment.update({

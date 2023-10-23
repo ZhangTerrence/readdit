@@ -136,7 +136,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
     <>
       <div
         className={
-          "inline-flex max-w-full cursor-pointer items-center justify-center rounded-full border-2 border-solid border-slate-950 px-16 py-2 text-lg shadow-md active:shadow-none"
+          "inline-flex max-w-full cursor-pointer items-center justify-center rounded-full border-2 border-solid border-slate-950 px-16 py-2 text-lg shadow-md active:shadow-none max-sm:w-28 max-sm:px-4 max-sm:text-sm"
         }
         onClick={() => modalRef.current?.showModal()}
       >
@@ -152,7 +152,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
       >
         <form
           className={
-            "flex w-[50rem] flex-col gap-y-6 overflow-hidden rounded-md border border-solid border-black p-8"
+            "flex w-[50rem] flex-col gap-y-6 overflow-hidden rounded-md border border-solid border-black p-8 max-lg:w-full"
           }
         >
           <div
@@ -160,20 +160,24 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
               "flex items-center justify-between border-b border-solid border-b-black pb-3"
             }
           >
-            <h1 className={"text-3xl"}>Edit Subreaddit</h1>
+            <h1 className={"text-3xl max-md:text-xl"}>Edit Subreaddit</h1>
             <div
               className={"rounded-full p-2 transition-colors hover:bg-gray-50"}
             >
               <IoClose
-                className={"cursor-pointer text-3xl"}
+                className={"cursor-pointer text-3xl max-md:text-xl"}
                 onClick={() => closeModal()}
               />
             </div>
           </div>
-          <div className={"flex grow gap-x-4"}>
+          <div
+            className={
+              "flex grow gap-4 max-lg:w-full max-lg:flex-col max-lg:items-center"
+            }
+          >
             <div
               className={
-                "group relative aspect-square w-64 cursor-pointer overflow-hidden rounded-full border border-solid border-black transition-all duration-300"
+                "group relative aspect-square w-64 cursor-pointer overflow-hidden rounded-full border border-solid border-black transition-all duration-300 max-lg:w-40 max-md:w-32"
               }
             >
               <Image
@@ -187,7 +191,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
                   "absolute hidden h-full w-full flex-col items-center justify-center gap-y-2 object-cover text-white transition-all duration-300 group-hover:flex group-hover:backdrop-blur-lg"
                 }
               >
-                <FaFileCirclePlus className={"text-3xl"} />
+                <FaFileCirclePlus className={"text-3xl max-md:text-xl"} />
                 <div>Upload file</div>
               </div>
               <input
@@ -210,22 +214,28 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
                 }}
               />
             </div>
-            <div className={"flex grow flex-col gap-y-4"}>
-              <div className={"flex gap-x-4"}>
-                <div className={"flex grow-[1] items-center gap-x-4 text-xl"}>
+            <div className={"flex grow flex-col gap-y-4 max-lg:w-full"}>
+              <div className={"flex gap-x-4 max-lg:w-full"}>
+                <div
+                  className={
+                    "flex grow-[1] items-center gap-x-4 text-xl max-lg:w-full max-md:text-lg"
+                  }
+                >
                   <h2>Name</h2>
                   <input
-                    className={"grow rounded-md bg-gray-200 p-2 outline-none"}
+                    className={
+                      "min-w-0 grow rounded-md bg-gray-200 p-2 outline-none"
+                    }
                     value={props.subreaddit.name}
                     readOnly={true}
                   />
                 </div>
               </div>
               <div className={"relative flex flex-col gap-y-2"}>
-                <h2 className={"text-xl"}>Description</h2>
+                <h2 className={"text-xl max-md:text-lg"}>Description</h2>
                 <textarea
                   className={
-                    "min-h-[10rem] w-full resize-none rounded-md border border-solid border-gray-400 p-3 text-lg outline-none"
+                    "min-h-[10rem] w-full resize-none rounded-md border border-solid border-gray-400 p-3 text-lg outline-none max-md:text-sm"
                   }
                   ref={subreadditDescRef}
                   defaultValue={props.subreaddit.description}
@@ -246,7 +256,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
             </div>
           </div>
           <div className={"flex flex-col gap-y-2"}>
-            <h2 className={"text-xl"}>Rules</h2>
+            <h2 className={"text-xl max-md:text-lg"}>Rules</h2>
             <div className={"max-h-52 overflow-y-scroll"}>
               <div>
                 {rules.map((rule, i) => {
@@ -267,7 +277,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
               <AddSubreadditRule addRule={addRule} />
             </div>
           </div>
-          <div className={"mt-4 flex justify-end gap-x-4"}>
+          <div className={"max-xs:flex-col mt-4 flex justify-end gap-4"}>
             <div
               className={
                 "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"
@@ -277,7 +287,7 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
                 closeModal();
               }}
             >
-              <button>Cancel</button>
+              <button className={"max-md:text-sm"}>Cancel</button>
             </div>
             <div
               className={
@@ -293,7 +303,9 @@ export const EditSubreaddit = (props: EditSubreadditTypes) => {
                   "absolute h-0 max-h-full w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
                 }
               ></span>
-              <button className={"relative"}>Edit Subreaddit</button>
+              <button className={"relative max-md:text-sm"}>
+                Edit Subreaddit
+              </button>
             </div>
           </div>
         </form>

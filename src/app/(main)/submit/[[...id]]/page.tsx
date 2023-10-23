@@ -27,10 +27,16 @@ export default async function CreatePage({
       : null;
 
   return (
-    <main className={"flex h-fit min-h-screen justify-center gap-x-12 py-8"}>
+    <main
+      className={
+        "flex h-fit min-h-screen justify-center gap-12 p-8 max-xl:flex-col-reverse max-xl:items-center"
+      }
+    >
       <CreatePost subreaddit={subreaddit} />
       <div
-        className={"h-fit rounded-md border border-solid border-black p-4 px-6"}
+        className={
+          "h-fit rounded-md border border-solid border-black p-4 px-6 max-md:w-full"
+        }
       >
         <div
           className={

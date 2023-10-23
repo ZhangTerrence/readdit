@@ -67,7 +67,7 @@ export const DeleteUser = (props: DeleteUserTypes) => {
           <h1 className={"text-center text-2xl"}>
             Are you sure you want to delete your account?
           </h1>
-          <div className={"flex justify-between"}>
+          <div className={"flex justify-between gap-y-4 max-sm:flex-col"}>
             <div
               className={
                 "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"

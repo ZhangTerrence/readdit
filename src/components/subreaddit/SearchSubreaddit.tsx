@@ -63,7 +63,9 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
 
   return (
     <div
-      className={"w-1/2 rounded-md border border-solid border-gray-500 text-lg"}
+      className={
+        "w-1/2 rounded-md border border-solid border-gray-500 text-lg max-md:w-full"
+      }
     >
       {searching ? (
         <div className={"relative"}>
@@ -144,7 +146,7 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
                 height={30}
               />
               <input
-                className={"grow outline-none"}
+                className={"min-w-0 grow outline-none"}
                 value={searchQuery}
                 type="text"
                 onClick={() => {
@@ -167,11 +169,11 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
             >
               <div
                 className={
-                  "aspect-square w-7 rounded-full border border-dashed border-black"
+                  "aspect-square h-7 rounded-full border border-dashed border-black"
                 }
               ></div>
               <input
-                className={"grow outline-none"}
+                className={"min-w-0 grow outline-none"}
                 type={"text"}
                 value={searchQuery}
                 onClick={() => {
@@ -181,7 +183,7 @@ export const SearchSubreaddit = (props: SearchSubreadditProps) => {
                 readOnly={true}
               ></input>
               <FaCaretDown
-                className={"cursor-pointer"}
+                className={"aspect-square h-4 cursor-pointer"}
                 onClick={() => {
                   setSearching(true);
                   searchSubreaddits();

@@ -29,8 +29,14 @@ export default async function HomePage() {
   });
 
   return (
-    <main className={"flex h-fit justify-center gap-x-12 py-8"}>
-      <div className={"w-[50rem] rounded-md px-8 pb-6"}>
+    <main
+      className={
+        "flex h-fit justify-center gap-12 p-8 max-xl:flex-col-reverse max-xl:items-center"
+      }
+    >
+      <div
+        className={"w-[50rem] rounded-md px-8 pb-6 max-md:w-full max-md:px-0"}
+      >
         <div
           className={
             "mb-6 flex items-center gap-x-4 border-b border-solid border-black pb-4 text-2xl font-bold"
@@ -43,7 +49,7 @@ export default async function HomePage() {
       </div>
       <div
         className={
-          "h-fit w-[25rem] rounded-md border border-solid border-black p-8"
+          "h-fit w-[25rem] rounded-md border border-solid border-black p-8 max-md:w-full"
         }
       >
         <div
@@ -55,7 +61,7 @@ export default async function HomePage() {
             <IoHome />
             <h1>Home</h1>
           </div>
-          <p>
+          <p className={"max-xs:text-sm"}>
             Your personal Readdit frontpage. Come here to check in with your
             favorite communities.
           </p>
@@ -72,7 +78,7 @@ export default async function HomePage() {
                 "absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-75 ease-out group-hover:h-32 group-hover:w-full"
               }
             ></span>
-            <button className={"relative"}>Create Post</button>
+            <button className={"relative max-xs:text-sm"}>Create Post</button>
           </Link>
           <CreateSubreaddit />
         </div>

@@ -34,13 +34,13 @@ export const SubreadditRule = (props: SubreadditRuleTypes) => {
     <div
       className={`${
         editing ? "" : "cursor-move"
-      } mb-1 list-item rounded-md border border-solid border-gray-400 p-4`}
+      } mb-1 list-item rounded-md border border-solid border-gray-400 p-4 max-md:w-full`}
       draggable={!editing}
       onDragStart={() => (props.draggedItem.current = props.index)}
       onDragEnter={() => (props.draggedOverItem.current = props.index)}
       onDragEnd={props.moveRule}
     >
-      <div className={"flex items-center justify-between gap-x-2 "}>
+      <div className={"flex items-center justify-between gap-x-2"}>
         {editing ? (
           <div
             className={
@@ -48,7 +48,9 @@ export const SubreadditRule = (props: SubreadditRuleTypes) => {
             }
           >
             <textarea
-              className={"h-full w-full resize-none pr-2 outline-none"}
+              className={
+                "h-full w-full resize-none pr-2 outline-none max-md:text-sm"
+              }
               defaultValue={editRule}
               maxLength={100}
               placeholder={"Editing rule..."}
@@ -66,9 +68,9 @@ export const SubreadditRule = (props: SubreadditRuleTypes) => {
             </p>
           </div>
         ) : (
-          <p className={"grow break-words"}>{rule}</p>
+          <p className={"grow break-words max-md:text-sm"}>{rule}</p>
         )}
-        <div className={"flex w-16 text-lg"}>
+        <div className={"flex w-16 text-lg max-md:text-sm"}>
           <div
             className={
               "cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-50"

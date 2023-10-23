@@ -6,6 +6,6 @@ export default withUt({
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {},
+  theme: { extend: { screens: { xs: "480px" } } },
   plugins: [],
 });

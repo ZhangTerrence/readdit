@@ -20,7 +20,7 @@ export default async function SigninPage() {
       </HomeButton>
       <div
         className={
-          "ml-80 flex h-full flex-col items-start justify-center gap-y-8 border-l-2 border-solid border-black pl-12"
+          "ml-80 flex h-full flex-col items-start justify-center gap-y-8 border-l-2 border-solid border-black px-12 max-lg:ml-0 max-lg:border-none"
         }
       >
         <div>

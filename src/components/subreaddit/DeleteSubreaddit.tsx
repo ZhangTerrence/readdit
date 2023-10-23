@@ -46,7 +46,7 @@ export const DeleteSubreaddit = (props: DeleteSubreadditTypes) => {
     <>
       <div
         className={
-          "inline-flex max-w-full cursor-pointer items-center justify-center rounded-full border-2 border-solid border-red-600 px-16 py-2 text-lg text-red-600 shadow-md shadow-red-200 active:shadow-none"
+          "inline-flex max-w-full cursor-pointer items-center justify-center rounded-full border-2 border-solid border-red-600 px-16 py-2 text-lg text-red-600 shadow-md shadow-red-200 active:shadow-none max-sm:w-28 max-sm:px-4 max-sm:text-sm"
         }
         onClick={() => modalRef.current?.showModal()}
       >
@@ -68,7 +68,7 @@ export const DeleteSubreaddit = (props: DeleteSubreadditTypes) => {
           <h1 className={"text-center text-2xl"}>
             Are you sure you want to delete r/{props.subreaddit.name}?
           </h1>
-          <div className={"flex justify-between"}>
+          <div className={"flex justify-between gap-y-4 max-xs:flex-col"}>
             <div
               className={
                 "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"

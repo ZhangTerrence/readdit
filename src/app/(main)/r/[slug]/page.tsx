@@ -67,22 +67,30 @@ export default async function SubreadditPage({
 
   return (
     <div className={"relative"}>
-      <main className={"flex h-fit flex-col items-center py-8"}>
+      <main className={"flex h-fit flex-col items-center p-8"}>
         <div
-          className={"flex w-[75rem] border-b-2 border-solid border-black pb-4"}
+          className={
+            "flex w-[75rem] border-b-2 border-solid border-black pb-4 max-xl:w-full"
+          }
         >
           <div className={"flex w-full items-center justify-between"}>
             <div className={"flex gap-x-4"}>
               <Image
-                className={"rounded-full border-2 border-solid border-black"}
+                className={
+                  "rounded-full border-2 border-solid border-black max-sm:aspect-square max-sm:w-20"
+                }
                 src={subreaddit.image}
                 alt={"subreaddit image"}
                 width={100}
                 height={100}
               />
               <div className={"flex flex-col gap-y-1 self-end"}>
-                <h1 className={"text-6xl font-semibold"}>{subreaddit.name}</h1>
-                <h2 className={"text-2xl"}>r/{subreaddit.name}</h2>
+                <h1 className={"text-6xl font-semibold max-sm:text-3xl"}>
+                  {subreaddit.name}
+                </h1>
+                <h2 className={"text-2xl max-sm:text-xl"}>
+                  r/{subreaddit.name}
+                </h2>
               </div>
             </div>
             {subreaddit.creatorId !== session?.user.id ? (
@@ -113,8 +121,10 @@ export default async function SubreadditPage({
             )}
           </div>
         </div>
-        <div className={"flex gap-x-10 pt-8"}>
-          <div className={"flex w-[50rem] flex-col gap-y-4"}>
+        <div
+          className={"flex gap-10 pt-8 max-xl:w-full max-xl:flex-col-reverse"}
+        >
+          <div className={"flex w-[50rem] flex-col gap-y-4 max-xl:w-full"}>
             <CreatePostPreview
               subreaddit={{
                 id: subreaddit.id,
@@ -126,7 +136,9 @@ export default async function SubreadditPage({
               subreaddit={{ id: subreaddit.id, name: subreaddit.name }}
             />
           </div>
-          <div className={"flex h-fit w-[22.5rem] flex-col gap-y-4"}>
+          <div
+            className={"flex h-fit w-[22.5rem] flex-col gap-4 max-xl:w-full"}
+          >
             <div
               className={
                 "overflow-hidden rounded-md border border-solid border-black"
@@ -174,7 +186,7 @@ export default async function SubreadditPage({
             </div>
             <div
               className={
-                "overflow-hidden rounded-md border border-solid border-black "
+                "overflow-hidden rounded-md border border-solid border-black"
               }
             >
               <h1 className={"bg-slate-950 p-4 text-lg text-slate-50"}>

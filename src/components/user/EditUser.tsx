@@ -86,14 +86,22 @@ export const EditUser = (props: EditUserTypes) => {
   };
 
   return (
-    <div>
-      <h1 className={"mb-12 border-b border-solid border-black pb-2 text-4xl"}>
+    <div className={"max-md:w-full max-md:p-8"}>
+      <h1
+        className={
+          "mb-12 border-b border-solid border-black pb-2 text-4xl max-md:w-full max-md:text-2xl"
+        }
+      >
         Profile Settings
       </h1>
-      <div className={"flex flex-col gap-y-12"}>
-        <div className={"flex"}>
-          <div className={"mr-32 flex flex-col items-center gap-y-4"}>
-            <h2 className={"text-2xl"}>Profile Picture</h2>
+      <div className={"flex flex-col gap-y-12 max-md:w-full"}>
+        <div
+          className={"flex max-md:flex-col max-md:items-center max-md:gap-y-8"}
+        >
+          <div
+            className={"mr-20 flex flex-col items-center gap-y-4 max-md:mr-0"}
+          >
+            <h2 className={"text-2xl max-md:text-lg"}>Profile Picture</h2>
             <div
               className={
                 "group relative aspect-square w-40 cursor-pointer overflow-hidden rounded-full border border-solid border-black transition-all duration-300"
@@ -133,13 +141,13 @@ export const EditUser = (props: EditUserTypes) => {
               />
             </div>
           </div>
-          <div className={"flex w-[30rem] flex-col gap-y-8"}>
+          <div className={"flex w-[30rem] flex-col gap-y-8 max-sm:w-full"}>
             <div className={"flex flex-col gap-y-2"}>
               <div className={"relative flex flex-col gap-y-2"}>
-                <h2 className={"text-2xl"}>Username</h2>
+                <h2 className={"text-2xl max-md:text-lg"}>Username</h2>
                 <input
                   className={
-                    "rounded-md border border-solid border-gray-500 p-2 outline-none"
+                    "min-w-0 rounded-md border border-solid border-gray-500 p-2 outline-none max-sm:text-sm"
                   }
                   ref={usernameRef}
                   type="text"
@@ -160,14 +168,16 @@ export const EditUser = (props: EditUserTypes) => {
                 </p>
               </div>
               {usernameError ? (
-                <p className={"mt-2 text-sm text-red-600"}>{usernameError}</p>
+                <p className={"mt-2 text-sm text-red-600 max-sm:text-sm"}>
+                  {usernameError}
+                </p>
               ) : null}
             </div>
             <div className={"relative flex flex-col gap-y-2"}>
-              <h2 className={"text-2xl"}>Bio</h2>
+              <h2 className={"text-2xl max-md:text-lg"}>Bio</h2>
               <textarea
                 className={
-                  "max-h-60 min-h-[5rem] rounded-md border border-solid border-gray-500 p-2 outline-none"
+                  "max-h-60 min-h-[5rem] min-w-0 rounded-md border border-solid border-gray-500 p-2 outline-none max-sm:text-sm"
                 }
                 ref={bioRef}
                 defaultValue={props.user.bio}
@@ -186,7 +196,7 @@ export const EditUser = (props: EditUserTypes) => {
             </div>
           </div>
         </div>
-        <div className={"flex w-full justify-between"}>
+        <div className={"flex w-full justify-between max-md:justify-evenly"}>
           <DeleteUser user={{ id: props.user.id }} />
           <div
             className={

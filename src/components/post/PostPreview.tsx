@@ -96,11 +96,13 @@ export const PostPreview = (props: PostPreviewProps) => {
   return (
     <div
       className={
-        "relative mb-4 flex h-fit w-full overflow-hidden rounded-md border border-solid border-gray-500"
+        "relative mb-4 flex h-fit w-full overflow-hidden rounded-md border border-solid border-gray-500 max-sm:flex-col"
       }
     >
       <div
-        className={"flex w-12 flex-col items-center bg-gray-100 p-3 text-xl"}
+        className={
+          "flex w-12 flex-col items-center bg-gray-100 p-3 text-xl max-sm:w-full max-sm:flex-row max-sm:gap-x-2"
+        }
       >
         <PostVoteButtons
           post={{
@@ -111,26 +113,25 @@ export const PostPreview = (props: PostPreviewProps) => {
         />
       </div>
       <div className={"flex grow flex-col gap-y-2 px-4 py-2"}>
-        <div className={"flex text-sm"}>
+        <div className={"flex text-sm max-sm:flex-col max-sm:gap-y-1"}>
           {!pathname.includes("/r/") ? (
-            <button
-              className={"hover:underline"}
-              onClick={() => goToSubreaddit()}
-            >
+            <p className={"hover:underline"} onClick={() => goToSubreaddit()}>
               <span>r/{props.subreaddit.name}</span>
-              <BsDot className={"inline-block"} />
-            </button>
+              <BsDot className={"inline-block max-sm:hidden"} />
+            </p>
           ) : null}
-          <p className={"mr-2"}>
-            Posted by{" "}
-            <a
-              className={"cursor-pointer hover:underline"}
-              onClick={() => goToUser()}
-            >
-              u/{props.post.author.username}
-            </a>
-          </p>
-          <p>{formatTimeToNow(new Date(props.post.createdAt))}</p>
+          <div className={"flex"}>
+            <p className={"mr-2"}>
+              Posted by{" "}
+              <a
+                className={"cursor-pointer hover:underline"}
+                onClick={() => goToUser()}
+              >
+                u/{props.post.author.username}
+              </a>
+            </p>
+            <p>{formatTimeToNow(new Date(props.post.createdAt))}</p>
+          </div>
         </div>
         <h1
           className={"cursor-pointer text-2xl font-semibold"}

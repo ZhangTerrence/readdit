@@ -219,7 +219,7 @@ export const CreatePost = (props: CreatePostProps) => {
   };
 
   return (
-    <div className={"flex flex-col gap-y-4"}>
+    <div className={"flex flex-col gap-y-4 max-md:w-full"}>
       <div
         className={
           "flex items-center gap-x-3 border-b border-solid border-gray-400 text-xl"
@@ -234,7 +234,7 @@ export const CreatePost = (props: CreatePostProps) => {
       />
       <div
         className={
-          "flex w-[50rem] flex-col gap-y-4 rounded-md border border-solid border-gray-500 p-4"
+          "flex w-[50rem] flex-col gap-y-4 rounded-md border border-solid border-gray-500 p-4 max-md:w-full"
         }
       >
         <div
@@ -263,12 +263,12 @@ export const CreatePost = (props: CreatePostProps) => {
         </div>
         <div
           className={
-            "h-fit rounded-sm border border-solid border-slate-300 p-4"
+            "h-fit rounded-sm border border-solid border-slate-300 p-4 max-md:w-full"
           }
         >
-          <div id={"editor"} className={"break-words pl-4"} />
+          <div id={"editor"} className={"break-words pl-4 max-md:w-full"} />
         </div>
-        <div className={"flex gap-x-4 self-end"}>
+        <div className={"max-xs:flex-col max-xs:w-full flex gap-4 self-end"}>
           <div
             className={
               "inline-flex cursor-pointer items-center justify-center rounded-xl border border-solid border-black px-6 py-2 text-xl shadow-md active:shadow-none"

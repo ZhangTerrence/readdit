@@ -79,14 +79,14 @@ export const SubscriptionButton = (props: SubscriptionButtonTypes) => {
 
   return session && isSubscribed ? (
     <div
-      className={`${props.className} inline-flex cursor-pointer items-center justify-center rounded-full border-2 border-solid border-black px-20 py-4 text-2xl shadow-md active:shadow-none`}
+      className={`${props.className} inline-flex cursor-pointer items-center justify-center rounded-full border-2 border-solid border-black px-20 py-4 text-2xl shadow-md active:shadow-none max-xs:w-20 max-xs:px-4 max-xs:text-sm`}
       onClick={() => leaveSubreaddit()}
     >
       <button>Leave</button>
     </div>
   ) : (
     <div
-      className={`${props.className} group relative inline-flex cursor-pointer items-center justify-center rounded-full bg-slate-900 px-20 py-4 text-2xl text-white shadow-md active:shadow-none`}
+      className={`${props.className} group relative inline-flex cursor-pointer items-center justify-center rounded-full bg-slate-900 px-20 py-4 text-2xl text-white shadow-md active:shadow-none max-xs:w-20 max-xs:px-4 max-xs:text-sm`}
       onClick={() => joinSubreaddit()}
     >
       <span

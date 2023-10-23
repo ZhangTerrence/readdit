@@ -21,7 +21,7 @@ export const CreatePostPreview = (props: CreatePostPreview) => {
   return (
     <div
       className={
-        "flex items-center gap-x-3 rounded-md border border-solid border-black bg-gray-100 p-3"
+        "flex items-center gap-x-3 rounded-md border border-solid border-black bg-gray-100 p-3 max-xl:w-full"
       }
     >
       <Image
@@ -33,7 +33,7 @@ export const CreatePostPreview = (props: CreatePostPreview) => {
       />
       <input
         className={
-          "grow rounded-md border border-solid border-black py-2 pl-2 text-lg outline-none"
+          "min-w-0 grow rounded-md border border-solid border-black py-2 pl-2 text-lg outline-none"
         }
         type="text"
         placeholder={"Create Post"}

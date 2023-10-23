@@ -83,8 +83,14 @@ export default async function UserPage({
   }, 0);
 
   return (
-    <main className={"flex h-fit justify-center gap-x-12 py-8"}>
-      <div className={"w-[50rem] rounded-md px-8 pb-6"}>
+    <main
+      className={
+        "flex h-fit justify-center gap-12 p-8 max-xl:flex-col-reverse max-xl:items-center"
+      }
+    >
+      <div
+        className={"w-[50rem] rounded-md px-8 pb-6 max-md:w-full max-md:px-0"}
+      >
         <UserInfo
           user={{ id: user.id }}
           posts={user.posts}
@@ -93,7 +99,7 @@ export default async function UserPage({
       </div>
       <div
         className={
-          "relative flex h-fit w-[25rem] flex-col gap-y-6 rounded-md border border-solid border-black p-8"
+          "relative flex h-fit w-[25rem] flex-col gap-y-6 rounded-md border border-solid border-black p-8 max-md:w-full"
         }
       >
         <div

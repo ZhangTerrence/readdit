@@ -82,15 +82,15 @@ export const CommentVoteButtons = (props: CommentVoteButtonsProps) => {
         <PiArrowFatUpFill
           className={`${
             userVote === "UP" ? "text-blue-700" : ""
-          } hover:scale-110`}
+          } hover:scale-110 max-sm:text-sm`}
         />
       </button>
-      <p className={"text-center"}>{commentVotes}</p>
+      <p className={"text-center max-sm:text-sm"}>{commentVotes}</p>
       <button onClick={() => createCommentVote(VoteTypes.DOWN)}>
         <PiArrowFatDownFill
           className={`${
             userVote === "DOWN" ? "text-red-700" : ""
-          } hover:scale-110`}
+          } hover:scale-110 max-sm:text-sm`}
         />
       </button>
     </div>

@@ -29,7 +29,9 @@ export const AddSubreadditRule = (props: AddSubreadditRuleTypes) => {
         }
       >
         <textarea
-          className={"h-full w-full resize-none pr-2 outline-none"}
+          className={
+            "h-full w-full resize-none pr-2 outline-none max-md:text-sm"
+          }
           defaultValue={rule}
           maxLength={100}
           placeholder={"Adding rule..."}
@@ -46,7 +48,7 @@ export const AddSubreadditRule = (props: AddSubreadditRuleTypes) => {
           {ruleCharRemaining}/100
         </p>
       </div>
-      <div className={"flex w-16 text-lg"}>
+      <div className={"flex w-16 text-lg max-md:text-sm"}>
         <div
           className={"rounded-full p-2 transition-colors hover:bg-green-50"}
           title={"Confirm"}
@@ -78,7 +80,7 @@ export const AddSubreadditRule = (props: AddSubreadditRuleTypes) => {
     >
       <div
         className={
-          "rounded-full p-3 text-2xl transition-colors hover:bg-gray-50"
+          "rounded-full p-3 text-2xl transition-colors hover:bg-gray-50 max-md:text-sm"
         }
         onClick={() => setAdding(true)}
       >

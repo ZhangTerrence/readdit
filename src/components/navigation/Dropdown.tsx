@@ -15,18 +15,22 @@ export const Dropdown = () => {
   return (
     <div className={"relative flex items-center rounded-md"}>
       <div
-        className={`flex min-w-[10rem] cursor-pointer items-center justify-between gap-x-4 rounded-md border border-solid border-gray-400 p-2.5 transition-colors`}
+        className={`flex min-w-[10rem] cursor-pointer items-center justify-between gap-x-4 rounded-md border border-solid border-gray-400 p-2.5 transition-colors max-lg:w-[7.5rem]`}
         onClick={() => setDropdown(!dropdown)}
       >
         <div className={"flex items-center gap-x-2 text-lg leading-3"}>
           <Image
-            className={"rounded-full border border-solid border-black"}
+            className={
+              "aspect-square rounded-full border border-solid border-black max-lg:w-6"
+            }
             src={session.user.image!}
             alt={"user image"}
             width={30}
             height={30}
           />
-          <p className={"select-none"}>{session.user.username!}</p>
+          <p className={"select-none max-lg:text-sm"}>
+            {session.user.username!}
+          </p>
         </div>
         <IoCaretDown
           className={`${
@@ -43,19 +47,17 @@ export const Dropdown = () => {
           >
             <Link
               className={
-                "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
+                "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100 max-lg:py-2 max-lg:text-sm"
               }
               href={`/settings/${session.user.id}`}
-              onClick={() => {
-                setDropdown(false);
-              }}
+              onClick={() => setDropdown(false)}
             >
               <IoSettings />
               <button>Settings</button>
             </Link>
             <li
               className={
-                "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
+                "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100 max-lg:py-2 max-lg:text-sm"
               }
               onClick={() => signOut()}
             >

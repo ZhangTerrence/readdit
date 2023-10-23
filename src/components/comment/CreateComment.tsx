@@ -64,7 +64,7 @@ export const CreateComment = (props: CreateCommentProps) => {
       <textarea
         id={"editor"}
         className={
-          "max-h-60 min-h-[5rem] rounded-md border border-solid border-black p-2 outline-none"
+          "max-h-60 min-h-[5rem] rounded-md border border-solid border-black p-2 outline-none max-sm:text-sm"
         }
         ref={textRef}
         maxLength={2000}

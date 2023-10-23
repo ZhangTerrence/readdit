@@ -12,7 +12,10 @@ export const ViewMoreButton = (props: ViewMoreButtonProps) => {
   return display ? (
     <div>{props.children}</div>
   ) : (
-    <button className={"my-2 self-start"} onClick={() => setDisplay(true)}>
+    <button
+      className={"my-2 self-start max-sm:text-sm"}
+      onClick={() => setDisplay(true)}
+    >
       View More
     </button>
   );

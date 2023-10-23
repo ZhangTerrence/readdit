@@ -27,7 +27,7 @@ export const AuthButtons = () => {
           onClick={() => handleAuth("google")}
         >
           <IoLogoGoogle />
-          <p>Continue with Google</p>
+          <p className={"max-sm:text-lg"}>Continue with Google</p>
         </button>
       </div>
       <div
@@ -45,7 +45,7 @@ export const AuthButtons = () => {
           onClick={() => handleAuth("github")}
         >
           <IoLogoGithub />
-          <p>Continue with Github</p>
+          <p className={"max-sm:text-lg"}>Continue with Github</p>
         </button>
       </div>
     </div>

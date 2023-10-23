@@ -16,7 +16,7 @@ export const MoreComments = (props: MoreCommentsTypes) => {
   };
 
   return (
-    <button className={"p-2"} onClick={() => getMoreComments()}>
+    <button className={"p-2 max-sm:text-sm"} onClick={() => getMoreComments()}>
       View More
     </button>
   );

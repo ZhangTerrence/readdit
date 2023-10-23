@@ -44,11 +44,13 @@ export const CommentSection = async (props: CommentSectionProps) => {
     !props.comments[0].replyingToId &&
     props.comments.length !== props.totalTopLevelComments;
 
+  if (props.comments.length === 0) return null;
+
   return (
     <>
       <div
         className={
-          "mt-4 flex flex-col gap-y-1 border-l border-solid border-gray-400 pl-6"
+          "mt-4 flex flex-col gap-y-1 border-l border-solid border-gray-400 pl-6 max-sm:pl-4"
         }
       >
         {props.comments.map((comment) => {
@@ -64,7 +66,7 @@ export const CommentSection = async (props: CommentSectionProps) => {
 
           return (
             <div key={comment.id} className={"flex flex-col"}>
-              <div className={"mb-2"}>
+              <div>
                 <UserComment
                   key={comment.id}
                   comment={comment}

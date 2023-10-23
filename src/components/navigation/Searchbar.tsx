@@ -79,12 +79,12 @@ export const Searchbar = () => {
   return (
     <div
       className={
-        "fixed left-0 right-0 top-0 m-auto mt-2.5 flex h-fit w-[40rem] items-center gap-x-2 rounded-lg border border-solid border-black bg-gray-50 p-2 text-lg transition-all duration-200 ease-out"
+        "fixed left-0 right-0 top-0 m-auto mt-2.5 flex h-fit w-[40rem] min-w-0 items-center gap-x-2 rounded-lg border border-solid border-black bg-gray-50 p-2 text-lg transition-all duration-200 ease-out max-xl:w-[30rem] max-lg:w-[25rem] max-md:static max-md:m-0 max-md:grow"
       }
     >
       <IoSearch className={"mx-1"} />
       <input
-        className={"grow bg-transparent outline-none"}
+        className={"min-w-0 grow bg-transparent outline-none max-lg:text-lg"}
         type="text"
         name="searchbar"
         value={searchQuery}
@@ -163,7 +163,10 @@ export const Searchbar = () => {
             ) : null}
             {searchedUsers.length > 0 ? (
               <>
-                <h1 className={"p-2 px-3"}>Users</h1>
+                {searchedUsers.length === 1 &&
+                searchedUsers[0].id === "[deleted]" ? null : (
+                  <h1 className={"p-2 px-3"}>Users</h1>
+                )}
                 {searchedUsers.map((user) => {
                   if (user.id === "[deleted]") return null;
 

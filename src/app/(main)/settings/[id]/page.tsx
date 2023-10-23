@@ -27,7 +27,7 @@ export default async function SettingsPage({
   }
 
   return (
-    <main className={"flex h-fit justify-center gap-x-12 py-8"}>
+    <main className={"flex h-fit justify-center gap-x-12 py-8 max-md:w-full"}>
       <EditUser user={user} />
     </main>
   );

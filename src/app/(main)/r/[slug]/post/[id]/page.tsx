@@ -135,10 +135,22 @@ export default async function PostPage({
     <div
       className={"flex h-fit min-h-[calc(100vh-4rem)] justify-center bg-black"}
     >
-      <div className={"flex max-w-[85rem] gap-x-4 bg-white p-8"}>
-        <div className={"flex w-[50rem] flex-col gap-y-2 rounded-md p-4"}>
-          <div className={"flex gap-x-3 pb-4"}>
-            <div className={"text-2xl"}>
+      <div
+        className={
+          "flex max-w-[85rem] gap-4 bg-white p-8 max-xl:w-full max-xl:flex-col-reverse"
+        }
+      >
+        <div
+          className={
+            "flex w-[50rem] flex-col gap-y-2 rounded-md p-4 max-xl:w-full max-xl:p-0"
+          }
+        >
+          <div className={"flex gap-x-3 pb-4 max-xl:flex-col max-xl:gap-y-2"}>
+            <div
+              className={
+                "text-2xl max-xl:flex max-xl:justify-center max-xl:gap-x-2"
+              }
+            >
               <PostVoteButtons
                 post={{
                   id: post.id,
@@ -153,15 +165,6 @@ export default async function PostPage({
               }
             >
               <div className={"flex text-sm"}>
-                <SubreadditButton
-                  className={"hover:underline"}
-                  subreaddit={{
-                    name: post.subreaddit.name,
-                  }}
-                >
-                  <span>r/{post.subreaddit.name}</span>
-                  <BsDot className={"inline-block"} />
-                </SubreadditButton>
                 <p className={"mr-2"}>
                   Posted by{" "}
                   <UserButton
@@ -194,7 +197,9 @@ export default async function PostPage({
             />
           </div>
         </div>
-        <div className={"flex h-fit w-[22.5rem] flex-col gap-y-4"}>
+        <div
+          className={"flex h-fit w-[22.5rem] flex-col gap-y-4 max-xl:w-full"}
+        >
           <div className={"rounded-md border border-solid border-gray-500"}>
             <div className={"flex items-center gap-x-4 px-4 pt-4"}>
               <Image
