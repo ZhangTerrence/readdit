@@ -254,7 +254,7 @@ export default async function PostPage({
                     id: post.subreaddit.id,
                   }}
                   isSubscribed={isSubscribed}
-                  className={"w-full py-1.5"}
+                  className={"w-full py-1.5 max-xl:py-1"}
                 />
               ) : null}
             </div>

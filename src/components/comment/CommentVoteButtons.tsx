@@ -1,8 +1,10 @@
 "use client";
 
+import type { CreateCommentVotePayload } from "@/lib/validators/vote";
 import { VoteTypes } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CreateCommentVotePayload } from "@/lib/validators/vote";
 import { PiArrowFatUpFill, PiArrowFatDownFill } from "react-icons/pi";
 import { toast } from "react-toastify";
 
@@ -15,9 +17,11 @@ type CommentVoteButtonsProps = {
 };
 
 export const CommentVoteButtons = (props: CommentVoteButtonsProps) => {
+  const { data: session } = useSession();
   const [commentVotes, setCommentVotes] = useState(props.commentVotes);
   const [previousUserVote, setPreviousUserVote] = useState(props.userVote);
   const [userVote, setUserVote] = useState(props.userVote);
+  const router = useRouter();
 
   useEffect(() => {
     setUserVote(props.userVote);
@@ -40,6 +44,11 @@ export const CommentVoteButtons = (props: CommentVoteButtonsProps) => {
   };
 
   const createCommentVote = async (type: VoteTypes) => {
+    if (!session) {
+      router.push("/signin");
+      return;
+    }
+
     const payload: CreateCommentVotePayload = {
       commentId: props.comment.id,
       type,

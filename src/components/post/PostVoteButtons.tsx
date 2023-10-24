@@ -2,6 +2,8 @@
 
 import type { CreatePostVotePayload } from "@/lib/validators/vote";
 import { VoteTypes } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PiArrowFatUpFill, PiArrowFatDownFill } from "react-icons/pi";
 import { toast } from "react-toastify";
@@ -15,9 +17,11 @@ type PostVoteButtonsProps = {
 };
 
 export const PostVoteButtons = (props: PostVoteButtonsProps) => {
+  const { data: session } = useSession();
   const [postVotes, setPostVotes] = useState(props.postVotes);
   const [previousUserVote, setPreviousUserVote] = useState(props.userVote);
   const [userVote, setUserVote] = useState(props.userVote);
+  const router = useRouter();
 
   useEffect(() => {
     setUserVote(props.userVote);
@@ -40,6 +44,11 @@ export const PostVoteButtons = (props: PostVoteButtonsProps) => {
   };
 
   const createPostVote = async (type: VoteTypes) => {
+    if (!session) {
+      router.push("/signin");
+      return;
+    }
+
     const payload: CreatePostVotePayload = {
       postId: props.post.id,
       type,
