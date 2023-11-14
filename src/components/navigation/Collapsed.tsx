@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { FaBars } from "react-icons/fa6";
-import { IoExit, IoSettings } from "react-icons/io5";
+import { IoExit, IoHome, IoSettings } from "react-icons/io5";
 
 export const Collapsed = () => {
   const { data: session } = useSession();
@@ -21,6 +21,15 @@ export const Collapsed = () => {
             "absolute left-0 top-full z-20 w-full rounded-b-md border border-solid border-gray-400 bg-white transition-all"
           }
         >
+          <Link
+            className={
+              "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
+            }
+            href={"/"}
+          >
+            <IoHome />
+            <button>Home</button>
+          </Link>
           <Link
             className={
               "flex cursor-pointer items-center gap-x-4 px-3 py-4 text-lg leading-3 transition-colors hover:bg-gray-100"
